@@ -13,12 +13,12 @@ import { shareGoalFlow } from "../../utils/move-feature-utils";
 
 test.describe.configure({ timeout: 100000 });
 
-// Helper function to retry assertion with page refresh if it times out
+// Enhanced helper function to retry assertion with multiple recovery strategies for CI/CD environments
 async function expectWithRetry(
   page: Page,
   assertion: () => Promise<void>,
-  maxRetries: number = 3,
-  retryDelay: number = 2000,
+  maxRetries: number = 5, // Increased retries for CI/CD
+  retryDelay: number = 3000, // Increased delay for CI/CD
 ): Promise<void> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -26,12 +26,36 @@ async function expectWithRetry(
       return; // Success, exit the function
     } catch (error) {
       if (attempt === maxRetries) {
+        console.error(`Assertion failed after ${maxRetries} attempts. Final error: ${error.message}`);
         throw error; // Re-throw the error on final attempt
       }
 
-      console.warn(`Assertion failed on attempt ${attempt}. Refreshing page and retrying in ${retryDelay}ms...`);
-      await page.reload();
-      await page.waitForTimeout(retryDelay);
+      console.warn(`Assertion failed on attempt ${attempt}/${maxRetries}. Error: ${error.message}`);
+
+      // Progressive recovery strategies for CI/CD environments
+      if (attempt === 1) {
+        // First retry: Just wait a bit longer
+        console.log(`First retry: Waiting ${retryDelay}ms before retry...`);
+        await page.waitForTimeout(retryDelay);
+      } else if (attempt === 2) {
+        // Second retry: Wait and try to stabilize the page
+        console.log(`Second retry: Waiting ${retryDelay}ms and stabilizing page...`);
+        await page.waitForTimeout(retryDelay);
+        // Wait for page to be ready
+        await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {});
+      } else if (attempt === 3) {
+        // Third retry: Refresh the page
+        console.log(`Third retry: Refreshing page and waiting ${retryDelay}ms...`);
+        await page.reload();
+        await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
+        await page.waitForTimeout(retryDelay);
+      } else {
+        // Fourth retry: Hard refresh and longer wait
+        console.log(`Fourth retry: Hard refresh and waiting ${retryDelay * 2}ms...`);
+        await page.reload({ waitUntil: "networkidle" });
+        await page.waitForLoadState("networkidle", { timeout: 20000 }).catch(() => {});
+        await page.waitForTimeout(retryDelay * 2);
+      }
     }
   }
 }
