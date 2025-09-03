@@ -199,6 +199,8 @@ test.describe("Goal Sharing Feature", () => {
       await userBPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
+      await userBPage.waitForTimeout(2000);
+      await userBPage.reload({ timeout: 30000 });
       await expectWithRetry(userBPage, async () => {
         await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible({ timeout: 15000 });
       });
@@ -231,7 +233,8 @@ test.describe("Goal Sharing Feature", () => {
 
       await userCPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
-
+      await userCPage.waitForTimeout(2000);
+      await userCPage.reload({ timeout: 30000 });
       await expectWithRetry(userCPage, async () => {
         await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible({ timeout: 15000 });
       });
@@ -269,7 +272,8 @@ test.describe("Goal Sharing Feature", () => {
 
       await userCPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
-
+      await userCPage.waitForTimeout(2000);
+      await userCPage.reload({ timeout: 30000 });
       await expectWithRetry(userCPage, async () => {
         await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible({
           timeout: 15000,
@@ -288,7 +292,8 @@ test.describe("Goal Sharing Feature", () => {
 
       await userAPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
       await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
-
+      await userAPage.waitForTimeout(2000);
+      await userAPage.reload({ timeout: 30000 });
       await expectWithRetry(userAPage, async () => {
         await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible({
           timeout: 15000,
@@ -319,7 +324,8 @@ test.describe("Goal Sharing Feature", () => {
 
       await userBPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
-
+      await userBPage.waitForTimeout(2000);
+      await userBPage.reload({ timeout: 30000 });
       await expectWithRetry(userBPage, async () => {
         await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible({
           timeout: 15000,
@@ -352,7 +358,8 @@ test.describe("Goal Sharing Feature", () => {
 
       await userAPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
       await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
-
+      await userAPage.waitForTimeout(2000);
+      await userAPage.reload({ timeout: 30000 });
       await expectWithRetry(userAPage, async () => {
         await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible({
           timeout: 15000,

@@ -321,6 +321,8 @@ test.describe("Goal Sharing Feature", () => {
 
       await sharerPage().goto("http://127.0.0.1:3000/goals");
       // first verify that the notification dot exists
+      await sharerPage().waitForTimeout(2000);
+      await sharerPage().reload({ timeout: 30000 });
       await expectWithRetry(sharerPage(), async () => {
         await expect(sharerPage().getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
       });

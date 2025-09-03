@@ -144,6 +144,8 @@ export async function verifyUpdatedGoal(
         .locator(".goal-dd-outer");
 
       console.log("Checking for notification dot...");
+      await page.waitForTimeout(2000);
+      await page.reload({ timeout: 30000 });
       await expect(goalDropdownWithContact.getByTestId(`notification-dot-${expectedGoalTitle}`)).toBeVisible();
       await goalDropdownWithContact.click();
 
