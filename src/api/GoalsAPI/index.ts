@@ -46,13 +46,35 @@ export const getGoal = async (goalId: string) => {
     const goal: GoalItem | undefined = await db.goalsCollection.where("id").equals(goalId).first();
     return goal;
   } catch (error) {
-    console.error(`Error fetching goal with ID ${goalId}:`, error);
     throw new Error(`Failed to fetch goal with ID ${goalId}`);
   }
 };
 
 export const getGoalById = (id: string) => {
-  return db.goalsCollection.get(id);
+  const goal = db.goalsCollection.get(id);
+  return goal;
+};
+
+// Batch fetch multiple goals efficiently
+export const getGoalsByIds = async (ids: string[]): Promise<GoalItem[]> => {
+  if (ids.length === 0) return [];
+
+  const startTime = performance.now();
+
+  // Use batch operation for better performance
+  const goals = await db.goalsCollection
+    .where("id")
+    .anyOf(...ids)
+    .toArray();
+
+  const totalTime = performance.now();
+
+  console.log(`📦 getGoalsByIds Performance:
+    - DB Query: ${(totalTime - startTime).toFixed(2)}ms
+    - Requested: ${ids.length} goals
+    - Found: ${goals.length} goals`);
+
+  return goals;
 };
 
 export const getChildrenGoals = async (parentGoalId: string) => {
@@ -72,23 +94,49 @@ export const getAllGoals = async (includeArchived = "false") => {
 };
 
 export const getArchivedGoals = async (parentGoalId: string) => {
+  const startTime = performance.now();
+
   const archivedGoals: GoalItem[] = await db.goalsCollection
-    .where("parentGoalId")
-    .equals(parentGoalId)
-    .and((goal) => goal.archived === "true")
+    .where("[parentGoalId+archived]")
+    .equals([parentGoalId, "true"])
     .sortBy("createdAt");
+
+  const dbQueryTime = performance.now();
   archivedGoals.reverse();
-  return sortGoalsByProps(archivedGoals);
+  const sortedGoals = await sortGoalsByProps(archivedGoals);
+
+  const totalTime = performance.now();
+
+  console.log(`📦 getArchivedGoals Performance:
+    - DB Query: ${(dbQueryTime - startTime).toFixed(2)}ms
+    - Processing: ${(totalTime - dbQueryTime).toFixed(2)}ms
+    - Total: ${(totalTime - startTime).toFixed(2)}ms
+    - Results: ${archivedGoals.length} goals`);
+
+  return sortedGoals;
 };
 
 export const getActiveGoals = async (parentGoalId: string) => {
+  const startTime = performance.now();
+
+  // Use compound index for efficient querying: [parentGoalId+archived+createdAt]
   const activeGoals: GoalItem[] = await db.goalsCollection
-    .where("parentGoalId")
-    .equals(parentGoalId)
-    .and((goal) => goal.archived === "false")
+    .where("[parentGoalId+archived]")
+    .equals([parentGoalId, "false"])
     .sortBy("createdAt");
+
+  const dbQueryTime = performance.now();
   activeGoals.reverse();
   const sortedGoals = await sortGoalsByProps(activeGoals);
+
+  const totalTime = performance.now();
+
+  console.log(`🚀 getActiveGoals Performance:
+    - DB Query: ${(dbQueryTime - startTime).toFixed(2)}ms
+    - Processing: ${(totalTime - dbQueryTime).toFixed(2)}ms
+    - Total: ${(totalTime - startTime).toFixed(2)}ms
+    - Results: ${activeGoals.length} goals`);
+
   return sortedGoals;
 };
 
@@ -249,19 +297,6 @@ export const getParticipantsOfGoals = async (ids: string[]) => {
   return goals.flatMap((goal) =>
     goal.participants.map((participant) => ({ sub: participant, notificationGoalId: goal.id })),
   );
-};
-
-export const notifyNewColabRequest = async (id: string, relId: string) => {
-  db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection
-      .where("id")
-      .equals(id)
-      .modify((obj: GoalItem) => {
-        obj.shared.conversionRequests = { status: true, senders: [relId] };
-      });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
 };
 
 export const removeGoalWithChildrens = async (goal: GoalItem, permanently = false) => {
