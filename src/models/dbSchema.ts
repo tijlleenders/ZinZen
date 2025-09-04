@@ -7,7 +7,7 @@ import { TaskItem } from "./TaskItem";
 export const dbStoreSchema = {
   feelingsCollection: "++id, content, category, date, note",
   goalsCollection:
-    "id, category, title, duration, sublist, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, notificationGoalId, isShared, timeBudget, typeOfGoal, timestamp",
+    "id, category, title, duration, sublist, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, notificationGoalId, isShared, timeBudget, typeOfGoal, timestamp, [parentGoalId+archived]",
   sharedWMCollection:
     "id, category, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, notificationGoalId, isShared, timeBudget, typeOfGoal",
   contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt, type",

@@ -14,7 +14,7 @@ import { TaskHistoryItem } from "./TaskHistoryItem";
 import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
 import { SharedGoalMetadata } from "./SharedGoalNotMoved";
 
-export const dexieVersion = 27;
+export const dexieVersion = 29;
 
 const currentVersion = Number(localStorage.getItem(LocalStorageKeys.DEXIE_VERSION) || dexieVersion);
 localStorage.setItem(LocalStorageKeys.DEXIE_VERSION, `${dexieVersion}`);
