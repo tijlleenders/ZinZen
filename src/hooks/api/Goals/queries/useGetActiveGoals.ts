@@ -8,6 +8,7 @@ export const useGetActiveGoals = (parentGoalId: string) => {
     data: activeGoals,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: GOAL_QUERY_KEYS.list("active", parentGoalId),
     queryFn: async () => {
@@ -19,6 +20,7 @@ export const useGetActiveGoals = (parentGoalId: string) => {
         return goals;
       }
     },
+    enabled: parentGoalId !== "",
   });
-  return { activeGoals, isLoading, error };
+  return { activeGoals, isLoading, error, refetch };
 };

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-relative-packages */
 import { useSetRecoilState } from "recoil";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { getAllGoals } from "@src/api/GoalsAPI";
@@ -16,9 +16,11 @@ import { updateGoalsImpossibleStatus } from "@src/utils/updateGoalsImpossibleSta
 
 import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 
 function useScheduler() {
   const setSchedulerError = useSetRecoilState(schedulerErrorState);
+  const queryClient = useQueryClient();
 
   const getInputForScheduler = async (activeGoals: GoalItem[]) => {
     try {
@@ -42,6 +44,9 @@ function useScheduler() {
   const generateSchedule = async (): Promise<ScheduleResult> => {
     try {
       const activeGoals: GoalItem[] = await getAllGoals();
+
+      queryClient.setQueryData(["allGoals"], activeGoals);
+
       const schedulerInput = await getInputForScheduler(activeGoals);
       const generatedInputId = generateUniqueIdForSchInput(JSON.stringify(schedulerInput));
       const cachedRes = await getCachedSchedule(generatedInputId);
@@ -115,6 +120,7 @@ function useScheduler() {
     mutationFn: async (goal: GoalItem): Promise<ISchedulerOutput | null> => {
       try {
         const activeGoals: GoalItem[] = await getAllGoals();
+
         const goalsWithConfig = [...activeGoals, goal];
         const { schedulerInput } = await organizeDataForInptPrep(goalsWithConfig);
 

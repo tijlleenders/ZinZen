@@ -36,14 +36,10 @@ const SublistGoalsPage = () => {
   return (
     <AppLayout title="myGoals">
       <div className="myGoals-container">
-        {isLoading && <GoalHistory goalsHistory={goalsHistory} />}
-        {isLoading ? (
-          <div className="place-middle">
-            <Spin />
-          </div>
-        ) : (
-          <GoalSublist key={parentId} goals={filteredActiveGoals || []} isLoading={isLoading} />
-        )}
+        <GoalHistory goalsHistory={goalsHistory} />
+
+        <GoalSublist key={parentId} goals={filteredActiveGoals || []} isLoading={isLoading} />
+
         {/* Modals */}
         {goalCategories.includes(goalType) && (
           <ConfigGoal

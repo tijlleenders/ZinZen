@@ -9,12 +9,17 @@ import useGoalActions from "@src/hooks/useGoalActions";
 import TriangleIcon from "@src/assets/TriangleIcon";
 import { CopyIcon } from "@src/assets/CopyIcon";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { glowGoalIdState } from "@src/store/GlowGoalIdState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import { GoalIcon } from "./components/GoalIcon";
 import { ZItemContainer } from "../ZItemContainer";
+import { selectedParentId } from "@pages/GoalsPage/SublistGoalAtom";
+import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
+import { getActiveGoals } from "@src/api/GoalsAPI";
+import { useQueryClient } from "react-query";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 
 // eslint-disable-next-line no-shadow
 export enum ActionModal {
@@ -44,16 +49,25 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, ac
   const { copyCode } = useGoalActions();
   const goalToMove = useRecoilValue(moveGoalState);
   const [glowGoalId, setGlowGoalId] = useRecoilState(glowGoalIdState);
+  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const redirect = (state: object, isDropdown = false, actionModalType = ActionModal.ACTIVE) => {
+  const redirect = async (state: object, isDropdown = false, actionModalType = ActionModal.ACTIVE) => {
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     if (isDropdown) {
       const searchparam = goal.newUpdates ? "showNewChanges" : "showOptions";
       navigate(`${prefix}/${parentId}/${goal.id}?${searchparam}=true`, { state: { ...state, actionModalType } });
     } else {
+      const queryKey = GOAL_QUERY_KEYS.list("active", goal.id);
+      const cachedData = queryClient.getQueryData(queryKey);
+
+      if (!cachedData) {
+        const subgoals = await getActiveGoals(goal.id);
+        queryClient.setQueryData(queryKey, subgoals);
+      }
+
       navigate(`${prefix}/${goal.id}`, { state });
     }
   };

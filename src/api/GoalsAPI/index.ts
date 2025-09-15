@@ -117,26 +117,11 @@ export const getArchivedGoals = async (parentGoalId: string) => {
 };
 
 export const getActiveGoals = async (parentGoalId: string) => {
-  const startTime = performance.now();
-
-  // Use compound index for efficient querying: [parentGoalId+archived+createdAt]
-  const activeGoals: GoalItem[] = await db.goalsCollection
-    .where("[parentGoalId+archived]")
-    .equals([parentGoalId, "false"])
-    .sortBy("createdAt");
-
-  const dbQueryTime = performance.now();
+  console.time("hello");
+  const activeGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).toArray();
+  console.timeEnd("hello");
   activeGoals.reverse();
   const sortedGoals = await sortGoalsByProps(activeGoals);
-
-  const totalTime = performance.now();
-
-  console.log(`🚀 getActiveGoals Performance:
-    - DB Query: ${(dbQueryTime - startTime).toFixed(2)}ms
-    - Processing: ${(totalTime - dbQueryTime).toFixed(2)}ms
-    - Total: ${(totalTime - startTime).toFixed(2)}ms
-    - Results: ${activeGoals.length} goals`);
-
   return sortedGoals;
 };
 
