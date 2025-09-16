@@ -13,6 +13,7 @@ export const useGetGoalById = (goalId: string | undefined, disabled = false) => 
     },
     cacheTime: 0,
     enabled: !disabled && !!goalId,
+    refetchOnWindowFocus: false,
   });
 
   return { data, isLoading, isError, isSuccess };

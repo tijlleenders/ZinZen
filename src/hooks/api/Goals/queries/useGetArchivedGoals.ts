@@ -12,6 +12,7 @@ export const useGetArchivedGoals = (parentGoalId: string) => {
     queryFn: () => {
       return getArchivedGoals(parentGoalId);
     },
+    refetchOnWindowFocus: false,
   });
   return { archivedGoals, isLoading, error };
 };

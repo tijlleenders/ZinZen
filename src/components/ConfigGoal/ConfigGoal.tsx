@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
@@ -151,12 +151,17 @@ const ConfigGoalContent = ({
     budgetGoal?.perWeekHrs,
   ]);
 
-  const debouncedSave = useDebounce(async (editMode: boolean, newFormState: FormState) => {
-    if (isModal) return;
-    if (onSave) {
-      await onSave(editMode, newFormState);
-    }
-  }, 1000);
+  const debouncedSaveCallback = useCallback(
+    async (editMode: boolean, newFormState: FormState) => {
+      if (isModal) return;
+      if (onSave) {
+        await onSave(editMode, newFormState);
+      }
+    },
+    [isModal, onSave],
+  );
+
+  const debouncedSave = useDebounce(debouncedSaveCallback, 1000);
 
   const handleColorPickerAreaClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest(".goal-color") || (e.target as HTMLElement).closest(".color-palette-popup")) {

@@ -10,6 +10,7 @@ export const useGetDeletedGoals = (parentGoalId: string) => {
   } = useQuery({
     queryKey: GOAL_QUERY_KEYS.list("deleted", parentGoalId),
     queryFn: () => getDeletedGoals(parentGoalId),
+    refetchOnWindowFocus: false,
   });
   return { deletedGoals, isLoading, error };
 };

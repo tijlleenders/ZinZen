@@ -113,4 +113,4 @@ const GoalHistory = ({
   );
 };
 
-export default GoalHistory;
+export default React.memo(GoalHistory);
