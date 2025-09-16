@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import React from "react";
+import React, { useMemo } from "react";
 import { useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
@@ -51,9 +51,10 @@ export const MyGoals = () => {
 
   const zinZenLogoHeight = activeGoals && activeGoals.length > 0 ? 125 : 350;
 
-  const filteredActiveGoals = activeGoals?.filter((goal) =>
-    goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredActiveGoals = useMemo(() => {
+    if (!activeGoals) return [];
+    return activeGoals.filter((goal) => goal.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [activeGoals, searchQuery]);
 
   return (
     <>

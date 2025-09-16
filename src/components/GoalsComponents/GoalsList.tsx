@@ -1,5 +1,5 @@
 import { GoalItem } from "@src/models/GoalItem";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   DndContext,
   closestCenter,
@@ -46,7 +46,9 @@ const GoalsList = ({ goals }: GoalsListProps) => {
     };
   };
 
-  const updatedGoals = goals.map(addImpossibleProp);
+  const updatedGoals = useMemo(() => {
+    return goals.map(addImpossibleProp);
+  }, [goals]);
 
   const getGoalsPos = (id: string | number | undefined) => goals.findIndex((goal) => goal.id === id);
 
@@ -79,4 +81,4 @@ const GoalsList = ({ goals }: GoalsListProps) => {
   );
 };
 
-export default GoalsList;
+export default React.memo(GoalsList);
