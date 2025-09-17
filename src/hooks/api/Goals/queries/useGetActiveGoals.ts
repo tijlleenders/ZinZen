@@ -2,6 +2,7 @@ import { getActiveGoals } from "@src/api/GoalsAPI";
 import { useQuery } from "react-query";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
+import { sortGoalsByProps } from "@src/api/GCustomAPI";
 
 export const useGetActiveGoals = (parentGoalId: string) => {
   const {
@@ -14,7 +15,8 @@ export const useGetActiveGoals = (parentGoalId: string) => {
     queryFn: async () => {
       const goals = await getActiveGoals(parentGoalId);
       try {
-        return await priotizeImpossibleGoals(goals);
+        const sortedGoals = await sortGoalsByProps(goals);
+        return await priotizeImpossibleGoals(sortedGoals);
       } catch (prioritizationError) {
         console.error("Error prioritizing impossible goals:", prioritizationError);
         return goals;

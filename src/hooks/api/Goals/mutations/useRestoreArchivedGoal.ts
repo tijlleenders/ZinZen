@@ -20,6 +20,7 @@ export const useRestoreArchivedGoal = () => {
     onSuccess: () => {
       setLastAction(GoalActions.GOAL_RESTORED);
       queryClient.invalidateQueries(["reminders"]);
+      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
       restoreGoalSound.play();
     },
     onError: () => {

@@ -72,6 +72,7 @@ export const useDeleteGoal = () => {
     onSettled: (_, __, goal) => {
       queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", goal.parentGoalId));
       queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("deleted", goal.parentGoalId));
+      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
     },
 
     onSuccess: (_, goal) => {

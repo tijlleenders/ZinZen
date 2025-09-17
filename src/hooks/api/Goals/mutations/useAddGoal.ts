@@ -32,7 +32,6 @@ export const useAddGoal = () => {
       });
       return { previousGoals };
     },
-
     mutationKey: ["goals", "add"],
 
     onError: (error, { newGoal }, context) => {
@@ -53,6 +52,7 @@ export const useAddGoal = () => {
 
     onSuccess: (_, { newGoal }) => {
       queryClient.invalidateQueries({ queryKey: ["scheduler", "reminders"] });
+      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
       setShowToast({
         open: true,
         message: `${newGoal.title.slice(0, 15)}${newGoal.title.length > 15 ? "..." : ""} created!`,

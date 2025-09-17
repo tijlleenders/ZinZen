@@ -11,7 +11,7 @@ export const useGetGoalById = (goalId: string | undefined, disabled = false) => 
       }
       return getGoalById(goalId);
     },
-    cacheTime: 0,
+
     enabled: !disabled && !!goalId,
     refetchOnWindowFocus: false,
   });

@@ -13,7 +13,6 @@ export const useUpdateGoalPositions = () => {
   const { parentId = "root" } = useParams();
 
   return useMutation({
-    mutationKey: ["goals", "updatePositions"],
     mutationFn: async ({ goals }: UpdateGoalPositionsParams) => {
       const posIndexPromises = goals.map(async (goal, index) => updatePositionIndex(goal.id, index));
       await Promise.all(posIndexPromises);

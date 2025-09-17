@@ -14,6 +14,8 @@ export const useAddGoalHintsToMyGoal = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(HINT_QUERY_KEYS.all);
       queryClient.invalidateQueries(GOAL_QUERY_KEYS.all);
+      queryClient.invalidateQueries(["scheduler"]);
+      queryClient.invalidateQueries(["reminders"]);
       setShowToast({ open: true, message: "Goal hint added to my goals", extra: "" });
       window.history.back();
     },

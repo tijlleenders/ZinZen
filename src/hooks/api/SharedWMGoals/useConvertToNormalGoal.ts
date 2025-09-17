@@ -12,6 +12,9 @@ export const useConvertToNormalGoal = () => {
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: SHARED_WM_GOAL_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: GOAL_QUERY_KEYS.all });
+      queryClient.invalidateQueries(["scheduler"]);
+      queryClient.invalidateQueries(["reminders"]);
+
       if (res) {
         setShowToast({
           open: true,

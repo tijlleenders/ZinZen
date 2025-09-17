@@ -60,6 +60,7 @@ export const useEditGoal = (activeGoalId: string, isModal = false) => {
       queryClient.invalidateQueries({
         queryKey: [["scheduler"], ["reminders"]],
       });
+      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
 
       if (hasGoalChanged && isModal) {
         setShowToast({

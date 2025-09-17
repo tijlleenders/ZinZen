@@ -31,7 +31,8 @@ export const useArchiveGoal = () => {
       sendFinalUpdateOnGoal(goal.id, "archived", ancestors, false).then(() => {
         console.log("Update Sent");
       });
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: ["reminders", "scheduler"] });
+      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
       await updateTimestamp(goal.id);
       await doneSound.play();
     },
