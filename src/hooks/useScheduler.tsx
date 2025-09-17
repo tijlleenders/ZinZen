@@ -15,6 +15,8 @@ import {
 import { updateGoalsImpossibleStatus } from "@src/utils/updateGoalsImpossibleStatus";
 
 import { schedulerErrorState } from "@src/store/SchedulerErrorState";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
+import { sortGoalsByProps } from "@src/api/GCustomAPI";
 import init, { schedule } from "../../pkg/scheduler";
 
 function useScheduler() {
@@ -43,7 +45,24 @@ function useScheduler() {
   const generateSchedule = async (): Promise<ScheduleResult> => {
     try {
       const activeGoals: GoalItem[] = await getAllGoals();
-      queryClient.setQueryData(["allGoals"], activeGoals);
+
+      const transformedGoals = new Map();
+      activeGoals.forEach((goal) => {
+        if (!transformedGoals.get(goal.parentGoalId)) {
+          transformedGoals.set(goal.parentGoalId, [goal]);
+        } else {
+          transformedGoals.set(goal.parentGoalId, [...transformedGoals.get(goal.parentGoalId), goal]);
+        }
+      });
+
+      transformedGoals.forEach(async (goals, parentId) => {
+        const sortedGoals = await sortGoalsByProps(goals);
+        queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", parentId), sortedGoals);
+      });
+
+      activeGoals.forEach((goal) => {
+        queryClient.setQueryData(GOAL_QUERY_KEYS.detail(goal.id), goal);
+      });
 
       const schedulerInput = await getInputForScheduler(activeGoals);
       const generatedInputId = generateUniqueIdForSchInput(JSON.stringify(schedulerInput));

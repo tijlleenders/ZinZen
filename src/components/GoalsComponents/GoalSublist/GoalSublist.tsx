@@ -14,11 +14,10 @@ import { useGetSharedWMGoalsArchived } from "@src/hooks/api/SharedWMGoals/useGet
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
 import { Spin } from "antd";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import GoalsList from "../GoalsList";
-import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
@@ -29,8 +28,6 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
   const { t } = useTranslation();
 
   const searchQuery = useRecoilValue(searchQueryState);
-  const location = useLocation();
-  const goalsHistory = location.state?.goalsHistory ?? [];
 
   const { archivedGoals } = useGetArchivedGoals(parentId || "");
   const { deletedGoals } = useGetDeletedGoals(parentId || "");
@@ -51,7 +48,6 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
 
   return (
     <div className="sublist-container">
-      <GoalHistory showConfig={showConfig} setShowConfig={setShowConfig} goalsHistory={goalsHistory} />
       <div className="sublist-content-container">
         <div className="sublist-content">
           <button className="clickable-container" type="button" onClick={handleToggleConfig}>
