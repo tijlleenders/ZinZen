@@ -66,7 +66,7 @@ export const getChildrenGoals = async (parentGoalId: string) => {
 };
 
 export const getAllGoals = async (includeArchived = "false") => {
-  const allGoals = await db.goalsCollection.where("archived").equals(includeArchived).toArray();
+  const allGoals = await db.goalsCollection.where("archived").equals(includeArchived).sortBy("createdAt");
   allGoals.reverse();
   return allGoals;
 };
@@ -89,9 +89,7 @@ export const getActiveGoals = async (parentGoalId: string) => {
     .equals(parentGoalId)
     .and((goal) => goal.archived === "false")
     .sortBy("createdAt");
-  activeGoals.reverse();
-  const sortedGoals = await sortGoalsByProps(activeGoals);
-  return sortedGoals;
+  return activeGoals.reverse();
 };
 
 export const updateGoal = async (id: string, changes: Partial<GoalItem>) => {
