@@ -55,28 +55,6 @@ export const getGoalById = (id: string) => {
   return goal;
 };
 
-// Batch fetch multiple goals efficiently
-export const getGoalsByIds = async (ids: string[]): Promise<GoalItem[]> => {
-  if (ids.length === 0) return [];
-
-  const startTime = performance.now();
-
-  // Use batch operation for better performance
-  const goals = await db.goalsCollection
-    .where("id")
-    .anyOf(...ids)
-    .toArray();
-
-  const totalTime = performance.now();
-
-  console.log(`📦 getGoalsByIds Performance:
-    - DB Query: ${(totalTime - startTime).toFixed(2)}ms
-    - Requested: ${ids.length} goals
-    - Found: ${goals.length} goals`);
-
-  return goals;
-};
-
 export const getChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals: GoalItem[] = await db.goalsCollection
     .where("parentGoalId")
@@ -94,32 +72,23 @@ export const getAllGoals = async (includeArchived = "false") => {
 };
 
 export const getArchivedGoals = async (parentGoalId: string) => {
-  const startTime = performance.now();
-
   const archivedGoals: GoalItem[] = await db.goalsCollection
-    .where("[parentGoalId+archived]")
-    .equals([parentGoalId, "true"])
+    .where("parentGoalId")
+    .equals(parentGoalId)
+    .and((goal) => goal.archived === "true")
     .sortBy("createdAt");
 
-  const dbQueryTime = performance.now();
   archivedGoals.reverse();
   const sortedGoals = await sortGoalsByProps(archivedGoals);
-
-  const totalTime = performance.now();
-
-  console.log(`📦 getArchivedGoals Performance:
-    - DB Query: ${(dbQueryTime - startTime).toFixed(2)}ms
-    - Processing: ${(totalTime - dbQueryTime).toFixed(2)}ms
-    - Total: ${(totalTime - startTime).toFixed(2)}ms
-    - Results: ${archivedGoals.length} goals`);
-
   return sortedGoals;
 };
 
 export const getActiveGoals = async (parentGoalId: string) => {
-  console.time("hello");
-  const activeGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).toArray();
-  console.timeEnd("hello");
+  const activeGoals: GoalItem[] = await db.goalsCollection
+    .where("parentGoalId")
+    .equals(parentGoalId)
+    .and((goal) => goal.archived === "false")
+    .sortBy("createdAt");
   activeGoals.reverse();
   const sortedGoals = await sortGoalsByProps(activeGoals);
   return sortedGoals;
