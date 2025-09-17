@@ -21,7 +21,6 @@ export const useGetActiveGoals = (parentGoalId: string) => {
       }
     },
     enabled: parentGoalId !== "",
-    refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
   return { activeGoals, isLoading, error, refetch };

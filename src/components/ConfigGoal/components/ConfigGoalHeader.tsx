@@ -78,6 +78,4 @@ const ConfigGoalHeader = memo(function ConfigGoalHeader({
   );
 });
 
-ConfigGoalHeader.displayName = "ConfigGoalHeader";
-
 export default ConfigGoalHeader;

@@ -16,7 +16,6 @@ import { updateGoalsImpossibleStatus } from "@src/utils/updateGoalsImpossibleSta
 
 import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
-import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 
 function useScheduler() {
   const setSchedulerError = useSetRecoilState(schedulerErrorState);
@@ -44,7 +43,6 @@ function useScheduler() {
   const generateSchedule = async (): Promise<ScheduleResult> => {
     try {
       const activeGoals: GoalItem[] = await getAllGoals();
-
       queryClient.setQueryData(["allGoals"], activeGoals);
 
       const schedulerInput = await getInputForScheduler(activeGoals);

@@ -9,17 +9,14 @@ import useGoalActions from "@src/hooks/useGoalActions";
 import TriangleIcon from "@src/assets/TriangleIcon";
 import { CopyIcon } from "@src/assets/CopyIcon";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
+import { useQueryClient } from "react-query";
+import { getActiveGoals } from "@src/api/GoalsAPI";
 import { glowGoalIdState } from "@src/store/GlowGoalIdState";
-import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import { GoalIcon } from "./components/GoalIcon";
 import { ZItemContainer } from "../ZItemContainer";
-import { selectedParentId } from "@pages/GoalsPage/SublistGoalAtom";
-import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
-import { getActiveGoals } from "@src/api/GoalsAPI";
-import { useQueryClient } from "react-query";
-import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 
 // eslint-disable-next-line no-shadow
 export enum ActionModal {
@@ -44,12 +41,12 @@ const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, 
 };
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, actionModal = ActionModal.ACTIVE }) => {
+  const queryClient = useQueryClient();
   const { parentId = "root", partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
   const { copyCode } = useGoalActions();
   const goalToMove = useRecoilValue(moveGoalState);
   const [glowGoalId, setGlowGoalId] = useRecoilState(glowGoalIdState);
-  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
   const location = useLocation();
