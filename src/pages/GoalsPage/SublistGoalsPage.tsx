@@ -1,6 +1,6 @@
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
-import React, { useState } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import React from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
@@ -10,7 +10,6 @@ import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
-import GoalHistory from "@components/GoalsComponents/GoalSublist/components/GoalHistory";
 import { TGoalConfigMode } from "@src/types";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalModals from "./GoalModals";
@@ -29,18 +28,10 @@ const SublistGoalsPage = () => {
     goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const [showConfig, setShowConfig] = useState(false);
-
-  const location = useLocation();
-  const goalsHistory = location.state?.goalsHistory ?? [];
-
   return (
     <AppLayout title="myGoals">
       <div className="myGoals-container">
-        <GoalHistory showConfig={showConfig} setShowConfig={setShowConfig} goalsHistory={goalsHistory} />
-
         <GoalSublist key={parentId} goals={filteredActiveGoals || []} isLoading={isLoading} />
-
         {/* Modals */}
         {goalCategories.includes(goalType) && (
           <ConfigGoal

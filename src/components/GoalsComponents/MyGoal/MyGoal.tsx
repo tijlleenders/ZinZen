@@ -17,6 +17,7 @@ import { glowGoalIdState } from "@src/store/GlowGoalIdState";
 import GoalTitle from "./components/GoalTitle";
 import { GoalIcon } from "./components/GoalIcon";
 import { ZItemContainer } from "../ZItemContainer";
+import GoalAvatar from "../GoalAvatar";
 
 // eslint-disable-next-line no-shadow
 export enum ActionModal {
