@@ -2,10 +2,11 @@
 import React, { useCallback, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { ILocationState } from "@src/Interfaces";
 import { useSetRecoilState } from "recoil";
+import { ISubGoalHistory } from "@src/store/GoalsState";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import useGoalStore from "@src/hooks/useGoalStore";
 import { FormState } from "../ConfigGoal.helper";
@@ -28,17 +29,44 @@ const ConfigGoalHeader = memo(function ConfigGoalHeader({
 }: ConfigGoalHeaderProps) {
   const { t } = useTranslation();
   const { openEditMode } = useGoalStore();
-
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
   const location = useLocation();
 
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
+  const prevGoalHistory = location.state?.goalsHistory as ISubGoalHistory[];
 
   const handleTitleChange = useCallback(
     (value: string) => {
       const newState = { ...formState, title: value };
       setFormState(newState);
+      if (!isModal) {
+        const currentGoalsHistory = location.state?.goalsHistory || [];
+        const updatedGoalsHistory =
+          currentGoalsHistory.length > 0
+            ? [
+                ...currentGoalsHistory.slice(0, -1),
+                {
+                  ...currentGoalsHistory[currentGoalsHistory.length - 1],
+                  goalTitle: value,
+                },
+              ]
+            : [
+                {
+                  goalID: prevGoalHistory?.[prevGoalHistory.length - 1]?.goalID || "",
+                  goalTitle: value,
+                  goalColor: formState.goalColor,
+                },
+              ];
+
+        navigate(".", {
+          replace: true,
+          state: {
+            goalsHistory: updatedGoalsHistory,
+          },
+        });
+      }
       debouncedSave(isEditMode, newState);
     },
     [formState, setFormState, debouncedSave, isEditMode],
