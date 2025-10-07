@@ -65,8 +65,16 @@ export const AppRoutes = () => {
         loader={async ({ params }) => activeGoalLoader(params.activeGoalId || "")}
       />
 
-      <Route path="/goals/:parentId" element={<SublistGoalsPage />} />
-      <Route path="/goals/:parentId/:activeGoalId" element={<SublistGoalsPage />} />
+      <Route
+        path="/goals/:parentId"
+        element={<SublistGoalsPage />}
+        loader={async ({ params }) => activeGoalsLoader(params.parentId || "")}
+      />
+      <Route
+        path="/goals/:parentId/:activeGoalId"
+        element={<SublistGoalsPage />}
+        loader={async ({ params }) => activeGoalLoader(params.activeGoalId || "")}
+      />
 
       <Route
         path="/partners"
