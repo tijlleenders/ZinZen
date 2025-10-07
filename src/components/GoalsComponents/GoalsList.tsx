@@ -63,19 +63,21 @@ const GoalsList = ({ goals }: GoalsListProps) => {
   const focusedGoal = useGoalSelection(goals);
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
-        {updatedGoals.map((goal: ImpossibleGoal) => (
-          <div
-            key={`sortable-${goal.id}`}
-            style={focusedGoal?.id === goal.id ? { borderLeft: `${goal.goalColor} 3px solid` } : {}}
-            className={focusedGoal?.id === goal.id ? "focused-goal" : ""}
-          >
-            <SortableItem key={`sortable-${goal.id}`} goal={goal} />
-          </div>
-        ))}
-      </SortableContext>
-    </DndContext>
+    <div className="d-flex f-col">
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
+          {updatedGoals.map((goal: ImpossibleGoal) => (
+            <div
+              key={`sortable-${goal.id}`}
+              style={focusedGoal?.id === goal.id ? { borderLeft: `${goal.goalColor} 3px solid` } : {}}
+              className={focusedGoal?.id === goal.id ? "focused-goal" : ""}
+            >
+              <SortableItem key={`sortable-${goal.id}`} goal={goal} />
+            </div>
+          ))}
+        </SortableContext>
+      </DndContext>
+    </div>
   );
 };
 

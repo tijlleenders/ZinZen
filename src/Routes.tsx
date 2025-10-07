@@ -9,6 +9,7 @@ import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import MyGoalsPage from "@pages/GoalsPage/MyGoalsPage";
+import { useQueryClient } from "react-query";
 import InvestPage from "@pages/InvestPage/InvestPage";
 import SublistGoalsPage from "@pages/GoalsPage/SublistGoalsPage";
 import AppLayout from "./layouts/AppLayout";
@@ -17,8 +18,12 @@ import useApp from "./hooks/useApp";
 import { useProcessSharedGoalData } from "./hooks/useProcessSharedGoalData";
 import { getAllInboxItems } from "./api/InboxAPI";
 import { checkAndUpdateGoalNewUpdatesStatus } from "./helpers/InboxProcessor";
+import { GOAL_QUERY_KEYS } from "./factories/queryKeyFactory";
+import { getActiveGoals, getGoalById } from "./api/GoalsAPI";
 
 export const AppRoutes = () => {
+  const queryClient = useQueryClient();
+
   const { isLanguageChosen } = useApp();
   useProcessSharedGoalData();
 
@@ -32,13 +37,33 @@ export const AppRoutes = () => {
     });
   }, []);
 
+  const activeGoalsLoader = async (parentId: string) => {
+    await queryClient.fetchQuery({
+      queryKey: GOAL_QUERY_KEYS.list("active", parentId),
+      queryFn: () => getActiveGoals(parentId),
+    });
+    return null;
+  };
+
+  const activeGoalLoader = async (activeGoalId: string) => {
+    await queryClient.fetchQuery({
+      queryKey: GOAL_QUERY_KEYS.detail(activeGoalId),
+      queryFn: () => getGoalById(activeGoalId),
+    });
+    return null;
+  };
+
   return (
     <Routes>
       {!isLanguageChosen ? <Route path="/" element={<LandingPage />} /> : <Route path="/" element={<MyTimePage />} />}
       <Route path="/Feedback" element={<FeedbackPage />} />
-      <Route path="*" element={<MyGoalsPage />} />
-      <Route path="/goals/root" element={<MyGoalsPage />} />
-      <Route path="/goals/root/:activeGoalId" element={<MyGoalsPage />} />
+      <Route path="*" element={<MyGoalsPage />} loader={async () => activeGoalsLoader("root")} />
+      <Route path="/goals/root" element={<MyGoalsPage />} loader={async () => activeGoalsLoader("root")} />
+      <Route
+        path="/goals/root/:activeGoalId"
+        element={<MyGoalsPage />}
+        loader={async ({ params }) => activeGoalLoader(params.activeGoalId || "")}
+      />
 
       <Route path="/goals/:parentId" element={<SublistGoalsPage />} />
       <Route path="/goals/:parentId/:activeGoalId" element={<SublistGoalsPage />} />

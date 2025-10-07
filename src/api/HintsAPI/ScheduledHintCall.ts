@@ -51,5 +51,10 @@ export const scheduledHintCalls = async () => {
   const now = new Date().toISOString();
   const goalsDueForCheck = await db.goalsCollection.where("hints.nextCheckDate").belowOrEqual(now).toArray();
 
+  if (goalsDueForCheck.length === 0) {
+    console.log("No goals due for check");
+    return;
+  }
+
   await Promise.all(goalsDueForCheck.map((goal) => manageHintCalls(goal.id)));
 };
