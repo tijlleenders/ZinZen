@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { notification } from "antd";
-import { BrowserRouter } from "react-router-dom";
+import { RouterProvider } from "@tanstack/react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
 
@@ -13,12 +13,12 @@ import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageCha
 
 import useApp from "./hooks/useApp";
 import { themeState } from "./store/ThemeState";
+import { router } from "./router";
 
 import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
-import { AppRoutes } from "./Routes";
 
 const Context = React.createContext({ name: "Default" });
 
@@ -33,9 +33,7 @@ const App = () => {
   const displayLanguageChangeModal = useRecoilValue(languageChangeModal);
   const openNotification = () => {
     api.info({
-      style: {
-        backgroundColor: "var(--secondary-background)",
-      },
+      style: { backgroundColor: "var(--secondary-background)" },
       icon: <img src={darkModeEnabled ? darkAvatar : lightAvatar} alt="zinzen message" />,
       closeIcon: null,
       message: `${showToast.message}`,
@@ -79,11 +77,9 @@ const App = () => {
   return (
     <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
       <div className={`App-${darkModeEnabled ? "dark" : "light"}`}>
-        <BrowserRouter>
-          {isLanguageChosen}
-          {contextHolder}
-          <AppRoutes />
-        </BrowserRouter>
+        {isLanguageChosen}
+        {contextHolder}
+        <RouterProvider router={router} />
         {displayBackupRestoreModal && <BackupRestoreModal />}
         {displayLanguageChangeModal && <LanguageChangeModal />}
       </div>
