@@ -3,16 +3,23 @@ import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
 import Participants from "@components/GoalsComponents/Participants";
-import { GoalItem } from "@src/models/GoalItem";
-import { useSearchParams } from "react-router-dom";
+import { useSearch } from "@tanstack/react-router";
+import { Route } from "@src/routes/goals.$parentId.$activeGoalId";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
-const GoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
-  const [searchParams] = useSearchParams();
-  const showShareModal = searchParams.get("share") === "true";
-  const showOptions = searchParams.get("showOptions") === "true" && activeGoal && activeGoal.archived === "false";
+const GoalModals = () => {
+  const { activeGoalId } = Route.useParams();
+  const { data: activeGoal } = useGetGoalById(activeGoalId);
+  const search = useSearch({ strict: false }) as {
+    share?: string;
+    showOptions?: string;
+    showParticipants?: string;
+    showNewChanges?: string;
+  };
+  const showShareModal = search.share;
+  const showOptions = search.showOptions && activeGoal && activeGoal.archived === "false";
 
-  const showParticipants = searchParams.get("showParticipants") === "true";
-  const showNewChanges = searchParams.get("showNewChanges") === "true";
+  const { showParticipants, showNewChanges } = search;
 
   return (
     <>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
@@ -22,9 +22,9 @@ import "./MyGoalActions.scss";
 import GoalItemSummary from "../../GoalItemSummary/GoalItemSummary";
 
 const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
-  const { partnerId } = useParams();
+  const navigate = useNavigate();
+  const { partnerId } = useParams({ strict: false });
   const { openEditMode, handleMove } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalMutation } = useDeleteGoal();
@@ -125,7 +125,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
             onClickCapture={async (e) => {
               e.stopPropagation();
               if (!isPartnerModeActive) {
-                navigate(`${pathname}?share=true`, { state, replace: true });
+                navigate({ to: `${pathname}?share=true`, state, replace: true });
               } else {
                 await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
               }
