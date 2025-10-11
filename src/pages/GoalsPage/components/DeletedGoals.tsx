@@ -3,15 +3,15 @@ import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
-import { useDeletedGoalContext } from "@src/contexts/deletedGoal-context";
 import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useParams, useSearch } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/mutations/useRestoreDeletedGoal";
+import { useGetDeletedGoalById } from "@src/hooks/api/Goals/queries/useGetDeletedGoalById";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
@@ -65,16 +65,16 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
 
 const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const [searchParams] = useSearchParams();
-  const { goal: deletedGoal } = useDeletedGoalContext();
+  const { showOptions } = useSearch({ strict: false }) as { showOptions: string };
+  const { activeGoalId } = useParams({ strict: false });
+  const { data: deletedGoal } = useGetDeletedGoalById(activeGoalId);
   const location = useLocation();
 
-  const showOptions =
-    !!searchParams.get("showOptions") && deletedGoal && location.state?.actionModalType === ActionModal.DELETED;
+  const showOptionsResult = !!showOptions && deletedGoal && location.state?.actionModalType === ActionModal.DELETED;
 
   return (
     <div className="archived-drawer">
-      {showOptions && <Actions goal={deletedGoal} />}
+      {showOptionsResult && <Actions goal={deletedGoal} />}
       {deletedGoals.length > 0 && (
         <ZAccordion
           showCount

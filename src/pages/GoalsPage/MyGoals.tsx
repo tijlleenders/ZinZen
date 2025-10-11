@@ -8,7 +8,6 @@ import { searchQueryState } from "@src/store/GoalsState";
 
 import GoalsList from "@components/GoalsComponents/GoalsList";
 
-import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
@@ -18,7 +17,7 @@ import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
-import { Route } from "@src/routes/goals.$parentId";
+import { Route } from "@src/routes/(mygoalRoutes)/goals.$parentId";
 import ZinZenBgImage from "./ZinZenBgImage";
 import SubgoalLayout from "./SubgoalLayout";
 import AvailableGoalHints from "./components/AvailableGoalHints";
@@ -52,19 +51,20 @@ export const MyGoals = () => {
   return (
     <>
       <div className="myGoals-container">
-        {isSublist && <SubgoalLayout goals={filteredActiveGoals || []} />}
+        {isSublist && (
+          <SubgoalLayout
+            subgoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0}
+            parentGoal={parentGoal}
+          />
+        )}
         <div className="my-goals-content">
           <GoalsList goals={filteredActiveGoals || []} />
           {isSublist && <AvailableGoalHints hints={hints || []} />}
-          {!isDeletedGoalsLoading && (
-            <DeletedGoalProvider>
-              <DeletedGoals deletedGoals={deletedGoals || []} />
-            </DeletedGoalProvider>
-          )}
+          {!isDeletedGoalsLoading && <DeletedGoals deletedGoals={deletedGoals || []} />}
           {!isArchivedGoalsLoading && <ArchivedGoals goals={archivedGoals || []} />}
         </div>
 
-        <ZinZenBgImage />
+        <ZinZenBgImage activeGoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0} />
       </div>
       {/* {activeGoal && location.state?.actionModalType === ActionModal.ACTIVE && <GoalModals activeGoal={activeGoal} />} */}
       <Outlet />

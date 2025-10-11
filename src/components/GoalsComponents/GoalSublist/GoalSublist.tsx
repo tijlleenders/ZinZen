@@ -4,7 +4,6 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { searchQueryState } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
-import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
 import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import GoalItemSummary from "@components/GoalItemSummary/GoalItemSummary";
@@ -13,7 +12,8 @@ import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetSharedWMGoalsArchived } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalsArchived";
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
-import { useLocation, useParams } from "react-router-dom";
+import { Route } from "@src/routes/(mygoalRoutes)/goals.$parentId";
+import { useLocation, useParams } from "@tanstack/react-router";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import GoalsList from "../GoalsList";
@@ -22,8 +22,8 @@ import "./GoalSublist.scss";
 import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
 export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
-  const { parentId, partnerId } = useParams();
-  const { data: parentGoal } = useGetGoalById(parentId || "");
+  const { parentId } = Route.useParams();
+  const { data: parentGoal } = useGetGoalById(parentId);
   const [showConfig, setShowConfig] = useState(goals.length === 0);
   const { t } = useTranslation();
 
@@ -33,8 +33,8 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
 
   const { archivedGoals } = useGetArchivedGoals(parentId || "");
   const { deletedGoals } = useGetDeletedGoals(parentId || "");
-  const { partner } = useGetContactByPartnerId(partnerId || "");
-  const { data: archivedSharedWMGoals } = useGetSharedWMGoalsArchived(parentId || "", partner?.relId || "");
+  // const { partner } = useGetContactByPartnerId(partnerId || "");
+  // const { data: archivedSharedWMGoals } = useGetSharedWMGoalsArchived(parentId || "", partner?.relId || "");
 
   const handleToggleConfig = () => {
     setShowConfig(!showConfig);
@@ -76,10 +76,8 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
             )}
             <GoalsList goals={goals} />
             <AvailableGoalHints hints={hints || []} />
-            <DeletedGoalProvider>
-              <DeletedGoals deletedGoals={deletedGoals || []} />
-            </DeletedGoalProvider>
-            <ArchivedGoals goals={partnerId ? archivedSharedWMGoals || [] : archivedGoals || []} />
+            <DeletedGoals deletedGoals={deletedGoals || []} />
+            {/* <ArchivedGoals goals={partnerId ? archivedSharedWMGoals || [] : archivedGoals || []} /> */}
           </div>
         </div>
       </div>
