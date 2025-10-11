@@ -8,10 +8,7 @@ import { searchQueryState } from "@src/store/GoalsState";
 
 import GoalsList from "@components/GoalsComponents/GoalsList";
 
-import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
-import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
-import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
@@ -21,18 +18,23 @@ import { Route } from "@src/routes/(mygoalRoutes)/goals.$parentId";
 import ZinZenBgImage from "./ZinZenBgImage";
 import SubgoalLayout from "./SubgoalLayout";
 import AvailableGoalHints from "./components/AvailableGoalHints";
+import { GoalItem } from "@src/models/GoalItem";
+import { TrashItem } from "@src/models/TrashItem";
 
 // TODO: re-implement sorting priority goals
 
-export const MyGoals = () => {
+export const MyGoals = ({
+  activeGoals,
+  deletedGoals,
+  archivedGoals,
+}: {
+  activeGoals: GoalItem[];
+  deletedGoals: TrashItem[];
+  archivedGoals: GoalItem[];
+}) => {
   const { parentId } = Route.useParams();
-  const { activeGoals } = useGetActiveGoals(parentId);
   const searchQuery = useRecoilValue(searchQueryState);
 
-  // const isActiveGoalIdEmpty = activeGoalId === "";
-  // const { data: activeGoal } = useGetGoalById(activeGoalId || "", isActiveGoalIdEmpty);
-  const { archivedGoals, isLoading: isArchivedGoalsLoading } = useGetArchivedGoals(parentId);
-  const { deletedGoals, isLoading: isDeletedGoalsLoading } = useGetDeletedGoals(parentId);
   const { data: parentGoal } = useGetGoalById(parentId);
 
   const filteredActiveGoals = activeGoals?.filter((goal) =>
@@ -60,8 +62,8 @@ export const MyGoals = () => {
         <div className="my-goals-content">
           <GoalsList goals={filteredActiveGoals || []} />
           {isSublist && <AvailableGoalHints hints={hints || []} />}
-          {!isDeletedGoalsLoading && <DeletedGoals deletedGoals={deletedGoals || []} />}
-          {!isArchivedGoalsLoading && <ArchivedGoals goals={archivedGoals || []} />}
+          <DeletedGoals deletedGoals={deletedGoals || []} />
+          <ArchivedGoals goals={archivedGoals || []} />
         </div>
 
         <ZinZenBgImage activeGoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0} />

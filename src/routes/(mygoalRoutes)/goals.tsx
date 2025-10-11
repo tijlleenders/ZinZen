@@ -35,7 +35,7 @@ type Params = {
   mode: TGoalConfigMode;
 };
 
-export const Route = createFileRoute("/goals")({
+export const Route = createFileRoute("/(mygoalRoutes)/goals")({
   component: RouteComponent,
   validateSearch: (search: { type: TGoalCategory; mode: TGoalConfigMode }): Params => {
     return {
