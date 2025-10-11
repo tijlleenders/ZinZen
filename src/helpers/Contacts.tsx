@@ -1,13 +1,16 @@
 import { GoalIcon } from "@components/GoalsComponents/MyGoal/components/GoalIcon";
 import { ZItemContainer } from "@components/GoalsComponents/ZItemContainer";
-import { usePartnerContext } from "@src/contexts/partner-context";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import ContactItem from "@src/models/ContactItem";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 
 const Contacts = ({ contact }: { contact: ContactItem }) => {
   const navigate = useNavigate();
-  const { setCurrentPartnerInLocalStorage } = usePartnerContext();
+
+  const setCurrentPartnerInLocalStorage = (partnerId: string) => {
+    localStorage.setItem(LocalStorageKeys.CURRENT_PARTNER, partnerId);
+  };
 
   return (
     <ZItemContainer id={`contact-${contact.id}`} dataTestId={`contact-${contact.name}`}>
@@ -15,7 +18,7 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
         style={{ touchAction: "none" }}
         onClickCapture={(e) => {
           e.stopPropagation();
-          navigate(`/partners/${contact.id}/?showOptions=true`);
+          navigate({ to: `/partners/${contact.id}/?showOptions=true` });
         }}
       >
         <GoalIcon color="#007bff" showDottedBorder={false}>
@@ -28,7 +31,7 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
         data-testid={`contact-${contact.name}`}
         onClick={() => {
           setCurrentPartnerInLocalStorage(contact.id);
-          navigate(`/partners/${contact.id}/goals`);
+          navigate({ to: `/partners/${contact.id}/goals/root` });
         }}
       >
         {contact.name}

@@ -2,20 +2,20 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import ZModal from "@src/common/ZModal";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
-import { useNavigate, useParams } from "react-router-dom";
-import { usePartnerContext } from "@src/contexts/partner-context";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { displayToast } from "@src/store";
 import { useSetRecoilState } from "recoil";
 import { useDeleteContact } from "@src/hooks/api/Contacts/queries/useDeleteContact";
+import { useGetPartner } from "@src/hooks/api/Contacts/queries/useGetPartner";
 
 const ContactActionModal = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const setShowToast = useSetRecoilState(displayToast);
-  const { partnerId } = useParams();
+  const { partnerId } = useParams({ strict: false });
 
   const { deleteContactMutation } = useDeleteContact(partnerId ?? "");
-  const { partner: contact, isSuccess } = usePartnerContext();
+  const { partner: contact, isSuccess } = useGetPartner();
 
   const handleDeleteContact = async () => {
     try {
@@ -38,7 +38,7 @@ const ContactActionModal = () => {
   }
 
   const handleEditContactClick = () => {
-    navigate(`/partners/${partnerId}/?mode=edit`, { replace: true });
+    navigate({ to: `/partners/${partnerId}/?mode=edit`, replace: true });
   };
 
   return (
