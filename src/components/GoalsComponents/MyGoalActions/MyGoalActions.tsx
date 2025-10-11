@@ -1,6 +1,5 @@
 import React from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { useRecoilValue } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import { GoalItem } from "@src/models/GoalItem";
@@ -8,12 +7,10 @@ import { ILocationState } from "@src/Interfaces";
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
 import { GoalActionsModal } from "@components/GoalActionsModal";
-import { createGoalActions } from "@src/factories/goalActionsFactory";
-import { darkModeState } from "@src/store";
+import { createActiveGoalActions } from "@src/factories/goalActionsFactory";
 
 const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
   const navigate = useNavigate();
-  const darkMode = useRecoilValue(darkModeState);
   const { openEditMode, handleMove } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalMutation } = useDeleteGoal();
@@ -45,9 +42,8 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
     navigate({ to: `${pathname}?share=true`, state, replace: true });
   };
 
-  const actions = createGoalActions({
+  const actions = createActiveGoalActions({
     goal,
-    entityType: "active",
     handlers: {
       onDelete: handleDeleteGoal,
       onArchive: handleArchiveGoal,
@@ -56,7 +52,6 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
       onShare: handleShareGoal,
     },
     context: {
-      darkMode,
       confirmActionCategory,
     },
   });

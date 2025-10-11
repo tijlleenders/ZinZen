@@ -1,111 +1,112 @@
-import React from "react";
-import { Action, IGoalActionsConfig } from "@src/types/goalActions.types";
-import { unarchiveIcon } from "@src/assets";
+import { Action } from "@components/GoalActionsModal/GoalActionsModal";
+import { GoalItem } from "@src/models/GoalItem";
+import { TrashItem } from "@src/models/TrashItem";
+import { actionBuilders } from "./actionBuilders";
 
-export const createGoalActions = (config: IGoalActionsConfig): Action[] => {
-  const { entityType, handlers, context } = config;
-
-  const actionBuilders = {
-    delete: (): Action => ({
-      label: "Delete",
-      icon: "Delete",
-      onClick: handlers.onDelete!,
-      requiresConfirmation: true,
-      confirmationCategory: "goal",
-      confirmationAction: "delete",
-    }),
-
-    archive: (): Action => ({
-      label: "Done",
-      icon: "Correct",
-      onClick: handlers.onArchive!,
-      requiresConfirmation: true,
-      confirmationCategory: context?.confirmActionCategory || "goal",
-      confirmationAction: "archive",
-    }),
-
-    restore: (): Action => ({
-      label: "Restore",
-      icon: React.createElement("img", {
-        alt: "restore goal",
-        src: unarchiveIcon,
-        width: 24,
-        height: 25,
-        style: { filter: context?.darkMode ? "invert(1)" : "none" },
-      }),
-      onClick: handlers.onRestore!,
-      requiresConfirmation: true,
-      confirmationCategory: "goal",
-      confirmationAction: "restore",
-    }),
-
-    edit: (): Action => ({
-      label: "Edit",
-      icon: "Edit",
-      onClick: handlers.onEdit!,
-    }),
-
-    move: (): Action => ({
-      label: "Move",
-      icon: "Move",
-      onClick: handlers.onMove!,
-      requiresConfirmation: true,
-      confirmationCategory: "goal",
-      confirmationAction: "move",
-      dataTestId: "move-action",
-    }),
-
-    share: (): Action => ({
-      label: "Share",
-      icon: "SingleAvatar",
-      onClick: handlers.onShare!,
-      dataTestId: "share-action",
-    }),
-
-    report: (): Action => ({
-      label: "Report",
-      icon: React.createElement("img", {
-        alt: "report hint",
-        src: unarchiveIcon,
-        width: 24,
-        height: 25,
-        style: { filter: context?.darkMode ? "invert(1)" : "none" },
-      }),
-      onClick: handlers.onReport!,
-      loading: context?.isLoadingReport,
-      requiresConfirmation: true,
-      confirmationCategory: "goal",
-      confirmationAction: "reportHint",
-    }),
-
-    add: (): Action => ({
-      label: "Add",
-      icon: "Add",
-      onClick: handlers.onAdd!,
-      requiresConfirmation: true,
-      confirmationCategory: "goal",
-      confirmationAction: "addHint",
-    }),
-
-    deleteHint: (): Action => ({
-      label: "Delete",
-      icon: "Delete",
-      onClick: handlers.onDeleteHint!,
-      requiresConfirmation: true,
-      confirmationCategory: "goal",
-      confirmationAction: "deleteHint",
-    }),
+export const createActiveGoalActions = (config: {
+  goal: GoalItem;
+  handlers: {
+    onDelete: () => Promise<void> | void;
+    onArchive: () => Promise<void> | void;
+    onEdit: () => void;
+    onMove: () => Promise<void> | void;
+    onShare: () => void;
   };
-
-  const actionMap: Record<string, Array<keyof typeof actionBuilders>> = {
-    active: ["delete", "archive", "share", "edit", "move"],
-    archived: ["restore", "delete"],
-    deleted: ["restore", "delete"],
-    hint: ["deleteHint", "add", "report"],
-    "partner-active": ["edit"],
-    "partner-archived": ["restore"],
+  context?: {
+    confirmActionCategory?: "goal" | "collaboration";
   };
+}): Action[] => {
+  const { handlers, context } = config;
 
-  const actionsToCreate = actionMap[entityType] || [];
-  return actionsToCreate.map((actionKey) => actionBuilders[actionKey]());
+  return [
+    actionBuilders.delete(handlers.onDelete),
+    actionBuilders.archive(handlers.onArchive, context?.confirmActionCategory),
+    actionBuilders.share(handlers.onShare),
+    actionBuilders.edit(handlers.onEdit),
+    actionBuilders.move(handlers.onMove),
+  ];
+};
+
+export const createArchivedGoalActions = (config: {
+  goal: GoalItem;
+  handlers: {
+    onRestore: () => Promise<void> | void;
+    onDelete: () => Promise<void> | void;
+  };
+  context?: {
+    darkMode?: boolean;
+  };
+}): Action[] => {
+  const { handlers, context } = config;
+
+  return [actionBuilders.restore(handlers.onRestore, context?.darkMode), actionBuilders.delete(handlers.onDelete)];
+};
+
+export const createDeletedGoalActions = (config: {
+  goal: TrashItem;
+  handlers: {
+    onRestore: () => Promise<void> | void;
+    onDelete: () => Promise<void> | void;
+  };
+  context?: {
+    darkMode?: boolean;
+  };
+}): Action[] => {
+  const { handlers, context } = config;
+
+  return [actionBuilders.restore(handlers.onRestore, context?.darkMode), actionBuilders.delete(handlers.onDelete)];
+};
+
+export const createHintGoalActions = (config: {
+  goal: GoalItem;
+  handlers: {
+    onDeleteHint: () => Promise<void> | void;
+    onAdd: () => Promise<void> | void;
+    onReport: () => Promise<void> | void;
+  };
+  context?: {
+    darkMode?: boolean;
+    isLoadingReport?: boolean;
+  };
+}): Action[] => {
+  const { handlers, context } = config;
+
+  return [
+    actionBuilders.deleteHint(handlers.onDeleteHint),
+    actionBuilders.add(handlers.onAdd),
+    actionBuilders.report(handlers.onReport, context?.darkMode, context?.isLoadingReport),
+  ];
+};
+
+export const createPartnerActiveGoalActions = (config: {
+  goal: GoalItem;
+  handlers: {
+    onEdit: () => void;
+    onDelete: () => Promise<void> | void;
+    onCollaborate: () => Promise<void> | void;
+    onMove: () => Promise<void> | void;
+  };
+}): Action[] => {
+  const { handlers } = config;
+
+  return [
+    actionBuilders.delete(handlers.onDelete),
+    actionBuilders.collaborate(handlers.onCollaborate),
+    actionBuilders.edit(handlers.onEdit),
+    actionBuilders.move(handlers.onMove),
+  ];
+};
+
+export const createPartnerArchivedGoalActions = (config: {
+  goal: GoalItem;
+  handlers: {
+    onRestore: () => Promise<void> | void;
+  };
+  context?: {
+    darkMode?: boolean;
+  };
+}): Action[] => {
+  const { handlers, context } = config;
+
+  return [actionBuilders.restore(handlers.onRestore, context?.darkMode)];
 };

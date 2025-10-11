@@ -1,9 +1,7 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import useGoalStore from "@src/hooks/useGoalStore";
-import { createGoalActions } from "@src/factories/goalActionsFactory";
+import { createPartnerActiveGoalActions } from "@src/factories/goalActionsFactory";
 
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useConvertToNormalGoal } from "@src/hooks/api/SharedWMGoals/useConvertToNormalGoal";
@@ -14,7 +12,6 @@ interface PartnerGoalActionsProps {
 }
 
 const PartnerGoalActions: React.FC<PartnerGoalActionsProps> = ({ goal }) => {
-  const darkMode = useRecoilValue(darkModeState);
   const { deleteGoalMutation } = useDeleteGoal();
   const { convertToNormalGoal } = useConvertToNormalGoal();
   const { openEditMode, handleMove } = useGoalStore();
@@ -24,17 +21,13 @@ const PartnerGoalActions: React.FC<PartnerGoalActionsProps> = ({ goal }) => {
     window.history.back();
   };
 
-  const actions = createGoalActions({
+  const actions = createPartnerActiveGoalActions({
     goal,
-    entityType: "partner-active",
     handlers: {
       onEdit: () => openEditMode(goal),
       onDelete: () => deleteGoalMutation(goal),
       onCollaborate: () => convertToNormalGoal(goal),
       onMove: handleMoveGoal,
-    },
-    context: {
-      darkMode,
     },
   });
 

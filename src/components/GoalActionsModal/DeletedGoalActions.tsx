@@ -4,8 +4,9 @@ import { darkModeState } from "@src/store";
 import { TrashItem } from "@src/models/TrashItem";
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/mutations/useRestoreDeletedGoal";
+import { createDeletedGoalActions } from "@src/factories/goalActionsFactory";
+
 import GoalActionsModal from "./GoalActionsModal";
-import { createGoalActions } from "@src/factories/goalActionsFactory";
 
 interface DeletedGoalActionsProps {
   goal: TrashItem;
@@ -16,9 +17,8 @@ const DeletedGoalActions: React.FC<DeletedGoalActionsProps> = ({ goal }) => {
   const { restoreDeletedGoalMutation } = useRestoreDeletedGoal();
   const { deleteGoalMutation } = useDeleteGoal();
 
-  const actions = createGoalActions({
+  const actions = createDeletedGoalActions({
     goal,
-    entityType: "deleted",
     handlers: {
       onRestore: () => restoreDeletedGoalMutation({ goal }),
       onDelete: () => deleteGoalMutation(goal),

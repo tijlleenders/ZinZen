@@ -4,7 +4,7 @@ import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/mutations/useRestoreArchivedGoal";
-import { createGoalActions } from "@src/factories/goalActionsFactory";
+import { createArchivedGoalActions } from "@src/factories/goalActionsFactory";
 
 import GoalActionsModal from "./GoalActionsModal";
 
@@ -26,9 +26,8 @@ const ArchivedGoalActions: React.FC<ArchivedGoalActionsProps> = ({ goal }) => {
     window.history.back();
   };
 
-  const actions = createGoalActions({
+  const actions = createArchivedGoalActions({
     goal,
-    entityType: "archived",
     handlers: {
       onRestore: handleRestoreClick,
       onDelete: () => deleteGoalMutation(goal),

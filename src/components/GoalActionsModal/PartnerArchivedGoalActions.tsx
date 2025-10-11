@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/mutations/useRestoreArchivedGoal";
-import { createGoalActions } from "@src/factories/goalActionsFactory";
+import { createPartnerArchivedGoalActions } from "@src/factories/goalActionsFactory";
 
 import GoalActionsModal from "./GoalActionsModal";
 
@@ -24,9 +24,8 @@ const PartnerArchivedGoalActions: React.FC<PartnerArchivedGoalActionsProps> = ({
     window.history.back();
   };
 
-  const actions = createGoalActions({
+  const actions = createPartnerArchivedGoalActions({
     goal,
-    entityType: "partner-archived",
     handlers: {
       onRestore: handleRestoreClick,
     },

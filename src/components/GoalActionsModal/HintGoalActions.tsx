@@ -5,7 +5,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { useDeleteGoalHint } from "@src/hooks/api/Hints/mutations/useDeleteGoalHint";
 import { useReportGoalHints } from "@src/hooks/api/Hints/mutations/useReportGoalHints";
 import { useAddGoalHintsToMyGoal } from "@src/hooks/api/Hints/mutations/useAddGoalHintsToMyGoal";
-import { createGoalActions } from "@src/factories/goalActionsFactory";
+import { createHintGoalActions } from "@src/factories/goalActionsFactory";
 
 import GoalActionsModal from "./GoalActionsModal";
 
@@ -19,9 +19,8 @@ const HintGoalActions: React.FC<HintGoalActionsProps> = ({ goal }) => {
   const { reportGoalHint, isReportingGoalHint } = useReportGoalHints();
   const { addGoalHintToMyGoal } = useAddGoalHintsToMyGoal();
 
-  const actions = createGoalActions({
+  const actions = createHintGoalActions({
     goal,
-    entityType: "hint",
     handlers: {
       onDeleteHint: deleteGoalHint,
       onAdd: () => addGoalHintToMyGoal(goal),
