@@ -1,15 +1,16 @@
 import React from "react";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
-import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
+import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import PartnerGoalActions from "@components/GoalsComponents/MyGoalActions/PartnerGoalActions";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
 import Participants from "@components/GoalsComponents/Participants";
-import { useSearch } from "@tanstack/react-router";
-import { Route } from "@src/routes/goals.$parentId.$activeGoalId";
-import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import { useParams, useSearch } from "@tanstack/react-router";
+import { GoalItem } from "@src/models/GoalItem";
 
-const GoalModals = () => {
-  const { activeGoalId } = Route.useParams();
-  const { data: activeGoal } = useGetGoalById(activeGoalId);
+const GoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
+  const { partnerId } = useParams({ strict: false });
+  const isPartnerModeActive = !!partnerId;
+
   const search = useSearch({ strict: false }) as {
     share?: string;
     showOptions?: string;
@@ -23,7 +24,8 @@ const GoalModals = () => {
 
   return (
     <>
-      {showOptions && <RegularGoalActions goal={activeGoal} />}
+      {showOptions &&
+        (isPartnerModeActive ? <PartnerGoalActions goal={activeGoal} /> : <MyGoalActions goal={activeGoal} />)}
       {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
       {showParticipants && <Participants />}
       {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}

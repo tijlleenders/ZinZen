@@ -1,79 +1,61 @@
 import MyGoal, { ActionModal } from "@components/GoalsComponents/MyGoal/MyGoal";
-import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
-import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
-import ZModal from "@src/common/ZModal";
 import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { useLocation, useParams, useSearch } from "@tanstack/react-router";
+import { Outlet, useParams, useSearch } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
+import { unarchiveIcon } from "@src/assets";
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/mutations/useRestoreDeletedGoal";
-import { useGetDeletedGoalById } from "@src/hooks/api/Goals/queries/useGetDeletedGoalById";
+import { GoalActionsModal, Action } from "@components/GoalActionsModal";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
   const { restoreDeletedGoalMutation } = useRestoreDeletedGoal();
   const { deleteGoalMutation } = useDeleteGoal();
-  const { t } = useTranslation();
 
-  return (
-    <ZModal open width={400} type="interactables-modal">
-      <div style={{ textAlign: "left" }} className="header-title">
-        <p className="ordinary-element" id="title-field">
-          {t(`${goal.title}`)}
-        </p>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
-          onClick={async (e) => {
-            e.stopPropagation();
-            await restoreDeletedGoalMutation({ goal });
-          }}
-        >
-          <ActionDiv
-            label={t("Restore")}
-            icon={
-              <img
-                alt="archived goal"
-                src={unarchiveIcon}
-                width={24}
-                height={25}
-                style={{ filter: darkMode ? "invert(1)" : "none" }}
-              />
-            }
-          />
-        </button>
+  const actions: Action[] = [
+    {
+      label: "Restore",
+      icon: (
+        <img
+          alt="archived goal"
+          src={unarchiveIcon}
+          width={24}
+          height={25}
+          style={{ filter: darkMode ? "invert(1)" : "none" }}
+        />
+      ),
+      onClick: () => restoreDeletedGoalMutation({ goal }),
+      requiresConfirmation: true,
+      confirmationCategory: "goal",
+      confirmationAction: "restore",
+    },
+    {
+      label: "Delete",
+      icon: "Delete",
+      onClick: () => deleteGoalMutation(goal),
+      requiresConfirmation: true,
+      confirmationCategory: "goal",
+      confirmationAction: "delete",
+    },
+  ];
 
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
-          onClick={async () => {
-            await deleteGoalMutation(goal);
-          }}
-        >
-          <ActionDiv label={t("Delete")} icon="Delete" />
-        </button>
-      </div>
-    </ZModal>
-  );
+  return <GoalActionsModal goal={goal} actions={actions} />;
 };
 
 const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const { showOptions } = useSearch({ strict: false }) as { showOptions: string };
   const { activeGoalId } = useParams({ strict: false });
-  const { data: deletedGoal } = useGetDeletedGoalById(activeGoalId);
-  const location = useLocation();
 
-  const showOptionsResult = !!showOptions && deletedGoal && location.state?.actionModalType === ActionModal.DELETED;
+  const deletedGoal = deletedGoals?.find((goal) => goal.id === activeGoalId);
+  const showOptionsResult = !!showOptions && deletedGoal;
 
   return (
     <div className="archived-drawer">
+      <Outlet />
       {showOptionsResult && <Actions goal={deletedGoal} />}
       {deletedGoals.length > 0 && (
         <ZAccordion
@@ -85,7 +67,7 @@ const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
           panels={[
             {
               header: "Trash",
-              body: deletedGoals.map(({ deletedAt: _, ...goal }) => (
+              body: deletedGoals.map(({ deletedAt: _deletedAt, ...goal }) => (
                 <MyGoal
                   key={`goal-${goal.id}`}
                   goal={{ ...goal, impossible: false }}
