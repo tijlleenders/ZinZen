@@ -1,15 +1,19 @@
 import React from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useRecoilValue } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import { GoalItem } from "@src/models/GoalItem";
 import { ILocationState } from "@src/Interfaces";
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
-import { GoalActionsModal, Action } from "@components/GoalActionsModal";
+import { GoalActionsModal } from "@components/GoalActionsModal";
+import { createGoalActions } from "@src/factories/goalActionsFactory";
+import { darkModeState } from "@src/store";
 
 const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
   const navigate = useNavigate();
+  const darkMode = useRecoilValue(darkModeState);
   const { openEditMode, handleMove } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalMutation } = useDeleteGoal();
@@ -41,41 +45,21 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
     navigate({ to: `${pathname}?share=true`, state, replace: true });
   };
 
-  const actions: Action[] = [
-    {
-      label: "Delete",
-      icon: "Delete",
-      onClick: handleDeleteGoal,
+  const actions = createGoalActions({
+    goal,
+    entityType: "active",
+    handlers: {
+      onDelete: handleDeleteGoal,
+      onArchive: handleArchiveGoal,
+      onEdit: () => openEditMode(goal),
+      onMove: handleMoveGoal,
+      onShare: handleShareGoal,
     },
-    {
-      label: "Done",
-      icon: "Correct",
-      onClick: handleArchiveGoal,
-      requiresConfirmation: true,
-      confirmationCategory: confirmActionCategory,
-      confirmationAction: "archive",
+    context: {
+      darkMode,
+      confirmActionCategory,
     },
-    {
-      label: "Share",
-      icon: "SingleAvatar",
-      onClick: handleShareGoal,
-      dataTestId: "share-action",
-    },
-    {
-      label: "Edit",
-      icon: "Edit",
-      onClick: () => openEditMode(goal),
-    },
-    {
-      label: "Move",
-      icon: "Move",
-      onClick: handleMoveGoal,
-      requiresConfirmation: true,
-      confirmationCategory: "goal",
-      confirmationAction: "move",
-      dataTestId: "move-action",
-    },
-  ];
+  });
 
   return <GoalActionsModal goal={goal} actions={actions} showSummary onHeaderClick={() => openEditMode(goal)} />;
 };
