@@ -27,4 +27,4 @@ const HintToggle = ({
   );
 };
 
-export default HintToggle;
+export default React.memo(HintToggle);

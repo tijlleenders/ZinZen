@@ -5,7 +5,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { displayToast } from "@src/store";
 import { useMutation, useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@tanstack/react-router";
 import { ILocationState } from "@src/Interfaces";
 
 type ArchiveGoalParams = {

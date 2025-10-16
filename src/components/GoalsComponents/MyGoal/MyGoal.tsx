@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactNode, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { isGoalCode } from "@src/utils/patterns";
 import NotificationSymbol from "@src/common/NotificationSymbol";
@@ -21,6 +21,7 @@ export enum ActionModal {
   ACTIVE = "active",
   DELETED = "deleted",
   ARCHIVED = "archived",
+  HINTS = "hints",
 }
 
 interface MyGoalProps {
@@ -39,7 +40,7 @@ const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, 
 };
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, actionModal = ActionModal.ACTIVE }) => {
-  const { parentId = "root", partnerId } = useParams();
+  const { parentId = "root", partnerId } = useParams({ strict: false });
   const isPartnerModeActive = !!partnerId;
   const { copyCode } = useGoalActions();
   const goalToMove = useRecoilValue(moveGoalState);
@@ -52,9 +53,12 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, ac
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     if (isDropdown) {
       const searchparam = goal.newUpdates ? "showNewChanges" : "showOptions";
-      navigate(`${prefix}/${parentId}/${goal.id}?${searchparam}=true`, { state: { ...state, actionModalType } });
+      navigate({
+        to: `${prefix}/${parentId}/${goal.id}?${searchparam}=${actionModalType}`,
+        state: { ...state, actionModalType },
+      });
     } else {
-      navigate(`${prefix}/${goal.id}`, { state });
+      navigate({ to: `${prefix}/${goal.id}`, state });
     }
   };
 

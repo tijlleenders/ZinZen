@@ -2,12 +2,12 @@ import React from "react";
 import Icon from "@src/common/Icon";
 import { GoalItem } from "@src/models/GoalItem";
 import { getSvgForGoalPps } from "@src/utils";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 
 const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { partnerId } = useParams();
+  const { partnerId } = useParams({ strict: false });
 
   const { goalColor } = goal;
   const participantsSvg = getSvgForGoalPps(goal.participants.length);
@@ -24,7 +24,7 @@ const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
         }}
         onClick={() => {
           const prefix = `${partnerId ? `/partners/${partnerId}/` : "/"}goals`;
-          navigate(`${prefix}/${goal.parentGoalId}/${goal.id}?showParticipants=true`, { state: location.state });
+          navigate({ to: `${prefix}/${goal.parentGoalId}/${goal.id}?showParticipants=true`, state: location.state });
         }}
       >
         <Icon active title={participantsSvg} c1={goalColor} c2={goalColor} />

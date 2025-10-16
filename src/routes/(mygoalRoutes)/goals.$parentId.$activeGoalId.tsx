@@ -17,7 +17,6 @@ const GoalsParentActiveComponent = () => {
   const { data: deletedGoal } = useGetDeletedGoalById(activeGoalId || "", showOptions !== "deleted");
 
   const goal = showOptions === "deleted" ? deletedGoal : activeGoal;
-
   if (!goal) {
     return null;
   }
@@ -33,11 +32,9 @@ const GoalsParentActiveComponent = () => {
   if (showOptions === "hints" && activeGoal) {
     return <HintGoalActions goal={activeGoal} />;
   }
-
   if (activeGoal) {
     return <GoalModals activeGoal={activeGoal} />;
   }
-
   return null;
 };
 

@@ -17,7 +17,7 @@ test.describe("Config Goal UI", () => {
     await titleInputContainer.fill(testGoalTitle);
     await titleInputContainer.press("Enter");
 
-    const myGoalContainer = page.locator(".myGoals-container");
+    const myGoalContainer = page.locator(".goals-container");
     await expect(myGoalContainer).toContainText(testGoalTitle);
   });
 
@@ -33,7 +33,7 @@ test.describe("Config Goal UI", () => {
     await titleInputContainer.fill(testBudgetTitle);
     await titleInputContainer.press("Enter");
 
-    const myGoalContainer = page.locator(".myGoals-container");
+    const myGoalContainer = page.locator(".goals-container");
     await expect(myGoalContainer).toContainText(testBudgetTitle);
   });
 });

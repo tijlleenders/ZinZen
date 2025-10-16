@@ -1,13 +1,14 @@
 import React from "react";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
-import PartnerGoalActions from "@components/GoalsComponents/MyGoalActions/PartnerGoalActions";
+
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
 import Participants from "@components/GoalsComponents/Participants";
 import { useParams, useSearch } from "@tanstack/react-router";
 import { GoalItem } from "@src/models/GoalItem";
+import { PartnerGoalActions } from "@components/GoalActionsModal";
 
-const GoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
+const MyGoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
   const { partnerId } = useParams({ strict: false });
   const isPartnerModeActive = !!partnerId;
 
@@ -18,7 +19,7 @@ const GoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
     showNewChanges?: string;
   };
   const showShareModal = search.share;
-  const showOptions = search.showOptions && activeGoal && activeGoal.archived === "false";
+  const showOptions = search.showOptions === "active" && activeGoal && activeGoal.archived === "false";
 
   const { showParticipants, showNewChanges } = search;
 
@@ -33,4 +34,4 @@ const GoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
   );
 };
 
-export default GoalModals;
+export default MyGoalModals;

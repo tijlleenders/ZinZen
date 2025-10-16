@@ -8,18 +8,19 @@ import { searchQueryState } from "@src/store/GoalsState";
 
 import GoalsList from "@components/GoalsComponents/GoalsList";
 
+import { TrashItem } from "@src/models/TrashItem";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import { Route } from "@src/routes/(mygoalRoutes)/goals.$parentId";
+import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
-import { Route } from "@src/routes/(mygoalRoutes)/goals.$parentId";
 import ZinZenBgImage from "./ZinZenBgImage";
 import SubgoalLayout from "./SubgoalLayout";
 import AvailableGoalHints from "./components/AvailableGoalHints";
-import { GoalItem } from "@src/models/GoalItem";
-import { TrashItem } from "@src/models/TrashItem";
+import "./MyGoals.scss";
 
 // TODO: re-implement sorting priority goals
 
@@ -52,7 +53,7 @@ export const MyGoals = ({
 
   return (
     <>
-      <div className="myGoals-container">
+      <div className="goals-container">
         {isSublist && (
           <SubgoalLayout
             subgoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0}
@@ -68,7 +69,6 @@ export const MyGoals = ({
 
         <ZinZenBgImage activeGoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0} />
       </div>
-      {/* {activeGoal && location.state?.actionModalType === ActionModal.ACTIVE && <GoalModals activeGoal={activeGoal} />} */}
       <Outlet />
     </>
   );

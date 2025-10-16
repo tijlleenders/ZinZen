@@ -1,0 +1,11 @@
+.goals-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .my-goals-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}

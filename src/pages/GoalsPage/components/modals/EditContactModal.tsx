@@ -7,8 +7,8 @@ import ZModal from "@src/common/ZModal";
 import { displayToast } from "@src/store";
 import useVirtualKeyboardOpen from "@src/hooks/useVirtualKeyBoardOpen";
 import useOnScreenKeyboardScrollFix from "@src/hooks/useOnScreenKeyboardScrollFix";
-import { useNavigate, useParams } from "react-router-dom";
-import { usePartnerContext } from "@src/contexts/partner-context";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import { useGetPartner } from "@src/hooks/api/Contacts/queries/useGetPartner";
 import { useUpdateContact } from "@src/hooks/api/Contacts/mutations/useUpdateContact";
 import DefaultButton from "@src/common/DefaultButton";
 
@@ -17,8 +17,8 @@ const EditContactModal = () => {
   const navigate = useNavigate();
   const setShowToast = useSetRecoilState(displayToast);
 
-  const { partnerId } = useParams();
-  const { partner: contact } = usePartnerContext();
+  const { partnerId } = useParams({ strict: false });
+  const { partner: contact } = useGetPartner();
 
   const { updateContactMutation, isLoading } = useUpdateContact();
 
@@ -55,7 +55,7 @@ const EditContactModal = () => {
     } catch (err) {
       console.error("Error updating contact", err);
     } finally {
-      navigate("/partners");
+      navigate({ to: "/partners" });
     }
   };
 
@@ -67,7 +67,7 @@ const EditContactModal = () => {
         transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
         transition: "transform 0.3s ease-in-out",
       }}
-      onCancel={() => navigate("/partners")}
+      onCancel={() => navigate({ to: "/partners" })}
     >
       <p className="popupModal-title">Edit contact name</p>
       <input

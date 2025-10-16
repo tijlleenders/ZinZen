@@ -11,6 +11,7 @@ import { displayConfirmation } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { TrashItem } from "@src/models/TrashItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
+import "@components/GoalsComponents/MyGoalActions/MyGoalActions.scss";
 
 export interface Action {
   label: string;

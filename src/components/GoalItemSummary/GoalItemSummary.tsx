@@ -16,7 +16,6 @@ export interface GoalItemSummaryProps {
 
 const GoalItemSummary = ({ goal, variant = "default", className = "", onClick }: GoalItemSummaryProps) => {
   const isBudget = goal.timeBudget !== undefined;
-
   return (
     <button
       className={getVariantClassName("goal-item-summary-wrapper", variant, className)}

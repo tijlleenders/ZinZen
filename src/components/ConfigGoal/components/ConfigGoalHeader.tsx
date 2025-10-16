@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { ILocationState } from "@src/Interfaces";
@@ -30,8 +30,7 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
   const { t } = useTranslation();
   const { openEditMode } = useGoalStore();
 
-  const [searchParams] = useSearchParams();
-  const type = searchParams.get("type");
+  const { type } = useSearch({ strict: false }) as { type?: string };
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -61,7 +60,8 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
               },
             ];
 
-      navigate(".", {
+      navigate({
+        to: ".",
         replace: true,
         state: {
           goalsHistory: updatedGoalsHistory,

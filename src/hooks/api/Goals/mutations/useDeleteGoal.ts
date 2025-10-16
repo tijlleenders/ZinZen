@@ -6,14 +6,14 @@ import { displayToast } from "@src/store";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { ILocationState } from "@src/Interfaces";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "@tanstack/react-router";
 import { sendFinalUpdateOnGoal } from "@src/controllers/PubSubController";
 
 const pageCrumpleSound = new Audio(pageCrumplingSound);
 
 export const useDeleteGoal = () => {
   const queryClient = useQueryClient();
-  const { partnerId } = useParams();
+  const { partnerId } = useParams({ strict: false });
   const setShowToast = useSetRecoilState(displayToast);
   const { state }: { state: ILocationState } = useLocation();
   const subGoalsHistory = state?.goalsHistory || [];
