@@ -7,18 +7,29 @@ import GoalModals from "@pages/GoalsPage/GoalModals";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetDeletedGoalById } from "@src/hooks/api/Goals/queries/useGetDeletedGoalById";
 import { DeletedGoalActions, ArchivedGoalActions, HintGoalActions } from "@components/GoalActionsModal";
+import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
+import { TGoalCategory } from "@src/models/GoalItem";
 
 type ShowOptionsType = "active" | "archived" | "deleted" | "hints";
 
 const GoalsParentActiveComponent = () => {
   const { activeGoalId } = useParams({ strict: false }) as { activeGoalId?: string };
-  const { showOptions } = useSearch({ strict: false }) as { showOptions?: ShowOptionsType };
+  const { showOptions, type, mode } = useSearch({ strict: false }) as {
+    showOptions?: ShowOptionsType;
+    type?: TGoalCategory;
+    mode?: string;
+  };
   const { data: activeGoal } = useGetGoalById(activeGoalId || "", showOptions === "deleted");
   const { data: deletedGoal } = useGetDeletedGoalById(activeGoalId || "", showOptions !== "deleted");
 
   const goal = showOptions === "deleted" ? deletedGoal : activeGoal;
+
   if (!goal) {
     return null;
+  }
+
+  if (mode === "edit" && type) {
+    return <ConfigGoal key={`edit-${activeGoalId}`} type={type} goal={goal} mode="edit" />;
   }
 
   if (showOptions === "deleted" && deletedGoal) {
