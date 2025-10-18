@@ -2,7 +2,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 
 import { darkModeState } from "@src/store";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
@@ -22,7 +22,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const goalToMove = useRecoilValue(moveGoalState);
-  const { partnerId } = useParams();
+  const { partnerId } = useParams({ strict: false }) as { partnerId?: string };
   const isPartnerModeActive = !!partnerId;
 
   const themeSelection = useRecoilValue(themeSelectionMode);
@@ -55,22 +55,28 @@ const BottomNavbar = ({ title }: { title: string }) => {
     } else {
       const newLocationState = { ...location.state, from: currentPage, displayFocus: false };
       if (to === "MyTime") {
-        if (currentPage !== "") navigate("/", { state: newLocationState });
+        if (currentPage !== "") navigate({ to: "/", state: newLocationState });
       } else if (to === "goals") {
         if (currentPage !== "goals") {
-          navigate("/goals", { state: newLocationState });
+          navigate({
+            to: "/goals/$parentId",
+            params: { parentId: "root" },
+            state: newLocationState,
+          });
         } else if (subGoalHistory.length > 0) {
           window.history.go(-subGoalHistory.length);
         }
       } else if (currentPage !== "MyJournal") {
-        navigate("/MyJournal", { state: newLocationState });
+        navigate({ to: "/MyJournal", state: newLocationState });
       }
     }
   };
 
   const { activeGoalId } = location.state || {};
+
   const isAddBtnVisible =
     title !== "Focus" && title !== PageTitle.Contacts && (isPartnerModeActive ? !!activeGoalId || goalToMove : true);
+
   return (
     <>
       {themeSelection && (

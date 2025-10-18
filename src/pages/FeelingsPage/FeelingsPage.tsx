@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { message } from "antd";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 import React, { useEffect, useRef } from "react";
 import { useInfiniteQuery, useQueryClient } from "react-query";
@@ -69,9 +69,9 @@ export const FeelingsPage = () => {
       {status === "loading" && <LoadingContainer />}
       <div>{data && renderFeelings(data.pages.flatMap((page) => page.feelings))}</div>
       <div ref={loadMoreRef} />
-      {displayNoteModal >= 0 && (
+      {displayNoteModal && !!displayNoteModal && (
         <NoteModal
-          open={displayNoteModal}
+          open={!!displayNoteModal}
           defaultValue={note}
           saveNote={async (newNote = "") => {
             await updateFeeling(displayNoteModal, { note: newNote });

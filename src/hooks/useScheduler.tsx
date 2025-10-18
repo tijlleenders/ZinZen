@@ -108,7 +108,6 @@ function useScheduler() {
 
       return processSchedulerResult(res, newGeneratedInputId, cachedRes.code);
     },
-    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   const { mutateAsync: checkGoalScheduleMutation, isLoading: isCheckingGoalSchedule } = useMutation({

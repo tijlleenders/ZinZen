@@ -2,7 +2,7 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import { useQueryClient } from "react-query";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 
 import { IFeelingItem } from "@src/models";
 import { darkModeState } from "@src/store";
@@ -30,16 +30,8 @@ const Feeling = ({ data }: { data: IFeelingItem }) => {
   const darkMode = useRecoilValue(darkModeState);
 
   const handleJournalClick = () => {
-    navigate("/MyJournal", {
-      state: {
-        ...location.state,
-        feelingDate: date,
-        displayNoteModal: id,
-        note,
-      },
-    });
+    navigate({ to: "/MyJournal", state: { ...location.state, displayNoteModal: id, note } });
   };
-
   return (
     <button
       type="button"
