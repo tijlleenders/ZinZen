@@ -10,6 +10,7 @@ export const useGetSharedWMGoalById = (id: string) => {
   } = useQuery({
     queryKey: SHARED_WM_GOAL_QUERY_KEYS.detail(id),
     queryFn: () => getSharedWMGoalById(id),
+    enabled: !!id,
   });
 
   return { sharedWMGoal, isLoading, error };

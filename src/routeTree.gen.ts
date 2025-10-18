@@ -8,354 +8,442 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as MyJournalRouteImport } from "./routes/MyJournal";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as PartnersIndexRouteImport } from "./routes/partners.index";
-import { Route as InviteIdRouteImport } from "./routes/invite.$id";
-import { Route as mygoalRoutesGoalsRouteImport } from "./routes/(mygoalRoutes)/goals";
-import { Route as basicRoutesZinzenfaqRouteImport } from "./routes/(basicRoutes)/zinzenfaq";
-import { Route as basicRoutesInvestRouteImport } from "./routes/(basicRoutes)/invest";
-import { Route as basicRoutesFeedbackRouteImport } from "./routes/(basicRoutes)/feedback";
-import { Route as basicRoutesDonateRouteImport } from "./routes/(basicRoutes)/donate";
-import { Route as PartnersPartnerIdGoalsRouteImport } from "./routes/partners.$partnerId.goals";
-import { Route as mygoalRoutesGoalsParentIdRouteImport } from "./routes/(mygoalRoutes)/goals.$parentId";
-import { Route as PartnersPartnerIdGoalsParentIdRouteImport } from "./routes/partners.$partnerId.goals.$parentId";
-import { Route as mygoalRoutesGoalsParentIdActiveGoalIdRouteImport } from "./routes/(mygoalRoutes)/goals.$parentId.$activeGoalId";
-import { Route as PartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport } from "./routes/partners.$partnerId.goals.$parentId.$activeGoalId";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as MyJournalRouteImport } from './routes/MyJournal'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as InviteIdRouteImport } from './routes/invite.$id'
+import { Route as partnerGoalRoutesPartnersRouteImport } from './routes/(partnerGoalRoutes)/partners'
+import { Route as mygoalRoutesGoalsRouteImport } from './routes/(mygoalRoutes)/goals'
+import { Route as basicRoutesZinzenfaqRouteImport } from './routes/(basicRoutes)/zinzenfaq'
+import { Route as basicRoutesInvestRouteImport } from './routes/(basicRoutes)/invest'
+import { Route as basicRoutesFeedbackRouteImport } from './routes/(basicRoutes)/feedback'
+import { Route as basicRoutesDonateRouteImport } from './routes/(basicRoutes)/donate'
+import { Route as partnerGoalRoutesPartnersIndexRouteImport } from './routes/(partnerGoalRoutes)/partners.index'
+import { Route as partnerGoalRoutesPartnersPartnerIdRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId'
+import { Route as mygoalRoutesGoalsParentIdRouteImport } from './routes/(mygoalRoutes)/goals.$parentId'
+import { Route as partnerGoalRoutesPartnersPartnerIdGoalsRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId.goals'
+import { Route as mygoalRoutesGoalsParentIdActiveGoalIdRouteImport } from './routes/(mygoalRoutes)/goals.$parentId.$activeGoalId'
+import { Route as partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId.goals.$parentId'
+import { Route as partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId.goals.$parentId.$activeGoalId'
 
 const MyJournalRoute = MyJournalRouteImport.update({
-  id: "/MyJournal",
-  path: "/MyJournal",
+  id: '/MyJournal',
+  path: '/MyJournal',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
-const PartnersIndexRoute = PartnersIndexRouteImport.update({
-  id: "/partners/",
-  path: "/partners/",
-  getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const InviteIdRoute = InviteIdRouteImport.update({
-  id: "/invite/$id",
-  path: "/invite/$id",
+  id: '/invite/$id',
+  path: '/invite/$id',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
+const partnerGoalRoutesPartnersRoute =
+  partnerGoalRoutesPartnersRouteImport.update({
+    id: '/(partnerGoalRoutes)/partners',
+    path: '/partners',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const mygoalRoutesGoalsRoute = mygoalRoutesGoalsRouteImport.update({
-  id: "/(mygoalRoutes)/goals",
-  path: "/goals",
+  id: '/(mygoalRoutes)/goals',
+  path: '/goals',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const basicRoutesZinzenfaqRoute = basicRoutesZinzenfaqRouteImport.update({
-  id: "/(basicRoutes)/zinzenfaq",
-  path: "/zinzenfaq",
+  id: '/(basicRoutes)/zinzenfaq',
+  path: '/zinzenfaq',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const basicRoutesInvestRoute = basicRoutesInvestRouteImport.update({
-  id: "/(basicRoutes)/invest",
-  path: "/invest",
+  id: '/(basicRoutes)/invest',
+  path: '/invest',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const basicRoutesFeedbackRoute = basicRoutesFeedbackRouteImport.update({
-  id: "/(basicRoutes)/feedback",
-  path: "/feedback",
+  id: '/(basicRoutes)/feedback',
+  path: '/feedback',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const basicRoutesDonateRoute = basicRoutesDonateRouteImport.update({
-  id: "/(basicRoutes)/donate",
-  path: "/donate",
+  id: '/(basicRoutes)/donate',
+  path: '/donate',
   getParentRoute: () => rootRouteImport,
-} as any);
-const PartnersPartnerIdGoalsRoute = PartnersPartnerIdGoalsRouteImport.update({
-  id: "/partners/$partnerId/goals",
-  path: "/partners/$partnerId/goals",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const mygoalRoutesGoalsParentIdRoute = mygoalRoutesGoalsParentIdRouteImport.update({
-  id: "/$parentId",
-  path: "/$parentId",
-  getParentRoute: () => mygoalRoutesGoalsRoute,
-} as any);
-const PartnersPartnerIdGoalsParentIdRoute = PartnersPartnerIdGoalsParentIdRouteImport.update({
-  id: "/$parentId",
-  path: "/$parentId",
-  getParentRoute: () => PartnersPartnerIdGoalsRoute,
-} as any);
-const mygoalRoutesGoalsParentIdActiveGoalIdRoute = mygoalRoutesGoalsParentIdActiveGoalIdRouteImport.update({
-  id: "/$activeGoalId",
-  path: "/$activeGoalId",
-  getParentRoute: () => mygoalRoutesGoalsParentIdRoute,
-} as any);
-const PartnersPartnerIdGoalsParentIdActiveGoalIdRoute = PartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport.update({
-  id: "/$activeGoalId",
-  path: "/$activeGoalId",
-  getParentRoute: () => PartnersPartnerIdGoalsParentIdRoute,
-} as any);
+} as any)
+const partnerGoalRoutesPartnersIndexRoute =
+  partnerGoalRoutesPartnersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => partnerGoalRoutesPartnersRoute,
+  } as any)
+const partnerGoalRoutesPartnersPartnerIdRoute =
+  partnerGoalRoutesPartnersPartnerIdRouteImport.update({
+    id: '/$partnerId',
+    path: '/$partnerId',
+    getParentRoute: () => partnerGoalRoutesPartnersRoute,
+  } as any)
+const mygoalRoutesGoalsParentIdRoute =
+  mygoalRoutesGoalsParentIdRouteImport.update({
+    id: '/$parentId',
+    path: '/$parentId',
+    getParentRoute: () => mygoalRoutesGoalsRoute,
+  } as any)
+const partnerGoalRoutesPartnersPartnerIdGoalsRoute =
+  partnerGoalRoutesPartnersPartnerIdGoalsRouteImport.update({
+    id: '/goals',
+    path: '/goals',
+    getParentRoute: () => partnerGoalRoutesPartnersPartnerIdRoute,
+  } as any)
+const mygoalRoutesGoalsParentIdActiveGoalIdRoute =
+  mygoalRoutesGoalsParentIdActiveGoalIdRouteImport.update({
+    id: '/$activeGoalId',
+    path: '/$activeGoalId',
+    getParentRoute: () => mygoalRoutesGoalsParentIdRoute,
+  } as any)
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute =
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteImport.update({
+    id: '/$parentId',
+    path: '/$parentId',
+    getParentRoute: () => partnerGoalRoutesPartnersPartnerIdGoalsRoute,
+  } as any)
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute =
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport.update(
+    {
+      id: '/$activeGoalId',
+      path: '/$activeGoalId',
+      getParentRoute: () =>
+        partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/MyJournal": typeof MyJournalRoute;
-  "/donate": typeof basicRoutesDonateRoute;
-  "/feedback": typeof basicRoutesFeedbackRoute;
-  "/invest": typeof basicRoutesInvestRoute;
-  "/zinzenfaq": typeof basicRoutesZinzenfaqRoute;
-  "/goals": typeof mygoalRoutesGoalsRouteWithChildren;
-  "/invite/$id": typeof InviteIdRoute;
-  "/partners": typeof PartnersIndexRoute;
-  "/goals/$parentId": typeof mygoalRoutesGoalsParentIdRouteWithChildren;
-  "/partners/$partnerId/goals": typeof PartnersPartnerIdGoalsRouteWithChildren;
-  "/goals/$parentId/$activeGoalId": typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute;
-  "/partners/$partnerId/goals/$parentId": typeof PartnersPartnerIdGoalsParentIdRouteWithChildren;
-  "/partners/$partnerId/goals/$parentId/$activeGoalId": typeof PartnersPartnerIdGoalsParentIdActiveGoalIdRoute;
+  '/': typeof IndexRoute
+  '/MyJournal': typeof MyJournalRoute
+  '/donate': typeof basicRoutesDonateRoute
+  '/feedback': typeof basicRoutesFeedbackRoute
+  '/invest': typeof basicRoutesInvestRoute
+  '/zinzenfaq': typeof basicRoutesZinzenfaqRoute
+  '/goals': typeof mygoalRoutesGoalsRouteWithChildren
+  '/partners': typeof partnerGoalRoutesPartnersRouteWithChildren
+  '/invite/$id': typeof InviteIdRoute
+  '/goals/$parentId': typeof mygoalRoutesGoalsParentIdRouteWithChildren
+  '/partners/$partnerId': typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  '/partners/': typeof partnerGoalRoutesPartnersIndexRoute
+  '/goals/$parentId/$activeGoalId': typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute
+  '/partners/$partnerId/goals': typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+  '/partners/$partnerId/goals/$parentId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+  '/partners/$partnerId/goals/$parentId/$activeGoalId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/MyJournal": typeof MyJournalRoute;
-  "/donate": typeof basicRoutesDonateRoute;
-  "/feedback": typeof basicRoutesFeedbackRoute;
-  "/invest": typeof basicRoutesInvestRoute;
-  "/zinzenfaq": typeof basicRoutesZinzenfaqRoute;
-  "/goals": typeof mygoalRoutesGoalsRouteWithChildren;
-  "/invite/$id": typeof InviteIdRoute;
-  "/partners": typeof PartnersIndexRoute;
-  "/goals/$parentId": typeof mygoalRoutesGoalsParentIdRouteWithChildren;
-  "/partners/$partnerId/goals": typeof PartnersPartnerIdGoalsRouteWithChildren;
-  "/goals/$parentId/$activeGoalId": typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute;
-  "/partners/$partnerId/goals/$parentId": typeof PartnersPartnerIdGoalsParentIdRouteWithChildren;
-  "/partners/$partnerId/goals/$parentId/$activeGoalId": typeof PartnersPartnerIdGoalsParentIdActiveGoalIdRoute;
+  '/': typeof IndexRoute
+  '/MyJournal': typeof MyJournalRoute
+  '/donate': typeof basicRoutesDonateRoute
+  '/feedback': typeof basicRoutesFeedbackRoute
+  '/invest': typeof basicRoutesInvestRoute
+  '/zinzenfaq': typeof basicRoutesZinzenfaqRoute
+  '/goals': typeof mygoalRoutesGoalsRouteWithChildren
+  '/invite/$id': typeof InviteIdRoute
+  '/goals/$parentId': typeof mygoalRoutesGoalsParentIdRouteWithChildren
+  '/partners/$partnerId': typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  '/partners': typeof partnerGoalRoutesPartnersIndexRoute
+  '/goals/$parentId/$activeGoalId': typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute
+  '/partners/$partnerId/goals': typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+  '/partners/$partnerId/goals/$parentId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+  '/partners/$partnerId/goals/$parentId/$activeGoalId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/MyJournal": typeof MyJournalRoute;
-  "/(basicRoutes)/donate": typeof basicRoutesDonateRoute;
-  "/(basicRoutes)/feedback": typeof basicRoutesFeedbackRoute;
-  "/(basicRoutes)/invest": typeof basicRoutesInvestRoute;
-  "/(basicRoutes)/zinzenfaq": typeof basicRoutesZinzenfaqRoute;
-  "/(mygoalRoutes)/goals": typeof mygoalRoutesGoalsRouteWithChildren;
-  "/invite/$id": typeof InviteIdRoute;
-  "/partners/": typeof PartnersIndexRoute;
-  "/(mygoalRoutes)/goals/$parentId": typeof mygoalRoutesGoalsParentIdRouteWithChildren;
-  "/partners/$partnerId/goals": typeof PartnersPartnerIdGoalsRouteWithChildren;
-  "/(mygoalRoutes)/goals/$parentId/$activeGoalId": typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute;
-  "/partners/$partnerId/goals/$parentId": typeof PartnersPartnerIdGoalsParentIdRouteWithChildren;
-  "/partners/$partnerId/goals/$parentId/$activeGoalId": typeof PartnersPartnerIdGoalsParentIdActiveGoalIdRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/MyJournal': typeof MyJournalRoute
+  '/(basicRoutes)/donate': typeof basicRoutesDonateRoute
+  '/(basicRoutes)/feedback': typeof basicRoutesFeedbackRoute
+  '/(basicRoutes)/invest': typeof basicRoutesInvestRoute
+  '/(basicRoutes)/zinzenfaq': typeof basicRoutesZinzenfaqRoute
+  '/(mygoalRoutes)/goals': typeof mygoalRoutesGoalsRouteWithChildren
+  '/(partnerGoalRoutes)/partners': typeof partnerGoalRoutesPartnersRouteWithChildren
+  '/invite/$id': typeof InviteIdRoute
+  '/(mygoalRoutes)/goals/$parentId': typeof mygoalRoutesGoalsParentIdRouteWithChildren
+  '/(partnerGoalRoutes)/partners/$partnerId': typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  '/(partnerGoalRoutes)/partners/': typeof partnerGoalRoutesPartnersIndexRoute
+  '/(mygoalRoutes)/goals/$parentId/$activeGoalId': typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute
+  '/(partnerGoalRoutes)/partners/$partnerId/goals': typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+  '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+  '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/MyJournal"
-    | "/donate"
-    | "/feedback"
-    | "/invest"
-    | "/zinzenfaq"
-    | "/goals"
-    | "/invite/$id"
-    | "/partners"
-    | "/goals/$parentId"
-    | "/partners/$partnerId/goals"
-    | "/goals/$parentId/$activeGoalId"
-    | "/partners/$partnerId/goals/$parentId"
-    | "/partners/$partnerId/goals/$parentId/$activeGoalId";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/MyJournal'
+    | '/donate'
+    | '/feedback'
+    | '/invest'
+    | '/zinzenfaq'
+    | '/goals'
+    | '/partners'
+    | '/invite/$id'
+    | '/goals/$parentId'
+    | '/partners/$partnerId'
+    | '/partners/'
+    | '/goals/$parentId/$activeGoalId'
+    | '/partners/$partnerId/goals'
+    | '/partners/$partnerId/goals/$parentId'
+    | '/partners/$partnerId/goals/$parentId/$activeGoalId'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/MyJournal"
-    | "/donate"
-    | "/feedback"
-    | "/invest"
-    | "/zinzenfaq"
-    | "/goals"
-    | "/invite/$id"
-    | "/partners"
-    | "/goals/$parentId"
-    | "/partners/$partnerId/goals"
-    | "/goals/$parentId/$activeGoalId"
-    | "/partners/$partnerId/goals/$parentId"
-    | "/partners/$partnerId/goals/$parentId/$activeGoalId";
+    | '/'
+    | '/MyJournal'
+    | '/donate'
+    | '/feedback'
+    | '/invest'
+    | '/zinzenfaq'
+    | '/goals'
+    | '/invite/$id'
+    | '/goals/$parentId'
+    | '/partners/$partnerId'
+    | '/partners'
+    | '/goals/$parentId/$activeGoalId'
+    | '/partners/$partnerId/goals'
+    | '/partners/$partnerId/goals/$parentId'
+    | '/partners/$partnerId/goals/$parentId/$activeGoalId'
   id:
-    | "__root__"
-    | "/"
-    | "/MyJournal"
-    | "/(basicRoutes)/donate"
-    | "/(basicRoutes)/feedback"
-    | "/(basicRoutes)/invest"
-    | "/(basicRoutes)/zinzenfaq"
-    | "/(mygoalRoutes)/goals"
-    | "/invite/$id"
-    | "/partners/"
-    | "/(mygoalRoutes)/goals/$parentId"
-    | "/partners/$partnerId/goals"
-    | "/(mygoalRoutes)/goals/$parentId/$activeGoalId"
-    | "/partners/$partnerId/goals/$parentId"
-    | "/partners/$partnerId/goals/$parentId/$activeGoalId";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/MyJournal'
+    | '/(basicRoutes)/donate'
+    | '/(basicRoutes)/feedback'
+    | '/(basicRoutes)/invest'
+    | '/(basicRoutes)/zinzenfaq'
+    | '/(mygoalRoutes)/goals'
+    | '/(partnerGoalRoutes)/partners'
+    | '/invite/$id'
+    | '/(mygoalRoutes)/goals/$parentId'
+    | '/(partnerGoalRoutes)/partners/$partnerId'
+    | '/(partnerGoalRoutes)/partners/'
+    | '/(mygoalRoutes)/goals/$parentId/$activeGoalId'
+    | '/(partnerGoalRoutes)/partners/$partnerId/goals'
+    | '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId'
+    | '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  MyJournalRoute: typeof MyJournalRoute;
-  basicRoutesDonateRoute: typeof basicRoutesDonateRoute;
-  basicRoutesFeedbackRoute: typeof basicRoutesFeedbackRoute;
-  basicRoutesInvestRoute: typeof basicRoutesInvestRoute;
-  basicRoutesZinzenfaqRoute: typeof basicRoutesZinzenfaqRoute;
-  mygoalRoutesGoalsRoute: typeof mygoalRoutesGoalsRouteWithChildren;
-  InviteIdRoute: typeof InviteIdRoute;
-  PartnersIndexRoute: typeof PartnersIndexRoute;
-  PartnersPartnerIdGoalsRoute: typeof PartnersPartnerIdGoalsRouteWithChildren;
+  IndexRoute: typeof IndexRoute
+  MyJournalRoute: typeof MyJournalRoute
+  basicRoutesDonateRoute: typeof basicRoutesDonateRoute
+  basicRoutesFeedbackRoute: typeof basicRoutesFeedbackRoute
+  basicRoutesInvestRoute: typeof basicRoutesInvestRoute
+  basicRoutesZinzenfaqRoute: typeof basicRoutesZinzenfaqRoute
+  mygoalRoutesGoalsRoute: typeof mygoalRoutesGoalsRouteWithChildren
+  partnerGoalRoutesPartnersRoute: typeof partnerGoalRoutesPartnersRouteWithChildren
+  InviteIdRoute: typeof InviteIdRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/MyJournal": {
-      id: "/MyJournal";
-      path: "/MyJournal";
-      fullPath: "/MyJournal";
-      preLoaderRoute: typeof MyJournalRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/partners/": {
-      id: "/partners/";
-      path: "/partners";
-      fullPath: "/partners";
-      preLoaderRoute: typeof PartnersIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/invite/$id": {
-      id: "/invite/$id";
-      path: "/invite/$id";
-      fullPath: "/invite/$id";
-      preLoaderRoute: typeof InviteIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(mygoalRoutes)/goals": {
-      id: "/(mygoalRoutes)/goals";
-      path: "/goals";
-      fullPath: "/goals";
-      preLoaderRoute: typeof mygoalRoutesGoalsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(basicRoutes)/zinzenfaq": {
-      id: "/(basicRoutes)/zinzenfaq";
-      path: "/zinzenfaq";
-      fullPath: "/zinzenfaq";
-      preLoaderRoute: typeof basicRoutesZinzenfaqRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(basicRoutes)/invest": {
-      id: "/(basicRoutes)/invest";
-      path: "/invest";
-      fullPath: "/invest";
-      preLoaderRoute: typeof basicRoutesInvestRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(basicRoutes)/feedback": {
-      id: "/(basicRoutes)/feedback";
-      path: "/feedback";
-      fullPath: "/feedback";
-      preLoaderRoute: typeof basicRoutesFeedbackRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(basicRoutes)/donate": {
-      id: "/(basicRoutes)/donate";
-      path: "/donate";
-      fullPath: "/donate";
-      preLoaderRoute: typeof basicRoutesDonateRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/partners/$partnerId/goals": {
-      id: "/partners/$partnerId/goals";
-      path: "/partners/$partnerId/goals";
-      fullPath: "/partners/$partnerId/goals";
-      preLoaderRoute: typeof PartnersPartnerIdGoalsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/(mygoalRoutes)/goals/$parentId": {
-      id: "/(mygoalRoutes)/goals/$parentId";
-      path: "/$parentId";
-      fullPath: "/goals/$parentId";
-      preLoaderRoute: typeof mygoalRoutesGoalsParentIdRouteImport;
-      parentRoute: typeof mygoalRoutesGoalsRoute;
-    };
-    "/partners/$partnerId/goals/$parentId": {
-      id: "/partners/$partnerId/goals/$parentId";
-      path: "/$parentId";
-      fullPath: "/partners/$partnerId/goals/$parentId";
-      preLoaderRoute: typeof PartnersPartnerIdGoalsParentIdRouteImport;
-      parentRoute: typeof PartnersPartnerIdGoalsRoute;
-    };
-    "/(mygoalRoutes)/goals/$parentId/$activeGoalId": {
-      id: "/(mygoalRoutes)/goals/$parentId/$activeGoalId";
-      path: "/$activeGoalId";
-      fullPath: "/goals/$parentId/$activeGoalId";
-      preLoaderRoute: typeof mygoalRoutesGoalsParentIdActiveGoalIdRouteImport;
-      parentRoute: typeof mygoalRoutesGoalsParentIdRoute;
-    };
-    "/partners/$partnerId/goals/$parentId/$activeGoalId": {
-      id: "/partners/$partnerId/goals/$parentId/$activeGoalId";
-      path: "/$activeGoalId";
-      fullPath: "/partners/$partnerId/goals/$parentId/$activeGoalId";
-      preLoaderRoute: typeof PartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport;
-      parentRoute: typeof PartnersPartnerIdGoalsParentIdRoute;
-    };
+    '/MyJournal': {
+      id: '/MyJournal'
+      path: '/MyJournal'
+      fullPath: '/MyJournal'
+      preLoaderRoute: typeof MyJournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite/$id': {
+      id: '/invite/$id'
+      path: '/invite/$id'
+      fullPath: '/invite/$id'
+      preLoaderRoute: typeof InviteIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(partnerGoalRoutes)/partners': {
+      id: '/(partnerGoalRoutes)/partners'
+      path: '/partners'
+      fullPath: '/partners'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(mygoalRoutes)/goals': {
+      id: '/(mygoalRoutes)/goals'
+      path: '/goals'
+      fullPath: '/goals'
+      preLoaderRoute: typeof mygoalRoutesGoalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(basicRoutes)/zinzenfaq': {
+      id: '/(basicRoutes)/zinzenfaq'
+      path: '/zinzenfaq'
+      fullPath: '/zinzenfaq'
+      preLoaderRoute: typeof basicRoutesZinzenfaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(basicRoutes)/invest': {
+      id: '/(basicRoutes)/invest'
+      path: '/invest'
+      fullPath: '/invest'
+      preLoaderRoute: typeof basicRoutesInvestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(basicRoutes)/feedback': {
+      id: '/(basicRoutes)/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof basicRoutesFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(basicRoutes)/donate': {
+      id: '/(basicRoutes)/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof basicRoutesDonateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(partnerGoalRoutes)/partners/': {
+      id: '/(partnerGoalRoutes)/partners/'
+      path: '/'
+      fullPath: '/partners/'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersIndexRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersRoute
+    }
+    '/(partnerGoalRoutes)/partners/$partnerId': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId'
+      path: '/$partnerId'
+      fullPath: '/partners/$partnerId'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersRoute
+    }
+    '/(mygoalRoutes)/goals/$parentId': {
+      id: '/(mygoalRoutes)/goals/$parentId'
+      path: '/$parentId'
+      fullPath: '/goals/$parentId'
+      preLoaderRoute: typeof mygoalRoutesGoalsParentIdRouteImport
+      parentRoute: typeof mygoalRoutesGoalsRoute
+    }
+    '/(partnerGoalRoutes)/partners/$partnerId/goals': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId/goals'
+      path: '/goals'
+      fullPath: '/partners/$partnerId/goals'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersPartnerIdRoute
+    }
+    '/(mygoalRoutes)/goals/$parentId/$activeGoalId': {
+      id: '/(mygoalRoutes)/goals/$parentId/$activeGoalId'
+      path: '/$activeGoalId'
+      fullPath: '/goals/$parentId/$activeGoalId'
+      preLoaderRoute: typeof mygoalRoutesGoalsParentIdActiveGoalIdRouteImport
+      parentRoute: typeof mygoalRoutesGoalsParentIdRoute
+    }
+    '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId'
+      path: '/$parentId'
+      fullPath: '/partners/$partnerId/goals/$parentId'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsRoute
+    }
+    '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId'
+      path: '/$activeGoalId'
+      fullPath: '/partners/$partnerId/goals/$parentId/$activeGoalId'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute
+    }
   }
 }
 
 interface mygoalRoutesGoalsParentIdRouteChildren {
-  mygoalRoutesGoalsParentIdActiveGoalIdRoute: typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute;
+  mygoalRoutesGoalsParentIdActiveGoalIdRoute: typeof mygoalRoutesGoalsParentIdActiveGoalIdRoute
 }
 
-const mygoalRoutesGoalsParentIdRouteChildren: mygoalRoutesGoalsParentIdRouteChildren = {
-  mygoalRoutesGoalsParentIdActiveGoalIdRoute: mygoalRoutesGoalsParentIdActiveGoalIdRoute,
-};
+const mygoalRoutesGoalsParentIdRouteChildren: mygoalRoutesGoalsParentIdRouteChildren =
+  {
+    mygoalRoutesGoalsParentIdActiveGoalIdRoute:
+      mygoalRoutesGoalsParentIdActiveGoalIdRoute,
+  }
 
-const mygoalRoutesGoalsParentIdRouteWithChildren = mygoalRoutesGoalsParentIdRoute._addFileChildren(
-  mygoalRoutesGoalsParentIdRouteChildren,
-);
+const mygoalRoutesGoalsParentIdRouteWithChildren =
+  mygoalRoutesGoalsParentIdRoute._addFileChildren(
+    mygoalRoutesGoalsParentIdRouteChildren,
+  )
 
 interface mygoalRoutesGoalsRouteChildren {
-  mygoalRoutesGoalsParentIdRoute: typeof mygoalRoutesGoalsParentIdRouteWithChildren;
+  mygoalRoutesGoalsParentIdRoute: typeof mygoalRoutesGoalsParentIdRouteWithChildren
 }
 
 const mygoalRoutesGoalsRouteChildren: mygoalRoutesGoalsRouteChildren = {
   mygoalRoutesGoalsParentIdRoute: mygoalRoutesGoalsParentIdRouteWithChildren,
-};
-
-const mygoalRoutesGoalsRouteWithChildren = mygoalRoutesGoalsRoute._addFileChildren(mygoalRoutesGoalsRouteChildren);
-
-interface PartnersPartnerIdGoalsParentIdRouteChildren {
-  PartnersPartnerIdGoalsParentIdActiveGoalIdRoute: typeof PartnersPartnerIdGoalsParentIdActiveGoalIdRoute;
 }
 
-const PartnersPartnerIdGoalsParentIdRouteChildren: PartnersPartnerIdGoalsParentIdRouteChildren = {
-  PartnersPartnerIdGoalsParentIdActiveGoalIdRoute: PartnersPartnerIdGoalsParentIdActiveGoalIdRoute,
-};
+const mygoalRoutesGoalsRouteWithChildren =
+  mygoalRoutesGoalsRoute._addFileChildren(mygoalRoutesGoalsRouteChildren)
 
-const PartnersPartnerIdGoalsParentIdRouteWithChildren = PartnersPartnerIdGoalsParentIdRoute._addFileChildren(
-  PartnersPartnerIdGoalsParentIdRouteChildren,
-);
-
-interface PartnersPartnerIdGoalsRouteChildren {
-  PartnersPartnerIdGoalsParentIdRoute: typeof PartnersPartnerIdGoalsParentIdRouteWithChildren;
+interface partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
 }
 
-const PartnersPartnerIdGoalsRouteChildren: PartnersPartnerIdGoalsRouteChildren = {
-  PartnersPartnerIdGoalsParentIdRoute: PartnersPartnerIdGoalsParentIdRouteWithChildren,
-};
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren: partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute:
+      partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute,
+  }
 
-const PartnersPartnerIdGoalsRouteWithChildren = PartnersPartnerIdGoalsRoute._addFileChildren(
-  PartnersPartnerIdGoalsRouteChildren,
-);
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren =
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute._addFileChildren(
+    partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren,
+  )
+
+interface partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+}
+
+const partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren: partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute:
+      partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren,
+  }
+
+const partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren =
+  partnerGoalRoutesPartnersPartnerIdGoalsRoute._addFileChildren(
+    partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren,
+  )
+
+interface partnerGoalRoutesPartnersPartnerIdRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdGoalsRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+}
+
+const partnerGoalRoutesPartnersPartnerIdRouteChildren: partnerGoalRoutesPartnersPartnerIdRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdGoalsRoute:
+      partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren,
+  }
+
+const partnerGoalRoutesPartnersPartnerIdRouteWithChildren =
+  partnerGoalRoutesPartnersPartnerIdRoute._addFileChildren(
+    partnerGoalRoutesPartnersPartnerIdRouteChildren,
+  )
+
+interface partnerGoalRoutesPartnersRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdRoute: typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  partnerGoalRoutesPartnersIndexRoute: typeof partnerGoalRoutesPartnersIndexRoute
+}
+
+const partnerGoalRoutesPartnersRouteChildren: partnerGoalRoutesPartnersRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdRoute:
+      partnerGoalRoutesPartnersPartnerIdRouteWithChildren,
+    partnerGoalRoutesPartnersIndexRoute: partnerGoalRoutesPartnersIndexRoute,
+  }
+
+const partnerGoalRoutesPartnersRouteWithChildren =
+  partnerGoalRoutesPartnersRoute._addFileChildren(
+    partnerGoalRoutesPartnersRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -365,8 +453,9 @@ const rootRouteChildren: RootRouteChildren = {
   basicRoutesInvestRoute: basicRoutesInvestRoute,
   basicRoutesZinzenfaqRoute: basicRoutesZinzenfaqRoute,
   mygoalRoutesGoalsRoute: mygoalRoutesGoalsRouteWithChildren,
+  partnerGoalRoutesPartnersRoute: partnerGoalRoutesPartnersRouteWithChildren,
   InviteIdRoute: InviteIdRoute,
-  PartnersIndexRoute: PartnersIndexRoute,
-  PartnersPartnerIdGoalsRoute: PartnersPartnerIdGoalsRouteWithChildren,
-};
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+}
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

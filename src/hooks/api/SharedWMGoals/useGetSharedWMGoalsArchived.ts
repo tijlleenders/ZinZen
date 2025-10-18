@@ -1,10 +1,10 @@
 import { getArchivedSharedWMGoals } from "@src/api/SharedWMAPI";
 import { SHARED_WM_GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 
 export const useGetSharedWMGoalsArchived = (parentGoalId: string, relId: string) => {
-  const { partnerId } = useParams();
+  const { partnerId } = useParams({ strict: false });
 
   const {
     data: archivedSharedWMGoals,

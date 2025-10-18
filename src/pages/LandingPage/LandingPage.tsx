@@ -2,7 +2,7 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
 import { i18n } from "@src/translations/i18n";
@@ -44,7 +44,7 @@ export const LandingPage = () => {
   }, []);
 
   const handleNavigateToFaq = (path: string) => {
-    navigate(path);
+    navigate({ to: `/${path}`, replace: true });
   };
 
   return (

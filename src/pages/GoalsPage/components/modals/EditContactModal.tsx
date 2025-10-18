@@ -1,43 +1,27 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import ZModal from "@src/common/ZModal";
 import { displayToast } from "@src/store";
 import useVirtualKeyboardOpen from "@src/hooks/useVirtualKeyBoardOpen";
 import useOnScreenKeyboardScrollFix from "@src/hooks/useOnScreenKeyboardScrollFix";
-import { useNavigate, useParams } from "@tanstack/react-router";
-import { useGetPartner } from "@src/hooks/api/Contacts/queries/useGetPartner";
+import { useNavigate } from "@tanstack/react-router";
 import { useUpdateContact } from "@src/hooks/api/Contacts/mutations/useUpdateContact";
 import DefaultButton from "@src/common/DefaultButton";
+import ContactItem from "@src/models/ContactItem";
 
-const EditContactModal = () => {
-  const { t } = useTranslation();
+const EditContactModal = ({ contact }: { contact: ContactItem }) => {
   const navigate = useNavigate();
   const setShowToast = useSetRecoilState(displayToast);
-
-  const { partnerId } = useParams({ strict: false });
-  const { partner: contact } = useGetPartner();
-
+  const [contactName, setContactName] = useState(contact.name);
   const { updateContactMutation, isLoading } = useUpdateContact();
 
-  const [name, setName] = useState("");
   const isKeyboardOpen = useVirtualKeyboardOpen();
   useOnScreenKeyboardScrollFix();
 
-  useEffect(() => {
-    if (contact) {
-      setName(contact.name);
-    }
-  }, [contact]);
-
-  if (!partnerId || !contact) {
-    return null;
-  }
-
   const handleUpdateContact = async () => {
-    if (name.trim().length === 0) {
+    if (contactName.trim().length === 0) {
       setShowToast({
         open: true,
         message: "Contact name cannot be empty",
@@ -46,12 +30,12 @@ const EditContactModal = () => {
       return;
     }
 
-    if (name.trim() === contact?.name) {
+    if (contactName.trim() === contact.name) {
       return;
     }
 
     try {
-      await updateContactMutation({ ...contact, name: name.trim() });
+      await updateContactMutation({ ...contact, name: contactName.trim() });
     } catch (err) {
       console.error("Error updating contact", err);
     } finally {
@@ -73,6 +57,8 @@ const EditContactModal = () => {
       <input
         type="text"
         autoFocus
+        value={contactName}
+        onChange={(e) => setContactName(e.target.value)}
         style={{
           padding: "8px 12px",
           fontSize: "16px",
@@ -84,9 +70,6 @@ const EditContactModal = () => {
             await handleUpdateContact();
           }
         }}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder={t("Enter contact name")}
         disabled={isLoading}
       />
       <br />
