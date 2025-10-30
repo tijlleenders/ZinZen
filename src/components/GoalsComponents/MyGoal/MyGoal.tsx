@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactNode, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { isGoalCode } from "@src/utils/patterns";
 import NotificationSymbol from "@src/common/NotificationSymbol";
@@ -114,12 +114,16 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, ac
       dataTestId={`goal-${goal.title}`}
       isGoalToBeMoved={goalToMove?.id === goal.id}
     >
-      <div
+      <Link
+        preload="intent"
+        to="/goals/$parentId/$activeGoalId"
+        params={{ parentId: goal.parentGoalId, activeGoalId: goal.id }}
         style={{ touchAction: "none" }}
-        onClickCapture={(e) => {
-          e.stopPropagation();
-          redirect(location.state, true, actionModal);
-        }}
+        search={{ showOptions: "active" }}
+        // onClickCapture={(e) => {
+        //   e.stopPropagation();
+        //   redirect(location.state, true, actionModal);
+        // }}
         {...dragAttributes}
         {...dragListeners}
       >
@@ -136,7 +140,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, ac
             </InnerCircle>
           </GoalIcon>
         )}
-      </div>
+      </Link>
       <div className="goal-tile" onClick={handleGoalClick} role="presentation">
         <GoalTitle goal={goal} isImpossible={goal.impossible} onTitleClick={handleGoalClick} />
       </div>

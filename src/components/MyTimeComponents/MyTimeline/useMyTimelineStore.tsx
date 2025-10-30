@@ -48,12 +48,12 @@ export const useMyTimelineStore = (day: string) => {
       expandedGoalId: goalId,
       goalsHistory,
     };
-    navigate(`/goals${parentGoalId === "root" ? "" : `/${parentGoalId}`}`, { state: newState });
+    navigate({ to: `/goals${parentGoalId === "root" ? "" : `/${parentGoalId}`}`, replace: true, state: newState });
   };
 
   const handleFocusClick = (task: ITask | GoalItem) => {
     setTaskTitle(task.title);
-    navigate("/", { state: { displayFocus: true } });
+    navigate({ to: "/", replace: true, state: { displayFocus: true } });
   };
 
   const handleDoneClick = async (task: ITask) => {

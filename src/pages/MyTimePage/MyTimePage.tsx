@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyTimeline from "@components/MyTimeComponents/MyTimeline/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
 import { getOrdinalSuffix } from "@src/utils";
@@ -8,7 +8,7 @@ import ColorBands from "@components/MyTimeComponents/ColorBands";
 import useScheduler from "@src/hooks/useScheduler";
 import "./MyTimePage.scss";
 import "@translations/i18n";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearch } from "@tanstack/react-router";
 import { Row } from "antd";
 import SchedulerErrorModal from "@components/MyTimeComponents/SchedulerErrorModal";
 import NotNowModal from "@components/MyTimeComponents/NotNow/NotNowModal";
@@ -21,10 +21,16 @@ import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Rem
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks } = useScheduler();
+  const { generateInitialSchedule } = useScheduler();
+
+  useEffect(() => {
+    generateInitialSchedule();
+  }, []);
+
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const { state } = useLocation();
-  const [searchParams] = useSearchParams();
-  const goalType = (searchParams.get("type") as TGoalCategory) || "";
+  const search = useSearch({ strict: false });
+  const goalType = (search?.type as TGoalCategory) || "";
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {

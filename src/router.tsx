@@ -13,7 +13,7 @@ export const queryClient = new QueryClient({
       if (mutationKey && !EXCLUDED_MUTATION_KEYS.includes(mutationKey as unknown as string)) {
         queryClient.invalidateQueries({ queryKey: mutationKey });
       }
-      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
+      // queryClient.invalidateQueries({ queryKey: ["scheduler"] });
     },
   }),
 });
@@ -40,5 +40,8 @@ declare module "@tanstack/react-router" {
     actionModalType?: ActionModal;
     displaySearch?: boolean;
     from?: string;
+    displayFocus?: boolean;
+    changeTheme?: boolean;
+    note?: string;
   }
 }

@@ -4,6 +4,7 @@ import { Alias, defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import react from "@vitejs/plugin-react";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { visualizer } from "rollup-plugin-visualizer";
 
 import * as tsconfig from "./tsconfig.paths.json";
 import generateBuildInfo from "./plugins/generateVersion";
@@ -24,9 +25,14 @@ export default defineConfig({
   resolve: { alias: readAliasFromTsConfig() },
   server: { host: "127.0.0.1", port: 3000 },
   plugins: [
+    visualizer({
+      filename: "stats.html",
+      template: "treemap",
+      open: true,
+    }),
     tanstackRouter({
       target: "react",
-      autoCodeSplitting: false,
+      autoCodeSplitting: true,
       routesDirectory: "./src/routes",
       generatedRouteTree: "./src/routeTree.gen.ts",
     }),

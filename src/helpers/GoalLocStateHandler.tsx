@@ -1,5 +1,6 @@
+/* eslint-disable complexity */
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@tanstack/react-router";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { ILocationState } from "@src/Interfaces";
 import { displayConfirmation, displayPartner } from "@src/store";
