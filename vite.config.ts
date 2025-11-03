@@ -1,5 +1,6 @@
 import path from "path";
 import { Alias, defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { VitePWA } from "vite-plugin-pwa";
 
@@ -27,6 +28,11 @@ export default defineConfig({
     port: 3000,
   },
   plugins: [
+    react({
+      babel: {
+        plugins: [["babel-plugin-react-compiler", { target: "18" }]],
+      },
+    }),
     VitePWA({
       registerType: "autoUpdate",
       strategies: "injectManifest",
