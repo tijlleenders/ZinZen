@@ -22,7 +22,7 @@ import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
-export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading: boolean }) => {
+export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
   const { parentId, partnerId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId || "");
   const [showConfig, setShowConfig] = useState(goals.length === 0);
@@ -75,13 +75,7 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
                 />
               </div>
             )}
-            {isLoading ? (
-              <div className="place-middle">
-                <Spin />
-              </div>
-            ) : (
-              <GoalsList goals={goals} />
-            )}
+            <GoalsList goals={goals} />
             <AvailableGoalHints hints={hints || []} />
             <DeletedGoalProvider>
               <DeletedGoals deletedGoals={deletedGoals || []} />
