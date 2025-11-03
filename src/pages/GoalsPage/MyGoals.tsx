@@ -58,19 +58,13 @@ export const MyGoals = () => {
   return (
     <>
       <div className="myGoals-container">
-        {parentId === "root" ? (
-          <div className="my-goals-content">
-            <div className="d-flex f-col">
-              <GoalsList goals={filteredActiveGoals || []} />
-            </div>
-            <DeletedGoalProvider>
-              <DeletedGoals deletedGoals={deletedGoals || []} />
-            </DeletedGoalProvider>
-            <ArchivedGoals goals={archivedGoals || []} />
-          </div>
-        ) : (
-          <div>Loading...</div>
-        )}
+        <div className="my-goals-content">
+          <GoalsList goals={filteredActiveGoals || []} />
+          <DeletedGoalProvider>
+            <DeletedGoals deletedGoals={deletedGoals || []} />
+          </DeletedGoalProvider>
+          <ArchivedGoals goals={archivedGoals || []} />
+        </div>
 
         <img
           style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
