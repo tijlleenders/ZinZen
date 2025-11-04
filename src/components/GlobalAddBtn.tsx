@@ -69,13 +69,14 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const handleAddGoal = async (goalType: TGoalCategory, replaceCurrentRoute = true) => {
     if (add === "myTime") {
-      navigate({ to: "/", search: { type: goalType, mode: "add" }, replace: replaceCurrentRoute });
+      navigate({ to: "/", search: { type: goalType, mode: "add" }, state, replace: replaceCurrentRoute });
       return;
     }
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     navigate({
       to: `${prefix}/${parentId || "root"}`,
       search: { type: goalType, mode: "add" },
+      state,
       replace: replaceCurrentRoute,
     });
   };
