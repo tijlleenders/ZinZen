@@ -2,88 +2,68 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
-import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
+import { Outlet } from "@tanstack/react-router";
 
-import { TGoalCategory } from "@src/models/GoalItem";
-import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { darkModeState } from "@src/store";
 import { searchQueryState } from "@src/store/GoalsState";
 
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
-
-import { TGoalConfigMode } from "@src/types";
-import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
-import { goalCategories } from "@src/constants/goals";
+import { TrashItem } from "@src/models/TrashItem";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
-import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
-import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
-import { ActionModal } from "@components/GoalsComponents/MyGoal/MyGoal";
-import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
+import { GoalItem } from "@src/models/GoalItem";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
-import GoalModals from "./GoalModals";
+import AvailableGoalHints from "./components/AvailableGoalHints";
+import "./MyGoals.scss";
+import ZinZenBgImage from "./ZinzenBgImage";
+import SubgoalLayout from "./SubgoalLayout";
 
 // TODO: re-implement sorting priority goals
 
-export const MyGoals = () => {
-  const { parentId = "root", activeGoalId } = useParams();
-  const location = useLocation();
-  const { activeGoals } = useGetActiveGoals("root");
-  const [searchParams] = useSearchParams();
+interface MyGoalsProps {
+  activeGoals: GoalItem[];
+  deletedGoals: TrashItem[];
+  archivedGoals: GoalItem[];
+  parentId: string;
+}
+
+export const MyGoals = ({ activeGoals, deletedGoals, archivedGoals, parentId }: MyGoalsProps) => {
   const searchQuery = useRecoilValue(searchQueryState);
 
-  const isActiveGoalIdEmpty = activeGoalId === "";
-  const { data: activeGoal } = useGetGoalById(activeGoalId || "", isActiveGoalIdEmpty);
-  const { archivedGoals } = useGetArchivedGoals(parentId);
-  const { deletedGoals } = useGetDeletedGoals(parentId);
-
-  const goalType = (searchParams.get("type") as TGoalCategory) || "";
-
-  const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
-
-  const darkModeStatus = useRecoilValue(darkModeState);
-
-  const zinZenLogoHeight = activeGoals && activeGoals.length > 0 ? 125 : 350;
+  const { data: parentGoal } = useGetGoalById(parentId);
 
   const filteredActiveGoals = activeGoals?.filter((goal) =>
     goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  const isSublist = parentId !== "root";
+
+  const hints =
+    parentGoal && parentGoal.hints?.availableGoalHints
+      ? parentGoal.hints.availableGoalHints.map((hint) =>
+          createGoalObjectFromTags({ ...hint, parentGoalId: parentId, id: hint.id }),
+        )
+      : [];
 
   return (
-    <>
-      <div className="myGoals-container">
-        <div className="my-goals-content">
-          <GoalsList goals={filteredActiveGoals || []} />
-          <DeletedGoalProvider>
-            <DeletedGoals deletedGoals={deletedGoals || []} />
-          </DeletedGoalProvider>
-          <ArchivedGoals goals={archivedGoals || []} />
-        </div>
-
-        <img
-          style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
-          src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-          alt="Zinzen"
-        />
-      </div>
-
-      {/* Modals */}
-      {goalCategories.includes(goalType) && (
-        <ConfigGoal
-          key={`${mode}-${activeGoalId}`}
-          type={goalType}
-          goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
-          mode={mode}
+    <div className="goals-container">
+      {isSublist && (
+        <SubgoalLayout
+          subgoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0}
+          parentGoal={parentGoal}
         />
       )}
+      <div className="my-goals-content">
+        <GoalsList goals={filteredActiveGoals || []} />
+        {isSublist && <AvailableGoalHints hints={hints || []} />}
+        <DeletedGoals deletedGoals={deletedGoals || []} />
+        <ArchivedGoals goals={archivedGoals || []} />
+      </div>
 
-      {activeGoal && location.state?.actionModalType === ActionModal.ACTIVE && <GoalModals activeGoal={activeGoal} />}
-    </>
+      <ZinZenBgImage activeGoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0} />
+      <Outlet />
+    </div>
   );
 };
