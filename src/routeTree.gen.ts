@@ -10,19 +10,31 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as partnerGoalRoutesPartnersRouteImport } from './routes/(partnerGoalRoutes)/partners'
 import { Route as myGoalRoutesGoalsRouteImport } from './routes/(myGoalRoutes)/goals'
 import { Route as basicRoutesZinzenfaqRouteImport } from './routes/(basicRoutes)/zinzenfaq'
 import { Route as basicRoutesInvestRouteImport } from './routes/(basicRoutes)/invest'
 import { Route as basicRoutesFeedbackRouteImport } from './routes/(basicRoutes)/feedback'
 import { Route as basicRoutesDonateRouteImport } from './routes/(basicRoutes)/donate'
+import { Route as partnerGoalRoutesPartnersIndexRouteImport } from './routes/(partnerGoalRoutes)/partners.index'
+import { Route as partnerGoalRoutesPartnersPartnerIdRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId'
 import { Route as myGoalRoutesGoalsParentIdRouteImport } from './routes/(myGoalRoutes)/goals.$parentId'
+import { Route as partnerGoalRoutesPartnersPartnerIdGoalsRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId.goals'
 import { Route as myGoalRoutesGoalsParentIdActiveGoalIdRouteImport } from './routes/(myGoalRoutes)/goals.$parentId.$activeGoalId'
+import { Route as partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId.goals.$parentId'
+import { Route as partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport } from './routes/(partnerGoalRoutes)/partners.$partnerId.goals.$parentId.$activeGoalId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const partnerGoalRoutesPartnersRoute =
+  partnerGoalRoutesPartnersRouteImport.update({
+    id: '/(partnerGoalRoutes)/partners',
+    path: '/partners',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const myGoalRoutesGoalsRoute = myGoalRoutesGoalsRouteImport.update({
   id: '/(myGoalRoutes)/goals',
   path: '/goals',
@@ -48,11 +60,29 @@ const basicRoutesDonateRoute = basicRoutesDonateRouteImport.update({
   path: '/donate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const partnerGoalRoutesPartnersIndexRoute =
+  partnerGoalRoutesPartnersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => partnerGoalRoutesPartnersRoute,
+  } as any)
+const partnerGoalRoutesPartnersPartnerIdRoute =
+  partnerGoalRoutesPartnersPartnerIdRouteImport.update({
+    id: '/$partnerId',
+    path: '/$partnerId',
+    getParentRoute: () => partnerGoalRoutesPartnersRoute,
+  } as any)
 const myGoalRoutesGoalsParentIdRoute =
   myGoalRoutesGoalsParentIdRouteImport.update({
     id: '/$parentId',
     path: '/$parentId',
     getParentRoute: () => myGoalRoutesGoalsRoute,
+  } as any)
+const partnerGoalRoutesPartnersPartnerIdGoalsRoute =
+  partnerGoalRoutesPartnersPartnerIdGoalsRouteImport.update({
+    id: '/goals',
+    path: '/goals',
+    getParentRoute: () => partnerGoalRoutesPartnersPartnerIdRoute,
   } as any)
 const myGoalRoutesGoalsParentIdActiveGoalIdRoute =
   myGoalRoutesGoalsParentIdActiveGoalIdRouteImport.update({
@@ -60,6 +90,21 @@ const myGoalRoutesGoalsParentIdActiveGoalIdRoute =
     path: '/$activeGoalId',
     getParentRoute: () => myGoalRoutesGoalsParentIdRoute,
   } as any)
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute =
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteImport.update({
+    id: '/$parentId',
+    path: '/$parentId',
+    getParentRoute: () => partnerGoalRoutesPartnersPartnerIdGoalsRoute,
+  } as any)
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute =
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport.update(
+    {
+      id: '/$activeGoalId',
+      path: '/$activeGoalId',
+      getParentRoute: () =>
+        partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,8 +113,14 @@ export interface FileRoutesByFullPath {
   '/invest': typeof basicRoutesInvestRoute
   '/zinzenfaq': typeof basicRoutesZinzenfaqRoute
   '/goals': typeof myGoalRoutesGoalsRouteWithChildren
+  '/partners': typeof partnerGoalRoutesPartnersRouteWithChildren
   '/goals/$parentId': typeof myGoalRoutesGoalsParentIdRouteWithChildren
+  '/partners/$partnerId': typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  '/partners/': typeof partnerGoalRoutesPartnersIndexRoute
   '/goals/$parentId/$activeGoalId': typeof myGoalRoutesGoalsParentIdActiveGoalIdRoute
+  '/partners/$partnerId/goals': typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+  '/partners/$partnerId/goals/$parentId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+  '/partners/$partnerId/goals/$parentId/$activeGoalId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -79,7 +130,12 @@ export interface FileRoutesByTo {
   '/zinzenfaq': typeof basicRoutesZinzenfaqRoute
   '/goals': typeof myGoalRoutesGoalsRouteWithChildren
   '/goals/$parentId': typeof myGoalRoutesGoalsParentIdRouteWithChildren
+  '/partners/$partnerId': typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  '/partners': typeof partnerGoalRoutesPartnersIndexRoute
   '/goals/$parentId/$activeGoalId': typeof myGoalRoutesGoalsParentIdActiveGoalIdRoute
+  '/partners/$partnerId/goals': typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+  '/partners/$partnerId/goals/$parentId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+  '/partners/$partnerId/goals/$parentId/$activeGoalId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,8 +145,14 @@ export interface FileRoutesById {
   '/(basicRoutes)/invest': typeof basicRoutesInvestRoute
   '/(basicRoutes)/zinzenfaq': typeof basicRoutesZinzenfaqRoute
   '/(myGoalRoutes)/goals': typeof myGoalRoutesGoalsRouteWithChildren
+  '/(partnerGoalRoutes)/partners': typeof partnerGoalRoutesPartnersRouteWithChildren
   '/(myGoalRoutes)/goals/$parentId': typeof myGoalRoutesGoalsParentIdRouteWithChildren
+  '/(partnerGoalRoutes)/partners/$partnerId': typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  '/(partnerGoalRoutes)/partners/': typeof partnerGoalRoutesPartnersIndexRoute
   '/(myGoalRoutes)/goals/$parentId/$activeGoalId': typeof myGoalRoutesGoalsParentIdActiveGoalIdRoute
+  '/(partnerGoalRoutes)/partners/$partnerId/goals': typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+  '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+  '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId': typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,8 +163,14 @@ export interface FileRouteTypes {
     | '/invest'
     | '/zinzenfaq'
     | '/goals'
+    | '/partners'
     | '/goals/$parentId'
+    | '/partners/$partnerId'
+    | '/partners/'
     | '/goals/$parentId/$activeGoalId'
+    | '/partners/$partnerId/goals'
+    | '/partners/$partnerId/goals/$parentId'
+    | '/partners/$partnerId/goals/$parentId/$activeGoalId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -112,7 +180,12 @@ export interface FileRouteTypes {
     | '/zinzenfaq'
     | '/goals'
     | '/goals/$parentId'
+    | '/partners/$partnerId'
+    | '/partners'
     | '/goals/$parentId/$activeGoalId'
+    | '/partners/$partnerId/goals'
+    | '/partners/$partnerId/goals/$parentId'
+    | '/partners/$partnerId/goals/$parentId/$activeGoalId'
   id:
     | '__root__'
     | '/'
@@ -121,8 +194,14 @@ export interface FileRouteTypes {
     | '/(basicRoutes)/invest'
     | '/(basicRoutes)/zinzenfaq'
     | '/(myGoalRoutes)/goals'
+    | '/(partnerGoalRoutes)/partners'
     | '/(myGoalRoutes)/goals/$parentId'
+    | '/(partnerGoalRoutes)/partners/$partnerId'
+    | '/(partnerGoalRoutes)/partners/'
     | '/(myGoalRoutes)/goals/$parentId/$activeGoalId'
+    | '/(partnerGoalRoutes)/partners/$partnerId/goals'
+    | '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId'
+    | '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +211,7 @@ export interface RootRouteChildren {
   basicRoutesInvestRoute: typeof basicRoutesInvestRoute
   basicRoutesZinzenfaqRoute: typeof basicRoutesZinzenfaqRoute
   myGoalRoutesGoalsRoute: typeof myGoalRoutesGoalsRouteWithChildren
+  partnerGoalRoutesPartnersRoute: typeof partnerGoalRoutesPartnersRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +221,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(partnerGoalRoutes)/partners': {
+      id: '/(partnerGoalRoutes)/partners'
+      path: '/partners'
+      fullPath: '/partners'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(myGoalRoutes)/goals': {
@@ -178,6 +265,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof basicRoutesDonateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(partnerGoalRoutes)/partners/': {
+      id: '/(partnerGoalRoutes)/partners/'
+      path: '/'
+      fullPath: '/partners/'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersIndexRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersRoute
+    }
+    '/(partnerGoalRoutes)/partners/$partnerId': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId'
+      path: '/$partnerId'
+      fullPath: '/partners/$partnerId'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersRoute
+    }
     '/(myGoalRoutes)/goals/$parentId': {
       id: '/(myGoalRoutes)/goals/$parentId'
       path: '/$parentId'
@@ -185,12 +286,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof myGoalRoutesGoalsParentIdRouteImport
       parentRoute: typeof myGoalRoutesGoalsRoute
     }
+    '/(partnerGoalRoutes)/partners/$partnerId/goals': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId/goals'
+      path: '/goals'
+      fullPath: '/partners/$partnerId/goals'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersPartnerIdRoute
+    }
     '/(myGoalRoutes)/goals/$parentId/$activeGoalId': {
       id: '/(myGoalRoutes)/goals/$parentId/$activeGoalId'
       path: '/$activeGoalId'
       fullPath: '/goals/$parentId/$activeGoalId'
       preLoaderRoute: typeof myGoalRoutesGoalsParentIdActiveGoalIdRouteImport
       parentRoute: typeof myGoalRoutesGoalsParentIdRoute
+    }
+    '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId'
+      path: '/$parentId'
+      fullPath: '/partners/$partnerId/goals/$parentId'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsRoute
+    }
+    '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId': {
+      id: '/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId/$activeGoalId'
+      path: '/$activeGoalId'
+      fullPath: '/partners/$partnerId/goals/$parentId/$activeGoalId'
+      preLoaderRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRouteImport
+      parentRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute
     }
   }
 }
@@ -221,6 +343,68 @@ const myGoalRoutesGoalsRouteChildren: myGoalRoutesGoalsRouteChildren = {
 const myGoalRoutesGoalsRouteWithChildren =
   myGoalRoutesGoalsRoute._addFileChildren(myGoalRoutesGoalsRouteChildren)
 
+interface partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute
+}
+
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren: partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute:
+      partnerGoalRoutesPartnersPartnerIdGoalsParentIdActiveGoalIdRoute,
+  }
+
+const partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren =
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute._addFileChildren(
+    partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteChildren,
+  )
+
+interface partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren
+}
+
+const partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren: partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdGoalsParentIdRoute:
+      partnerGoalRoutesPartnersPartnerIdGoalsParentIdRouteWithChildren,
+  }
+
+const partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren =
+  partnerGoalRoutesPartnersPartnerIdGoalsRoute._addFileChildren(
+    partnerGoalRoutesPartnersPartnerIdGoalsRouteChildren,
+  )
+
+interface partnerGoalRoutesPartnersPartnerIdRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdGoalsRoute: typeof partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren
+}
+
+const partnerGoalRoutesPartnersPartnerIdRouteChildren: partnerGoalRoutesPartnersPartnerIdRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdGoalsRoute:
+      partnerGoalRoutesPartnersPartnerIdGoalsRouteWithChildren,
+  }
+
+const partnerGoalRoutesPartnersPartnerIdRouteWithChildren =
+  partnerGoalRoutesPartnersPartnerIdRoute._addFileChildren(
+    partnerGoalRoutesPartnersPartnerIdRouteChildren,
+  )
+
+interface partnerGoalRoutesPartnersRouteChildren {
+  partnerGoalRoutesPartnersPartnerIdRoute: typeof partnerGoalRoutesPartnersPartnerIdRouteWithChildren
+  partnerGoalRoutesPartnersIndexRoute: typeof partnerGoalRoutesPartnersIndexRoute
+}
+
+const partnerGoalRoutesPartnersRouteChildren: partnerGoalRoutesPartnersRouteChildren =
+  {
+    partnerGoalRoutesPartnersPartnerIdRoute:
+      partnerGoalRoutesPartnersPartnerIdRouteWithChildren,
+    partnerGoalRoutesPartnersIndexRoute: partnerGoalRoutesPartnersIndexRoute,
+  }
+
+const partnerGoalRoutesPartnersRouteWithChildren =
+  partnerGoalRoutesPartnersRoute._addFileChildren(
+    partnerGoalRoutesPartnersRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   basicRoutesDonateRoute: basicRoutesDonateRoute,
@@ -228,6 +412,7 @@ const rootRouteChildren: RootRouteChildren = {
   basicRoutesInvestRoute: basicRoutesInvestRoute,
   basicRoutesZinzenfaqRoute: basicRoutesZinzenfaqRoute,
   myGoalRoutesGoalsRoute: myGoalRoutesGoalsRouteWithChildren,
+  partnerGoalRoutesPartnersRoute: partnerGoalRoutesPartnersRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
