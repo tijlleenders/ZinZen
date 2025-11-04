@@ -7,9 +7,9 @@ import { useGetSharedWMGoalById } from "@src/hooks/api/SharedWMGoals/useGetShare
 import { GoalItem } from "@src/models/GoalItem";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import InvitationStatus from "./InvitationStatus";
-import ZinZenBgImage from "./ZinzenBgImage";
 import "@src/pages/GoalsPage/GoalsPage.scss";
 import SubgoalLayout from "./SubgoalLayout";
+import ZinZenBgImage from "./ZinzenBgImage";
 
 interface PartnerGoalsProps {
   activeSharedWMGoals: GoalItem[];

@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearch } from "@tanstack/react-router";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
@@ -51,7 +51,8 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
-  const { parentId = "root", partnerId } = useParams();
+  const { type, addOptions } = useSearch({ strict: false }) as { type?: TGoalCategory; addOptions?: boolean };
+  const { parentId = "root", partnerId } = useParams({ strict: false }) as { parentId: string; partnerId: string };
   const { state }: { state: ILocationState } = useLocation();
   const { handleAddFeeling } = useFeelingStore();
   const isPartnerModeActive = !!partnerId;
@@ -59,7 +60,6 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const subGoalsHistory = state?.goalsHistory || [];
 
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
   const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
@@ -67,31 +67,29 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const enterPressed = useKeyPress("Enter");
   const plusPressed = useKeyPress("+");
 
-  const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
-    const navigateOptions = {
-      state: {
-        ...state,
-        goalType: type,
-      },
-      replace: replaceCurrentRoute,
-    };
+  const handleAddGoal = async (goalType: TGoalCategory, replaceCurrentRoute = true) => {
     if (add === "myTime") {
-      navigate(`?type=${type}&mode=add`, navigateOptions);
+      navigate({ to: "/", search: { type: goalType, mode: "add" }, replace: replaceCurrentRoute });
       return;
     }
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
-    navigate(`${prefix}/${parentId || "root"}?type=${type}&mode=add`, navigateOptions);
+    navigate({
+      to: `${prefix}/${parentId || "root"}`,
+      search: { type: goalType, mode: "add" },
+      replace: replaceCurrentRoute,
+    });
   };
+
   const handleGlobalAddClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (goalToMove) {
       if (add === "myGoals" || isPartnerModeActive) {
-        navigate(
-          isPartnerModeActive
+        navigate({
+          to: isPartnerModeActive
             ? `/partners/${partnerId}/goals/${parentId}?addOptions=true`
             : `/goals/${parentId}?addOptions=true`,
-          { state },
-        );
+          state,
+        });
       }
       return;
     }
@@ -108,9 +106,9 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (add === "myGoals" || isPartnerModeActive) {
-      navigate(`/goals/${parentId}?addOptions=true`, { state });
+      navigate({ to: `/goals/${parentId}`, search: { addOptions: true }, state });
     } else if (add === "myTime") {
-      navigate("?addOptions=true", { state });
+      navigate({ to: "/", search: { addOptions: true }, state });
     }
   };
   const { handlers } = useLongPress({
@@ -144,7 +142,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   };
 
   useEffect(() => {
-    if ((plusPressed || enterPressed) && !state?.goalType) {
+    if ((plusPressed || enterPressed) && !type) {
       // @ts-ignore
       handleGlobalAddClick(new MouseEvent("click"));
     }
@@ -152,7 +150,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const shouldRenderMoveButton = goalToMove && goalToMove.id !== parentId && goalToMove.parentGoalId !== parentId;
 
-  if (searchParams?.get("addOptions")) {
+  if (addOptions) {
     return (
       <>
         <Backdrop
