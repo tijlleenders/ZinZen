@@ -7,7 +7,7 @@ import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
 import { TGoalConfigMode } from "@src/types";
 import { ScheduleStatus } from "@src/Interfaces";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { useGoalSave } from "@src/hooks/useGoalSave";
 import useScheduler from "@src/hooks/useScheduler";
@@ -15,11 +15,12 @@ import ZAccordion from "@src/common/Accordion";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useKeyPress } from "@src/hooks/useKeyPress";
 import { useDebounce } from "@src/hooks/useDebounce";
-import { colorPalleteList } from "../../utils";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
+import { colorPalleteList } from "@src/utils";
+import useVirtualKeyboardOpen from "@src/hooks/useVirtualKeyBoardOpen";
+import useOnScreenKeyboardScrollFix from "@src/hooks/useOnScreenKeyboardScrollFix";
 
 import "./ConfigGoal.scss";
-import useVirtualKeyboardOpen from "../../hooks/useVirtualKeyBoardOpen";
-import useOnScreenKeyboardScrollFix from "../../hooks/useOnScreenKeyboardScrollFix";
 import {
   calDays,
   getDefaultColor,
@@ -63,11 +64,10 @@ const ConfigGoalContent = ({
 }: ConfigGoalContentProps) => {
   const navigate = useNavigate();
   const isEditMode = mode === "edit";
-
-  const { parentId } = useParams();
-  const { data: parentGoal } = useGetGoalById(parentId ?? "");
-
   const location = useLocation();
+
+  const { parentId } = useParams({ strict: false }) as { parentId?: string };
+  const { data: parentGoal } = useGetGoalById(parentId ?? "");
 
   const { checkGoalSchedule } = useScheduler();
   const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
@@ -190,7 +190,8 @@ const ConfigGoalContent = ({
               },
             ];
 
-      navigate(".", {
+      navigate({
+        to: ".",
         replace: true,
         state: {
           goalsHistory: updatedGoalsHistory,
@@ -352,7 +353,10 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
   const isEditMode = mode === "edit";
   const enterPress = useKeyPress("Enter");
 
-  const { parentId = "", activeGoalId = "" } = useParams();
+  const { parentId = "", activeGoalId = "" } = useParams({ strict: false }) as {
+    parentId?: string;
+    activeGoalId?: string;
+  };
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
 
   const [formState, setFormState] = useState<FormState>({

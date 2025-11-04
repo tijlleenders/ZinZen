@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Dropdown, MenuProps, Switch } from "antd";
 import React, { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ const Settings = () => {
         } else if (ele === t("donate")) {
           window.open("https://donate.stripe.com/6oE4jK1iPcPT1m89AA", "_self");
         } else if (ele === t("feedback")) {
-          navigate("/Feedback");
+          navigate({ to: "/feedback" });
         } else if (ele === t("blog")) {
           window.open("https://blog.zinzen.me", "_self");
         } else if (ele === t("backup")) {

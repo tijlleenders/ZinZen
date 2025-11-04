@@ -11,8 +11,7 @@ export const useGetGoalById = (goalId: string | undefined, disabled = false) => 
       }
       return getGoalById(goalId);
     },
-    cacheTime: 0,
-    enabled: !disabled && !!goalId,
+    enabled: !!goalId,
   });
 
   return { data, isLoading, isError, isSuccess };

@@ -16,5 +16,4 @@ const RootComponent = () => (
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
-  // notFoundComponent: () => <MyGoalsPage />,
 });

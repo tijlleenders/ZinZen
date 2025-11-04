@@ -12,7 +12,7 @@ import { suggestChanges, suggestNewGoal } from "@src/controllers/PartnerControll
 import { GoalItem } from "@src/models/GoalItem";
 import { displayToast, lastAction } from "@src/store";
 
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "@tanstack/react-router";
 
 import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
@@ -26,7 +26,7 @@ import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
-  const { partnerId } = useParams();
+  const { partnerId } = useParams({ strict: false });
   const isPartnerModeActive = !!partnerId;
   const setLastAction = useSetRecoilState(lastAction);
   const subGoalsHistory = state?.goalsHistory || [];

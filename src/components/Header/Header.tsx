@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
@@ -50,10 +50,10 @@ const Header = ({ title }: { title: string }) => {
       setPartnerModeTour(false);
     }
     if (location.pathname.split("/")[1] === "partners") {
-      navigate("/goals", { replace: true });
+      navigate({ to: "/goals/root", replace: true });
       return;
     }
-    navigate("/partners");
+    navigate({ to: "/partners" });
   };
   const handlePopState = () => {
     const locationState = location.state || {};
@@ -128,4 +128,5 @@ const Header = ({ title }: { title: string }) => {
     </div>
   );
 };
-export default Header;
+
+export default React.memo(Header);
