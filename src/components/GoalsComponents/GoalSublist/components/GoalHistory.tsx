@@ -36,6 +36,7 @@ const GoalHistory = ({
 }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
+  console.log(goalsHistory);
 
   return (
     <button

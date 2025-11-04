@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
@@ -34,12 +34,12 @@ export const LandingHeader = ({ avatar }: { avatar: string | null }) => {
               const invite = localStorage.getItem(LocalStorageKeys.PENDING_INVITE);
               localStorage.removeItem(LocalStorageKeys.PENDING_INVITE);
               if (invite && invite !== "none") {
-                navigate(`/invite/${invite}`);
+                navigate({ to: `/invite/${invite}` });
               } else {
-                navigate("/");
+                navigate({ to: "/" });
               }
             } else {
-              navigate(-1);
+              navigate({ to: "/", replace: true });
             }
           }}
         />

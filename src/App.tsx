@@ -13,12 +13,12 @@ import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageCha
 
 import useApp from "./hooks/useApp";
 import { themeState } from "./store/ThemeState";
+import { router } from "./router";
 
 import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
-import { router } from "./router";
 
 const Context = React.createContext({ name: "Default" });
 

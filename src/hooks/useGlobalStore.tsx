@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 
 import { ILocationState } from "@src/Interfaces";
 import { backupRestoreModal, languageChangeModal } from "@src/store";
@@ -35,11 +35,11 @@ function useGlobalStore() {
   };
 
   const handleBackResModal = () => {
-    navigate(window.location.pathname, { state: { displayBackResModal: true } });
+    navigate({ to: window.location.pathname, state: { displayBackResModal: true } });
   };
 
   const handleBackLangModal = () => {
-    navigate(window.location.pathname, { state: { displayLangChangeModal: true } });
+    navigate({ to: window.location.pathname, state: { displayLangChangeModal: true } });
   };
 
   const handleLangChangeModal = () => {
@@ -51,7 +51,7 @@ function useGlobalStore() {
   };
 
   const handleChangeTheme = () => {
-    navigate("/goals", { state: { ...location.state, changeTheme: true } });
+    navigate({ to: "/goals", state: { ...location.state, changeTheme: true } });
   };
 
   useEffect(() => {

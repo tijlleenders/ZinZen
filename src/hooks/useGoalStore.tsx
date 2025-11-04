@@ -1,49 +1,56 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayConfirmation } from "@src/store";
-import { ILocationState } from "@src/Interfaces";
 import { moveGoalState } from "@src/store/moveGoalState";
 
 const useGoalStore = () => {
-  const { partnerId } = useParams();
+  const params = useParams({ strict: false }) as { partnerId?: string };
   const navigate = useNavigate();
   const location = useLocation();
   const showConfirmation = useRecoilValue(displayConfirmation);
   const setGoalToMove = useSetRecoilState(moveGoalState);
 
-  const openEditMode = (goal: GoalItem, customState?: ILocationState) => {
-    const prefix = `${partnerId ? `/partners/${partnerId}/` : "/"}goals`;
+  const openEditMode = (goal: GoalItem, customState?: Record<string, unknown>) => {
+    const newState = { ...location.state, ...customState };
 
-    navigate(`${prefix}/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
-      state: {
-        ...location.state,
-        goalType: goal.category === "Budget" ? "Budget" : "Goal",
-        ...customState,
-      },
-      replace: true,
-    });
+    if (params.partnerId) {
+      navigate({
+        to: "/partners/$partnerId/goals/$parentId/$activeGoalId",
+        params: { partnerId: params.partnerId, parentId: goal.parentGoalId, activeGoalId: goal.id },
+        search: { type: goal.category, mode: "edit" },
+        state: newState,
+        replace: true,
+      });
+    } else {
+      navigate({
+        to: "/goals/$parentId/$activeGoalId",
+        params: { parentId: goal.parentGoalId, activeGoalId: goal.id },
+        search: { type: goal.category, mode: "edit" },
+        state: newState,
+        replace: true,
+      });
+    }
   };
 
   const handleConfirmation = () => {
-    navigate("/goals", { state: { ...location.state, displayConfirmation: { ...showConfirmation, open: true } } });
+    navigate({
+      to: "/goals/$parentId",
+      params: { parentId: "root" },
+      state: { ...location.state, displayConfirmation: { ...showConfirmation, open: true } },
+    });
   };
 
   const handleDisplayChanges = () => {
-    navigate("/goals", { state: location.state });
+    navigate({ to: "/goals/$parentId", params: { parentId: "root" }, state: location.state });
   };
 
   const handleMove = (goal: GoalItem) => {
     setGoalToMove(goal);
-    navigate("/goals", { replace: true });
+    navigate({ to: "/goals/$parentId", params: { parentId: "root" }, replace: true });
   };
 
-  return {
-    openEditMode,
-    handleConfirmation,
-    handleDisplayChanges,
-    handleMove,
-  };
+  return { openEditMode, handleConfirmation, handleDisplayChanges, handleMove };
 };
 
 export default useGoalStore;

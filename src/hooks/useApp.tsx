@@ -17,7 +17,9 @@ import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { TaskActions } from "@src/constants/actions";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import useScheduler from "./useScheduler";
+import { useProcessSharedGoalData } from "./useProcessSharedGoalData";
 
+// TODO: fix the scheduler issue
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
 
@@ -27,10 +29,11 @@ function useApp() {
 
   const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
-  const { generateInitialSchedule } = useScheduler();
 
   const confirmationState = useRecoilValue(displayConfirmation);
   const queryClient = useQueryClient();
+  useProcessSharedGoalData();
+
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts().then(async (contacts) => {
@@ -130,14 +133,14 @@ function useApp() {
       await checkUpdates();
       await createDefaultGoals();
       try {
-        await generateInitialSchedule();
+        // await generateInitialSchedule();
       } catch (error) {
         console.error("Failed to generate initial schedule:", error);
       }
     };
 
     initializeApp();
-  }, [generateInitialSchedule]);
+  }, []);
 
   useEffect(() => {
     const lastRefresh = localStorage.getItem(LocalStorageKeys.LAST_REFRESH);
