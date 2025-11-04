@@ -1,5 +1,5 @@
 import React, { useState, useEffect, CSSProperties, ReactNode } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
@@ -13,7 +13,7 @@ import { darkModeState, displayConfirmation } from "@src/store";
 import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import useGoalActions from "@src/hooks/useGoalActions";
 
-import Icon from "../../../../common/Icon";
+import Icon from "@src/common/Icon";
 import AddContactModal from "./AddContactModal";
 import "./ShareGoalModal.scss";
 
@@ -48,17 +48,16 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   const navigate = useNavigate();
   const { addContact, shareGoalWithRelId } = useGoalActions();
   const { state, pathname } = useLocation();
-  const [searchParams] = useSearchParams();
+  const { addContact: showAddContact } = useSearch({ strict: false }) as { addContact: string };
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [displaySubmenu, setDisplaySubmenu] = useState("contacts");
   const [showConfirmation, setDisplayConfirmation] = useRecoilState(displayConfirmation);
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
-  const showAddContactModal = searchParams.get("addContact") === "true";
 
   const handleShowAddContact = () => {
-    navigate(`${pathname}?share=true&addContact=true`, { state });
+    navigate({ to: `${pathname}?share=true&addContact=true`, state });
   };
 
   const handleActionClick = async (action: string) => {
@@ -83,15 +82,16 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       await handleActionClick(actionName);
     }
   };
+
   useEffect(() => {
     (async () => {
       const userContacts = await getAllContacts();
       setContacts([...userContacts]);
     })();
-  }, [showAddContactModal]);
+  }, [showAddContact]);
 
   return (
-    <ZModal open style={showAddContactModal ? { zIndex: 1 } : {}} type={`share-modal${darkModeStatus ? "-dark" : ""}`}>
+    <ZModal open style={showAddContact ? { zIndex: 1 } : {}} type={`share-modal${darkModeStatus ? "-dark" : ""}`}>
       {confirmationAction && (
         <ConfirmationModal
           handleClose={() => {
@@ -156,7 +156,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
           )}
         </button>
       </div>
-      {showAddContactModal && <AddContactModal showAddContactModal={showAddContactModal} />}
+      {showAddContact && <AddContactModal />}
     </ZModal>
   );
 };

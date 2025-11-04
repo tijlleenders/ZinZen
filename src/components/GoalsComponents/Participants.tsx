@@ -6,11 +6,11 @@ import TickIcon from "@assets/images/correct.svg";
 import ZModal from "@src/common/ZModal";
 import { IParticipant } from "@src/models/GoalItem";
 import { followContactOnGoal } from "@src/api/GoalsAPI";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 const Participants = () => {
-  const { activeGoalId } = useParams();
+  const { activeGoalId } = useParams({ strict: false });
   const { data: goal } = useGetGoalById(activeGoalId || "");
 
   const toggleFollowStatus = async (participant: IParticipant, following: boolean) => {

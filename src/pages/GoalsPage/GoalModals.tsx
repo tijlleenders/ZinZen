@@ -1,22 +1,32 @@
 import React from "react";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
-import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
+import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
 import Participants from "@components/GoalsComponents/Participants";
+import { useParams, useSearch } from "@tanstack/react-router";
 import { GoalItem } from "@src/models/GoalItem";
-import { useSearchParams } from "react-router-dom";
+import { PartnerGoalActions } from "@components/GoalActionsModal";
 
-const GoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
-  const [searchParams] = useSearchParams();
-  const showShareModal = searchParams.get("share") === "true";
-  const showOptions = searchParams.get("showOptions") === "true" && activeGoal && activeGoal.archived === "false";
+const MyGoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
+  const { partnerId } = useParams({ strict: false });
+  const isPartnerModeActive = !!partnerId;
 
-  const showParticipants = searchParams.get("showParticipants") === "true";
-  const showNewChanges = searchParams.get("showNewChanges") === "true";
+  const search = useSearch({ strict: false }) as {
+    share?: string;
+    showOptions?: string;
+    showParticipants?: string;
+    showNewChanges?: string;
+  };
+  const showShareModal = search.share;
+  const showOptions = search.showOptions === "active" && activeGoal && activeGoal.archived === "false";
+
+  const { showParticipants, showNewChanges } = search;
 
   return (
     <>
-      {showOptions && <RegularGoalActions goal={activeGoal} />}
+      {showOptions &&
+        (isPartnerModeActive ? <PartnerGoalActions goal={activeGoal} /> : <MyGoalActions goal={activeGoal} />)}
       {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
       {showParticipants && <Participants />}
       {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
@@ -24,4 +34,4 @@ const GoalModals = ({ activeGoal }: { activeGoal: GoalItem }) => {
   );
 };
 
-export default GoalModals;
+export default MyGoalModals;
