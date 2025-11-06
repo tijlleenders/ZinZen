@@ -12,12 +12,7 @@ import { TGoalConfigMode } from "@src/types";
 import { TGoalCategory } from "@src/models/GoalItem";
 
 export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      mode: (search.mode as TGoalConfigMode) || "",
-      type: (search.type as TGoalCategory) || "",
-    };
-  },
+  validateSearch: (search: { type?: TGoalCategory; mode?: TGoalConfigMode }) => search,
   loader: async ({ context: { queryClient }, params: { parentId } }) => {
     await queryClient.fetchQuery({
       queryKey: GOAL_QUERY_KEYS.list("active", parentId),
@@ -27,12 +22,11 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
   },
   component: () => {
     const search = Route.useSearch();
-    const mode = search.mode || "";
     const { parentId } = Route.useParams();
     const { activeGoals, isLoading: isLoadingActiveGoals } = useGetActiveGoals(parentId || "root");
     const { deletedGoals } = useGetDeletedGoals(parentId || "root");
     const { archivedGoals } = useGetArchivedGoals(parentId || "root");
-    const goalType = search.type || "";
+    const { mode, type } = search;
     return (
       <>
         <MyGoals
@@ -42,8 +36,8 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
           archivedGoals={archivedGoals || []}
           parentId={parentId || "root"}
         />
-        {mode === "add" && (
-          <ConfigGoal key={`add-${parentId}`} type={goalType} goal={createGoalObjectFromTags()} mode="add" />
+        {mode === "add" && type && (
+          <ConfigGoal key={`add-${parentId}`} type={type} goal={createGoalObjectFromTags()} mode="add" />
         )}
       </>
     );

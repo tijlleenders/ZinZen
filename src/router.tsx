@@ -18,7 +18,7 @@ export const queryClient = new QueryClient({
   }),
 });
 
-export const router = createRouter({ routeTree, defaultPreload: "intent", context: { queryClient } });
+export const router = createRouter({ routeTree, defaultPreload: "viewport", context: { queryClient } });
 
 declare module "@tanstack/react-router" {
   interface Register {
