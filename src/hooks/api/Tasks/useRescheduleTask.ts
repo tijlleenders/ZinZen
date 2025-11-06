@@ -1,20 +1,19 @@
 import { addTaskPostponedEvent } from "@src/api/TaskHistoryAPI";
-import { displayToast, lastAction } from "@src/store";
+import { displayToast } from "@src/store";
 import { displayReschedule } from "@src/store/TaskState";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { blockedSlotOfTask } from "@src/models/TaskItem";
 import { addBlockedSlot } from "@src/api/TasksAPI";
-import { TaskActions } from "@src/constants/actions";
 import { ITask } from "@src/Interfaces/Task";
 import rescheduleTune from "@assets/reschedule.mp3";
 
 const rescheduleSound = new Audio(rescheduleTune);
 
 export const useRescheduleTask = (task: ITask) => {
+  const queryClient = useQueryClient();
   const setShowToast = useSetRecoilState(displayToast);
   const setDisplayReschedule = useSetRecoilState(displayReschedule);
-  const setLastAction = useSetRecoilState(lastAction);
 
   const {
     mutate: rescheduleTaskMutation,
@@ -28,7 +27,7 @@ export const useRescheduleTask = (task: ITask) => {
     onSuccess: () => {
       addTaskPostponedEvent(task);
       setDisplayReschedule(null);
-      setLastAction(TaskActions.TASK_RESCHEUDLED);
+      queryClient.invalidateQueries({ queryKey: ["scheduler", "reminders"] });
       rescheduleSound.play();
     },
     onError: (err) => {

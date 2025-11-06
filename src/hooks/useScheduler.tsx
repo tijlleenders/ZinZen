@@ -102,6 +102,7 @@ function useScheduler() {
       } else {
         const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
         newGeneratedInputId = generatedInputId;
+        console.log("schedulerInputV2", schedulerInputV2);
         await init();
         res = schedule(schedulerInputV2);
       }

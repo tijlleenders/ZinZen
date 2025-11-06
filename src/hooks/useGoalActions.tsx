@@ -10,7 +10,7 @@ import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoal, modifyGoal } from "@src/controllers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/controllers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayToast, lastAction } from "@src/store";
+import { displayToast } from "@src/store";
 
 import { useLocation, useParams } from "@tanstack/react-router";
 
@@ -20,7 +20,6 @@ import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
 import { removeBackTicks } from "@src/utils/patterns";
-import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
 
@@ -28,7 +27,6 @@ const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
   const { partnerId } = useParams({ strict: false });
   const isPartnerModeActive = !!partnerId;
-  const setLastAction = useSetRecoilState(lastAction);
   const subGoalsHistory = state?.goalsHistory || [];
 
   const setShowToast = useSetRecoilState(displayToast);
@@ -44,16 +42,11 @@ const useGoalActions = () => {
   };
 
   const restoreDeletedGoal = async (goal: GoalItem) => {
-    return restoreUserGoal(goal, goal.typeOfGoal === "shared").then(() => {
-      setLastAction(GoalActions.GOAL_RESTORED);
-    });
+    return restoreUserGoal(goal, goal.typeOfGoal === "shared");
   };
 
-  const restoreArchivedGoal = async (goal: GoalItem, action: GoalActions.GOAL_RESTORED | GoalActions.NONE) => {
-    return unarchiveUserGoal(goal).then(() => {
-      if (action === GoalActions.NONE) return;
-      setLastAction(action);
-    });
+  const restoreArchivedGoal = async (goal: GoalItem) => {
+    return unarchiveUserGoal(goal);
   };
 
   const updateGoal = async (goal: GoalItem, updatedHintOption: boolean, goalToCompare: GoalItem) => {

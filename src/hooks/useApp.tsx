@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 
-import { lastAction, displayConfirmation, languageSelectionState, displayToast } from "@src/store";
+import { displayConfirmation, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
@@ -14,7 +14,6 @@ import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelpe
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
-import { TaskActions } from "@src/constants/actions";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import useScheduler from "./useScheduler";
 import { useProcessSharedGoalData } from "./useProcessSharedGoalData";
@@ -27,7 +26,6 @@ function useApp() {
   const language = useRecoilValue(languageSelectionState);
   const isLanguageChosen = language !== "No language chosen.";
 
-  const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
 
   const confirmationState = useRecoilValue(displayConfirmation);
@@ -148,7 +146,6 @@ function useApp() {
     if (lastRefresh !== today) {
       refreshTaskCollection().then(() => {
         localStorage.setItem(LocalStorageKeys.LAST_REFRESH, today);
-        setLastAction(TaskActions.TASK_COLLECTION_REFRESHED);
       });
     }
   }, []);

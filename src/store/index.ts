@@ -42,11 +42,6 @@ export const displayConfirmation = atom({
   default: defaultConfirmationObj,
 });
 
-export const lastAction = atom({
-  key: "lastAction",
-  default: "",
-});
-
 export const searchActive = atom({
   key: "searchActive",
   default: false,
