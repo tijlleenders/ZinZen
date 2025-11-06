@@ -17,7 +17,7 @@ const SubgoalLayout = ({
   subgoalsPresent?: boolean;
   parentGoal?: GoalItem;
 }) => {
-  const [showConfig, setShowConfig] = useState(subgoalsPresent);
+  const [showConfig, setShowConfig] = useState(!subgoalsPresent);
   const { t } = useTranslation();
   const location = useLocation();
   const goalsHistory = location.state?.goalsHistory ?? [];

@@ -28,9 +28,16 @@ interface MyGoalsProps {
   deletedGoals: TrashItem[];
   archivedGoals: GoalItem[];
   parentId: string;
+  isLoadingActiveGoals?: boolean;
 }
 
-export const MyGoals = ({ activeGoals, deletedGoals, archivedGoals, parentId }: MyGoalsProps) => {
+export const MyGoals = ({
+  activeGoals,
+  deletedGoals,
+  archivedGoals,
+  parentId,
+  isLoadingActiveGoals = false,
+}: MyGoalsProps) => {
   const searchQuery = useRecoilValue(searchQueryState);
 
   const { data: parentGoal } = useGetGoalById(parentId);
@@ -49,7 +56,7 @@ export const MyGoals = ({ activeGoals, deletedGoals, archivedGoals, parentId }: 
 
   return (
     <div className="goals-container">
-      {isSublist && (
+      {isSublist && !isLoadingActiveGoals && (
         <SubgoalLayout
           subgoalsPresent={filteredActiveGoals && filteredActiveGoals.length > 0}
           parentGoal={parentGoal}
