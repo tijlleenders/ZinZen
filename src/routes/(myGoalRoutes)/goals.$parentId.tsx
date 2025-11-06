@@ -8,8 +8,16 @@ import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGo
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
 import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { TGoalConfigMode } from "@src/types";
+import { TGoalCategory } from "@src/models/GoalItem";
 
 export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      mode: (search.mode as TGoalConfigMode) || "",
+      type: (search.type as TGoalCategory) || "",
+    };
+  },
   loader: async ({ context: { queryClient }, params: { parentId } }) => {
     await queryClient.fetchQuery({
       queryKey: GOAL_QUERY_KEYS.list("active", parentId),

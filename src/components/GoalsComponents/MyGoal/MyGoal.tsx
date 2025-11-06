@@ -116,14 +116,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, ac
     >
       <Link
         preload="intent"
-        to="/goals/$parentId/$activeGoalId"
+        to={
+          isPartnerModeActive ? "/partners/$partnerId/goals/$parentId/$activeGoalId" : "/goals/$parentId/$activeGoalId"
+        }
         params={{ parentId: goal.parentGoalId, activeGoalId: goal.id }}
         style={{ touchAction: "none" }}
-        search={{ showOptions: "active" }}
-        // onClickCapture={(e) => {
-        //   e.stopPropagation();
-        //   redirect(location.state, true, actionModal);
-        // }}
+        search={goal.newUpdates ? { showNewChanges: "true" } : { showOptions: actionModal.toString() }}
+        state={location.state}
         {...dragAttributes}
         {...dragListeners}
       >

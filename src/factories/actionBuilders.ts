@@ -2,6 +2,18 @@ import React from "react";
 import { Action } from "@components/GoalActionsModal/GoalActionsModal";
 import { unarchiveIcon } from "@src/assets";
 
+export type ActionTestId =
+  | "delete-action"
+  | "archive-action"
+  | "restore-action"
+  | "edit-action"
+  | "move-action"
+  | "share-action"
+  | "report-hint-action"
+  | "add-hint-action"
+  | "delete-hint-action"
+  | "collaborate-action";
+
 export const actionBuilders = {
   delete: (handler: () => Promise<void> | void): Action => ({
     label: "Delete",
@@ -10,6 +22,7 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: "goal",
     confirmationAction: "delete",
+    dataTestId: "delete-action" as ActionTestId,
   }),
 
   archive: (handler: () => Promise<void> | void, confirmCategory?: "goal" | "collaboration"): Action => ({
@@ -19,6 +32,7 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: confirmCategory || "goal",
     confirmationAction: "archive",
+    dataTestId: "archive-action" as ActionTestId,
   }),
 
   restore: (handler: () => Promise<void> | void, darkMode?: boolean): Action => ({
@@ -34,12 +48,14 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: "goal",
     confirmationAction: "restore",
+    dataTestId: "restore-action" as ActionTestId,
   }),
 
   edit: (handler: () => void): Action => ({
     label: "Edit",
     icon: "Edit",
     onClick: handler,
+    dataTestId: "edit-action" as ActionTestId,
   }),
 
   move: (handler: () => Promise<void> | void): Action => ({
@@ -49,14 +65,14 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: "goal",
     confirmationAction: "move",
-    dataTestId: "move-action",
+    dataTestId: "move-action" as ActionTestId,
   }),
 
   share: (handler: () => void): Action => ({
     label: "Share",
     icon: "SingleAvatar",
     onClick: handler,
-    dataTestId: "share-action",
+    dataTestId: "share-action" as ActionTestId,
   }),
 
   report: (handler: () => Promise<void> | void, darkMode?: boolean, isLoading?: boolean): Action => ({
@@ -73,6 +89,7 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: "goal",
     confirmationAction: "reportHint",
+    dataTestId: "report-hint-action" as ActionTestId,
   }),
 
   add: (handler: () => Promise<void> | void): Action => ({
@@ -82,6 +99,7 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: "goal",
     confirmationAction: "addHint",
+    dataTestId: "add-hint-action" as ActionTestId,
   }),
 
   deleteHint: (handler: () => Promise<void> | void): Action => ({
@@ -91,6 +109,7 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: "goal",
     confirmationAction: "deleteHint",
+    dataTestId: "delete-hint-action" as ActionTestId,
   }),
 
   collaborate: (handler: () => Promise<void> | void): Action => ({
@@ -100,6 +119,6 @@ export const actionBuilders = {
     requiresConfirmation: true,
     confirmationCategory: "collaboration",
     confirmationAction: "colabRequest",
-    dataTestId: "collaborate-action",
+    dataTestId: "collaborate-action" as ActionTestId,
   }),
 };

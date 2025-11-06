@@ -3,7 +3,6 @@ import ZAccordion from "@src/common/Accordion";
 import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
 import React from "react";
-import { Outlet } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 
 const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
@@ -11,7 +10,6 @@ const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
 
   return (
     <div className="archived-drawer">
-      <Outlet />
       {deletedGoals.length > 0 && (
         <ZAccordion
           showCount

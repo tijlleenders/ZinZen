@@ -3,15 +3,13 @@ import ZAccordion from "@src/common/Accordion";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import React from "react";
-import { Outlet } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 
 const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
 
   return (
-    <>
-      <Outlet />
+    <div>
       {goals.length > 0 && (
         <div className="archived-drawer">
           <ZAccordion
@@ -35,7 +33,7 @@ const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };
 
