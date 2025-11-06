@@ -19,8 +19,8 @@ interface PartnerGoalsProps {
 
 // TODO: Add shared archived goals
 const PartnerGoals = ({ activeSharedWMGoals, parentId, partnerId }: PartnerGoalsProps) => {
-  const { partner: contact } = useGetContactByPartnerId(partnerId);
-  const { sharedWMGoal: parentGoal } = useGetSharedWMGoalById(parentId);
+  const { data: contact } = useGetContactByPartnerId(partnerId);
+  const { data: parentGoal } = useGetSharedWMGoalById(parentId);
 
   // TODO: Add debounce search
 

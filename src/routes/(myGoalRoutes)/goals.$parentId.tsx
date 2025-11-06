@@ -23,9 +23,9 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
   component: () => {
     const search = Route.useSearch();
     const { parentId } = Route.useParams();
-    const { activeGoals, isLoading: isLoadingActiveGoals } = useGetActiveGoals(parentId || "root");
-    const { deletedGoals } = useGetDeletedGoals(parentId || "root");
-    const { archivedGoals } = useGetArchivedGoals(parentId || "root");
+    const { data: activeGoals, isLoading: isLoadingActiveGoals } = useGetActiveGoals(parentId || "root");
+    const { data: deletedGoals } = useGetDeletedGoals(parentId || "root");
+    const { data: archivedGoals } = useGetArchivedGoals(parentId || "root");
     const { mode, type } = search;
     return (
       <>

@@ -7,7 +7,7 @@ import { PageTitle } from "@src/constants/pageTitle";
 import "@pages/GoalsPage/GoalsPage.scss";
 
 const ContactsPage = () => {
-  const { contacts } = useGetAllContacts();
+  const { data: contacts } = useGetAllContacts();
   return (
     <AppLayout title={PageTitle.Contacts}>
       <div className="goals-container">

@@ -7,8 +7,8 @@ import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGet
 export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId")({
   component: () => {
     const { parentId = "root", partnerId = "" } = Route.useParams();
-    const { partner: contact } = useGetContactByPartnerId(partnerId);
-    const { activeSharedWMGoals = [] } = useGetSharedWMActiveGoals(parentId, contact?.relId);
+    const { data: contact } = useGetContactByPartnerId(partnerId);
+    const { data: activeSharedWMGoals = [] } = useGetSharedWMActiveGoals(parentId, contact?.relId);
     return <PartnerGoals activeSharedWMGoals={activeSharedWMGoals} parentId={parentId} partnerId={partnerId} />;
   },
 });

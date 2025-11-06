@@ -15,7 +15,7 @@ export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/g
     };
     const { type, mode } = useSearch({ strict: false }) as { type?: TGoalCategory; mode?: TGoalConfigMode };
     const { showOptions } = useSearch({ strict: false }) as { showOptions?: ShowOptionsType };
-    const { sharedWMGoal: activeGoal } = useGetSharedWMGoalById(activeGoalId || "");
+    const { data: activeGoal } = useGetSharedWMGoalById(activeGoalId || "");
 
     if (activeGoal && mode === "edit" && type) {
       return <ConfigGoal key={`edit-${activeGoalId}`} type={type} goal={activeGoal} mode={mode} />;

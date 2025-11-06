@@ -1,15 +1,11 @@
 import { GoalIcon } from "@components/GoalsComponents/MyGoal/components/GoalIcon";
 import { ZItemContainer } from "@components/GoalsComponents/ZItemContainer";
-import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import ContactItem from "@src/models/ContactItem";
 import React from "react";
 import { Link } from "@tanstack/react-router";
+import { setCurrentPartnerInLocalStorage } from "@src/utils/partnerStorage";
 
 const Contacts = ({ contact }: { contact: ContactItem }) => {
-  const setCurrentPartnerInLocalStorage = (partnerId: string) => {
-    localStorage.setItem(LocalStorageKeys.CURRENT_PARTNER, partnerId);
-  };
-
   return (
     <ZItemContainer id={`contact-${contact.id}`} dataTestId={`contact-${contact.name}`}>
       <Link

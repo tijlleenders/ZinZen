@@ -1,35 +1,21 @@
 import { getPartnerById } from "@src/api/ContactsAPI";
 import { CONTACT_QUERY_KEYS } from "@src/factories/queryKeyFactory";
-import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { useQuery } from "react-query";
 import { useParams } from "@tanstack/react-router";
-import { useEffect } from "react";
+import ContactItem from "@src/models/ContactItem";
+import { QueryResult } from "@src/hooks/types";
+import { getCurrentPartnerFromLocalStorage } from "@src/utils/partnerStorage";
 
-export const useGetPartner = () => {
+export const useGetPartner = (): QueryResult<ContactItem> => {
   const { partnerId: partnerIdFromUrl } = useParams({ strict: false }) as { partnerId: string };
-  const cachedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
+  const cachedPartnerId = getCurrentPartnerFromLocalStorage();
   const partnerId = partnerIdFromUrl || cachedPartnerId || "";
 
-  const {
-    isFetching,
-    isSuccess,
-    error,
-    data: partner,
-  } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: CONTACT_QUERY_KEYS.detail(partnerId),
     queryFn: () => getPartnerById(partnerId),
     enabled: !!partnerId,
   });
 
-  const setCurrentPartnerInLocalStorage = (partnerIdToSet: string) => {
-    localStorage.setItem(LocalStorageKeys.CURRENT_PARTNER, partnerIdToSet);
-  };
-
-  useEffect(() => {
-    if (partner?.id) {
-      setCurrentPartnerInLocalStorage(partner.id);
-    }
-  }, [partner]);
-
-  return { partner, setCurrentPartnerInLocalStorage, isFetching, isSuccess, error };
+  return { data, isLoading };
 };

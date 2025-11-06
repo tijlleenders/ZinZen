@@ -19,7 +19,7 @@ const classifyChildrenGoalItems = (childrenGoals: GoalItem[]) => {
 };
 
 export const useSublistSummary = ({ goal }: { goal: GoalItem }) => {
-  const { activeGoals } = useGetActiveGoals(goal.id);
+  const { data: activeGoals } = useGetActiveGoals(goal.id);
 
   const { goalsCount, budgetsCount } = classifyChildrenGoalItems(activeGoals || []);
 

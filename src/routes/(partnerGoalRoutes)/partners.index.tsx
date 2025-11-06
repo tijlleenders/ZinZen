@@ -7,7 +7,7 @@ import { useGetAllContacts } from "@src/hooks/api/Contacts/queries/useGetAllCont
 import "@pages/GoalsPage/GoalsPage.scss";
 
 const PartnersIndexComponent = () => {
-  const { contacts } = useGetAllContacts();
+  const { data: contacts } = useGetAllContacts();
 
   return (
     <AppLayout title={PageTitle.Contacts}>

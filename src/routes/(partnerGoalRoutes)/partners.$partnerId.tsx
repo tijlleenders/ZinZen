@@ -6,7 +6,7 @@ import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGet
 
 const RouteComponent = () => {
   const { partnerId } = useParams({ strict: false });
-  const { partner } = useGetContactByPartnerId(partnerId || "");
+  const { data: partner } = useGetContactByPartnerId(partnerId || "");
   const { showOptions, mode, type } = useSearch({ strict: false }) as {
     showOptions?: string;
     mode?: string;

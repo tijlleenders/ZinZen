@@ -9,7 +9,7 @@ export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/g
   validateSearch: (search: { type?: TGoalCategory; mode?: TGoalConfigMode }) => search,
   component: () => {
     const { partnerId } = Route.useParams();
-    const { partner } = useGetContactByPartnerId(partnerId || "");
+    const { data: partner } = useGetContactByPartnerId(partnerId || "");
     const { name = "" } = partner || {};
     const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);
 
