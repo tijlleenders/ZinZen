@@ -14,6 +14,7 @@ export const useGetDeletedGoalById = (goalId: string | undefined, disabled = fal
       return getDeletedGoalById(goalId);
     },
     enabled: !disabled && !!goalId,
+    refetchOnWindowFocus: false,
   });
 
   return { data, isLoading };

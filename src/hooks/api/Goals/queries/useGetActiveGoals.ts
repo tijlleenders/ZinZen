@@ -17,6 +17,8 @@ export const useGetActiveGoals = (parentGoalId: string): QueryResult<GoalItem[]>
         return goals;
       }
     },
+    refetchOnWindowFocus: false,
+    enabled: !!parentGoalId,
   });
   return { data: activeGoals, isLoading };
 };

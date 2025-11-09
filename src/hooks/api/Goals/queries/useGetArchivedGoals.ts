@@ -10,6 +10,8 @@ export const useGetArchivedGoals = (parentGoalId: string): QueryResult<GoalItem[
     queryFn: () => {
       return getArchivedGoals(parentGoalId);
     },
+    refetchOnWindowFocus: false,
+    enabled: !!parentGoalId,
   });
   return { data, isLoading };
 };
