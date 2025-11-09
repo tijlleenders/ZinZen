@@ -1,21 +1,19 @@
 /* eslint-disable complexity */
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 
-import { darkModeState } from "@src/store";
-import { themeSelectionMode, themeState } from "@src/store/ThemeState";
+import { themeSelectionMode } from "@src/store/ThemeState";
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
 
-import Backdrop from "@src/common/Backdrop";
 import GlobalAddBtn from "@components/GlobalAddBtn";
 
 import "./BottomNavbar.scss";
 import Icon from "@src/common/Icon";
-import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { PageTitle } from "@src/constants/pageTitle";
 import { moveGoalState } from "@src/store/moveGoalState";
+import ThemeSelectionControls from "./ThemeSelectionControls";
 
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
@@ -27,29 +25,10 @@ const BottomNavbar = ({ title }: { title: string }) => {
 
   const themeSelection = useRecoilValue(themeSelectionMode);
 
-  const [theme, setTheme] = useRecoilState(themeState);
-  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-
   const currentPage = window.location.pathname.split("/")[1];
   const subGoalHistory = location.state?.goalsHistory ?? [];
 
-  const themeChange = (nav: -1 | 1) => {
-    let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
-    if (choice >= 8) {
-      choice = 1;
-    } else if (choice === 0) {
-      choice = 8;
-    }
-    const newTheme = { ...theme, [darkModeStatus ? "dark" : "light"]: choice };
-    localStorage.setItem(LocalStorageKeys.THEME, JSON.stringify(newTheme));
-    setTheme({ ...newTheme });
-  };
-
   const handleClick = (to: string) => {
-    if (themeSelection) {
-      setDarkModeStatus(!darkModeStatus);
-      return;
-    }
     if (location.state?.from === to) {
       window.history.back();
     } else {
@@ -75,72 +54,68 @@ const BottomNavbar = ({ title }: { title: string }) => {
   const { activeGoalId } = location.state || {};
 
   const isAddBtnVisible =
-    title !== "Focus" && title !== PageTitle.Contacts && (isPartnerModeActive ? !!activeGoalId || goalToMove : true);
+    title !== "Focus" &&
+    title !== PageTitle.Contacts &&
+    (isPartnerModeActive ? !!activeGoalId || Boolean(goalToMove) : true);
+
+  if (themeSelection) {
+    return (
+      <ThemeSelectionControls
+        isAddBtnVisible={isAddBtnVisible}
+        onClose={() => {
+          window.history.back();
+        }}
+        title={title}
+      />
+    );
+  }
 
   return (
-    <>
-      {themeSelection && (
-        <Backdrop
-          opacity={0}
-          onClick={() => {
-            window.history.back();
-          }}
-        />
-      )}
-      <BottomNavLayout>
-        <button
-          type="button"
-          onClick={() => {
-            if (themeSelection) themeChange(-1);
-            else handleClick("MyTime");
-          }}
-          className={`bottom-nav-item ${currentPage === "" && !themeSelection ? "active" : ""}`}
-        >
-          <div
-            style={{
-              transform: themeSelection ? "scaleX(-1)" : "none",
-            }}
-          >
-            <Icon
-              active={currentPage === "" && !themeSelection}
-              title={themeSelection ? "ArrowIcon" : "CalendarIcon"}
-            />
-          </div>
-          {themeSelection ? <p>Prev</p> : <p>{t("Schedule")}</p>}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            handleClick("goals");
-          }}
-          data-testid="navigation-button-Goals"
-          className={`bottom-nav-item ${currentPage === "goals" || themeSelection ? "active" : ""}`}
-        >
-          <Icon active={currentPage === "goals" || themeSelection} title="GoalsIcon" />
-          {themeSelection ? <p>Switch Mode</p> : <p>{t("Goals")}</p>}
-        </button>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (themeSelection) themeChange(1);
-            else handleClick("MyJournal");
-          }}
+    <BottomNavLayout>
+      <button
+        type="button"
+        onClick={() => {
+          handleClick("MyTime");
+        }}
+        className={`bottom-nav-item ${currentPage === "" ? "active" : ""}`}
+      >
+        <div
           style={{
-            padding: 7.5,
-            gap: 10,
+            transform: "none",
           }}
-          className={`bottom-nav-item ${currentPage === "MyJournal" && !themeSelection ? "active" : ""}`}
         >
-          <Icon
-            active={currentPage === "MyJournal" && !themeSelection}
-            title={themeSelection ? "ArrowIcon" : "JournalIcon"}
-          />
-          {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
-          {isAddBtnVisible && <GlobalAddBtn add={title} />}
-        </button>
-      </BottomNavLayout>
-    </>
+          <Icon active={currentPage === ""} title="CalendarIcon" />
+        </div>
+        <p>{t("Schedule")}</p>
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          handleClick("goals");
+        }}
+        data-testid="navigation-button-Goals"
+        className={`bottom-nav-item ${currentPage === "goals" ? "active" : ""}`}
+      >
+        <Icon active={currentPage === "goals"} title="GoalsIcon" />
+        <p>{t("Goals")}</p>
+      </button>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleClick("MyJournal");
+        }}
+        style={{
+          padding: 7.5,
+          gap: 10,
+        }}
+        className={`bottom-nav-item ${currentPage === "MyJournal" ? "active" : ""}`}
+      >
+        <Icon active={currentPage === "MyJournal"} title="JournalIcon" />
+        <p>{t("Journal")}</p>
+        {isAddBtnVisible && <GlobalAddBtn add={title} />}
+      </button>
+    </BottomNavLayout>
   );
 };
 

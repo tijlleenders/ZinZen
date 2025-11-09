@@ -41,7 +41,6 @@ declare module "@tanstack/react-router" {
     displaySearch?: boolean;
     from?: string;
     displayFocus?: boolean;
-    changeTheme?: boolean;
     note?: string;
   }
 }

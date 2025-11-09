@@ -2,22 +2,28 @@ import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Dropdown, MenuProps, Switch } from "antd";
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import verticalDots from "@assets/images/verticalDots.svg";
 import { darkModeState } from "@src/store";
-import { themeState } from "@src/store/ThemeState";
+import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 import useGlobalStore from "@src/hooks/useGlobalStore";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+};
 
 const Settings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { handleChangeTheme, handleBackResModal, handleBackLangModal } = useGlobalStore();
+  const { handleBackResModal, handleBackLangModal } = useGlobalStore();
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+  const setThemeSelection = useSetRecoilState(themeSelectionMode);
 
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstall, setShowInstall] = useState(false);
   const dropdownOptions = [t("donate"), t("feedback"), t("blog"), t("backup"), t("changeLanguage"), t("changeTheme")];
 
@@ -28,13 +34,18 @@ const Settings = () => {
 
   const theme = useRecoilValue(themeState);
 
+  const handleChangeTheme = async () => {
+    await navigate({ to: "/goals/$parentId", params: { parentId: "root" }, state: (state) => ({ ...state }) });
+    setThemeSelection(true);
+  };
+
   const items: MenuProps["items"] = [
     ...[...dropdownOptions, ...(showInstall ? ["Install"] : [])].map((ele, index) => ({
       label: ele,
       key: `${index}`,
-      onClick: () => {
+      onClick: async () => {
         if (ele === t("changeTheme")) {
-          handleChangeTheme();
+          await handleChangeTheme();
         } else if (ele === t("donate")) {
           window.open("https://donate.stripe.com/6oE4jK1iPcPT1m89AA", "_self");
         } else if (ele === t("feedback")) {
@@ -47,13 +58,12 @@ const Settings = () => {
           handleBackLangModal();
         } else if (ele === t("Install")) {
           if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => {
-              if (choiceResult.outcome === "accepted") {
-                setShowInstall(false);
-                setDeferredPrompt(null);
-              }
-            });
+            await deferredPrompt.prompt();
+            const choice = await deferredPrompt.userChoice;
+            if (choice.outcome === "accepted") {
+              setShowInstall(false);
+              setDeferredPrompt(null);
+            }
           }
         }
       },
@@ -79,7 +89,7 @@ const Settings = () => {
   ];
 
   useEffect(() => {
-    const handleBeforeInstallPrompt = (event) => {
+    const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
       event.preventDefault();
       setDeferredPrompt(event);
       setShowInstall(true);

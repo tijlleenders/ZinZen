@@ -4,13 +4,11 @@ import { useLocation, useNavigate } from "@tanstack/react-router";
 
 import { ILocationState } from "@src/Interfaces";
 import { backupRestoreModal, languageChangeModal } from "@src/store";
-import { themeSelectionMode } from "@src/store/ThemeState";
 
 function useGlobalStore() {
   const location = useLocation();
   const navigate = useNavigate();
   const [openBackupModal, setBackupRestoreModal] = useRecoilState(backupRestoreModal);
-  const [themeSelection, setThemeSelection] = useRecoilState(themeSelectionMode);
   const [langChangeModal, setLangChangeModal] = useRecoilState(languageChangeModal);
 
   const handleLocationChange = () => {
@@ -25,12 +23,6 @@ function useGlobalStore() {
       setLangChangeModal(false);
     } else if (locationState.displayLangChangeModal) {
       setLangChangeModal(locationState.displayLangChangeModal);
-    }
-
-    if (themeSelection) {
-      setThemeSelection(false);
-    } else if (locationState.changeTheme) {
-      setThemeSelection(locationState.changeTheme);
     }
   };
 
@@ -50,17 +42,12 @@ function useGlobalStore() {
     }
   };
 
-  const handleChangeTheme = () => {
-    navigate({ to: "/goals", state: { ...location.state, changeTheme: true } });
-  };
-
   useEffect(() => {
     handleLocationChange();
   }, [location]);
 
   return {
     handleBackResModal,
-    handleChangeTheme,
     handleLangChangeModal,
     handleBackLangModal,
   };
