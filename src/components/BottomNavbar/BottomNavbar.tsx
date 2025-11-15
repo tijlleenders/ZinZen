@@ -2,13 +2,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
-import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate, useParams, useRouterState } from "@tanstack/react-router";
 
 import { themeSelectionMode } from "@src/store/ThemeState";
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
 
 import GlobalAddBtn from "@components/GlobalAddBtn";
 
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import "./BottomNavbar.scss";
 import Icon from "@src/common/Icon";
 import { PageTitle } from "@src/constants/pageTitle";
@@ -18,40 +19,68 @@ import ThemeSelectionControls from "./ThemeSelectionControls";
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
   const goalToMove = useRecoilValue(moveGoalState);
-  const { partnerId } = useParams({ strict: false }) as { partnerId?: string };
+  const { partnerId, parentId } = useParams({ strict: false }) as { partnerId?: string; parentId: string };
+  const { data: goal } = useGetGoalById(parentId);
   const isPartnerModeActive = !!partnerId;
-
   const themeSelection = useRecoilValue(themeSelectionMode);
+  const activeGoalId = useRouterState({
+    select: (state) => state.location.state.activeGoalId,
+  });
+  const from = useRouterState({
+    select: (state) => state.location.state.from,
+  });
 
   const currentPage = window.location.pathname.split("/")[1];
-  const subGoalHistory = location.state?.goalsHistory ?? [];
 
   const handleClick = (to: string) => {
-    if (location.state?.from === to) {
+    if (from === to) {
       window.history.back();
-    } else {
-      const newLocationState = { ...location.state, from: currentPage, displayFocus: false };
-      if (to === "MyTime") {
-        if (currentPage !== "") navigate({ to: "/", state: newLocationState });
-      } else if (to === "goals") {
-        if (currentPage !== "goals") {
-          navigate({
-            to: "/goals/$parentId",
-            params: { parentId: "root" },
-            state: newLocationState,
-          });
-        } else if (subGoalHistory.length > 0) {
-          window.history.go(-subGoalHistory.length);
-        }
-      } else if (currentPage !== "MyJournal") {
-        navigate({ to: "/MyJournal", state: newLocationState });
+      return;
+    }
+
+    if (to === "MyTime") {
+      if (currentPage !== "") {
+        navigate({
+          to: "/",
+          state: (prevState) => ({
+            ...prevState,
+            from: currentPage,
+            displayFocus: false,
+          }),
+        });
       }
+      return;
+    }
+
+    if (to === "goals") {
+      if (currentPage !== "goals") {
+        navigate({
+          to: "/goals/$parentId",
+          params: { parentId: "root" },
+          state: (prevState) => ({
+            ...prevState,
+            from: currentPage,
+            displayFocus: false,
+          }),
+        });
+      } else if (goal) {
+        window.history.go(-goal.depth);
+      }
+      return;
+    }
+
+    if (currentPage !== "MyJournal") {
+      navigate({
+        to: "/MyJournal",
+        state: (prevState) => ({
+          ...prevState,
+          from: currentPage,
+          displayFocus: false,
+        }),
+      });
     }
   };
-
-  const { activeGoalId } = location.state || {};
 
   const isAddBtnVisible =
     title !== "Focus" &&

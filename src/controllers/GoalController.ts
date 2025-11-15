@@ -191,6 +191,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
 
     const updatedGoal = {
       ...goalWithParentProps,
+      depth: parentGoal.depth + 1,
       participants: inheritParticipants(parentGoal),
     };
 
@@ -206,7 +207,11 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
     return { parentGoal };
   }
 
-  await addGoal({ ...newGoal, hints: { ...newGoal.hints, hintOptionEnabled: hintOption, availableGoalHints } });
+  await addGoal({
+    ...newGoal,
+    depth: 1,
+    hints: { ...newGoal.hints, hintOptionEnabled: hintOption, availableGoalHints },
+  });
   return { parentGoal: null };
 };
 

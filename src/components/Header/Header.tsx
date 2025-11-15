@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams, useRouterState } from "@tanstack/react-router";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
@@ -8,6 +8,7 @@ import searchIcon from "@assets/images/searchIcon.svg";
 import darkModeIcon from "@assets/images/darkModeIcon.svg";
 import lightModeIcon from "@assets/images/lightModeIcon.svg";
 import { getAllContacts } from "@src/api/ContactsAPI";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 import PartnerModeTour from "@components/PartnerModeTour";
 
@@ -22,12 +23,10 @@ import "./Header.scss";
 const Header = ({ title }: { title: string }) => {
   const { t } = useTranslation();
   const [showSearch, setShowSearch] = useRecoilState(showSearchState);
-  const location = useLocation();
-
+  const { parentId } = useParams({ strict: false }) as { parentId: string };
+  const { data: parentGoal } = useGetGoalById(parentId);
   const navigate = useNavigate();
   const setShowToast = useSetRecoilState(displayToast);
-
-  const subGoalHistory = location.state?.goalsHistory || [];
 
   const [partnerModeTour, setPartnerModeTour] = useRecoilState(displayPartnerModeTour);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
@@ -49,22 +48,25 @@ const Header = ({ title }: { title: string }) => {
     if (partnerModeTour) {
       setPartnerModeTour(false);
     }
-    if (location.pathname.split("/")[1] === "partners") {
-      navigate({ to: "/goals/root", replace: true });
+    if (window.location.pathname.split("/")[1] === "partners") {
+      navigate({ to: "/goals/$parentId", params: { parentId: "root" }, replace: true });
       return;
     }
     navigate({ to: "/partners" });
   };
+  const displaySearchState = useRouterState({
+    select: (state) => state.location.state.displaySearch || false,
+  });
+
   const handlePopState = () => {
-    const locationState = location.state || {};
-    if (displaySearch || locationState?.displaySearch) {
-      setDisplaySearch(locationState?.displaySearch || false);
+    if (displaySearch || displaySearchState) {
+      setDisplaySearch(displaySearchState || false);
     }
   };
 
   useEffect(() => {
     handlePopState();
-  }, [location]);
+  }, [displaySearchState]);
 
   useEffect(() => {
     const timer = isFlipping ? setTimeout(() => setIsFlipping(false), 500) : undefined;
@@ -101,7 +103,8 @@ const Header = ({ title }: { title: string }) => {
             <h6
               onClickCapture={() => {
                 if (title === "myGoals") {
-                  window.history.go(-subGoalHistory.length);
+                  if (!parentGoal) return;
+                  window.history.go(-parentGoal.depth || 0);
                 }
               }}
             >

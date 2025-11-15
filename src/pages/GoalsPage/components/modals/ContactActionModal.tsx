@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import ZModal from "@src/common/ZModal";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { Link } from "@tanstack/react-router";
-import { useDeleteContact } from "@src/hooks/api/Contacts/queries/useDeleteContact";
 import ContactItem from "@src/models/ContactItem";
+import { useDeleteContact } from "@src/hooks/api/Contacts/mutations/useDeleteContact";
 
 const ContactActionModal = ({ contact }: { contact: ContactItem }) => {
   const { t } = useTranslation();

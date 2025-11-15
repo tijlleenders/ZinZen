@@ -29,6 +29,7 @@ declare module "@tanstack/react-router" {
   interface HistoryState {
     goalsHistory?: Array<{ goalID: string; goalColor: string; goalTitle: string }>;
     displayUpdateGoal?: string;
+    rootGoalId?: string;
     activeGoalId?: string;
     displayAddGoal?: string;
     displayShareModal?: any;

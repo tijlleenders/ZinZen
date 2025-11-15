@@ -36,7 +36,6 @@ const GoalHistory = ({
 }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  console.log(goalsHistory);
 
   return (
     <button
@@ -96,15 +95,10 @@ const GoalHistory = ({
                     window.history.back();
                   },
                 },
-                ...goalsHistory.slice(goalsHistory.length - 1).map((goal: ISubGoalHistory, index: number) => ({
+                ...goalsHistory.slice(goalsHistory.length - 1).map((goal: ISubGoalHistory) => ({
                   title: <BreadcrumbItem color={goal.goalColor} title={t(goal.goalTitle)} />,
                   onClick: () => {
-                    const count = index + 1 - goalsHistory.length;
-                    if (-count === goalsHistory.length - 1) {
-                      setShowConfig?.(!showConfig);
-                      return;
-                    }
-                    window.history.go(count);
+                    setShowConfig?.(!showConfig);
                   },
                 })),
               ]),

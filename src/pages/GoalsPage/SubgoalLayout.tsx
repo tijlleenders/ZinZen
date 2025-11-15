@@ -3,7 +3,7 @@ import GoalItemSummary from "@components/GoalItemSummary/GoalItemSummary";
 import GoalHistory from "@components/GoalsComponents/GoalSublist/components/GoalHistory";
 import { GoalItem } from "@src/models/GoalItem";
 import { searchQueryState } from "@src/store/GoalsState";
-import { useLocation } from "@tanstack/react-router";
+import { useRouterState } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
@@ -17,10 +17,12 @@ const SubgoalLayout = ({
   subgoalsPresent?: boolean;
   parentGoal?: GoalItem;
 }) => {
-  const [showConfig, setShowConfig] = useState(!subgoalsPresent);
   const { t } = useTranslation();
-  const location = useLocation();
-  const goalsHistory = location.state?.goalsHistory ?? [];
+  const [showConfig, setShowConfig] = useState(!subgoalsPresent);
+  const goalsHistory = useRouterState({
+    select: (state) => state.location.state.goalsHistory || [],
+  });
+
   const handleToggleConfig = () => {
     setShowConfig(!showConfig);
   };
