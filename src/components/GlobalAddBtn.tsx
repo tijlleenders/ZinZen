@@ -1,25 +1,25 @@
 import React, { ReactNode, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import { useNavigate, useParams, useRouterState, useSearch } from "@tanstack/react-router";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
 import Backdrop from "@src/common/Backdrop";
-import useFeelingStore from "@src/hooks/useFeelingStore";
 
-import { ILocationState } from "@src/Interfaces";
 import { themeSelectionMode } from "@src/store/ThemeState";
 
 import "./index.scss";
-import { TGoalCategory } from "@src/models/GoalItem";
+import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
 import { useKeyPress } from "@src/hooks/useKeyPress";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
+import { TGoalConfigMode, TJournalConfigMode } from "@src/types";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGoalMoveMutation } from "../hooks/api/Goals/mutations/useGoalMoveMutation";
 
 interface AddGoalOptionProps {
@@ -49,69 +49,137 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
   );
 };
 
+const usePartnerModeLogic = (partnerId: string | undefined, parentId: string) => {
+  if (!partnerId) {
+    return {
+      isPartnerMode: false,
+      parentGoal: undefined,
+      rootGoalId: undefined,
+      moveHerePartner: undefined,
+    };
+  }
+
+  // Partner mode:
+  const { data: parentGoal } = useGetGoalById(parentId, false);
+
+  const rootGoalId = useRouterState({
+    select: (s) => s.location.state.rootGoalId,
+  });
+
+  const moveHerePartner = async (goalToMove: GoalItem) => {
+    let rootGoal = goalToMove;
+    if (rootGoalId) {
+      rootGoal = (await getSharedWMGoalById(rootGoalId)) || goalToMove;
+    }
+
+    suggestChanges(rootGoal, { ...goalToMove, parentGoalId: parentId }, parentGoal?.depth || 0);
+  };
+
+  return {
+    isPartnerMode: true,
+    parentGoal,
+    rootGoalId,
+    moveHerePartner,
+  };
+};
+
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
-  const { type, addOptions } = useSearch({ strict: false }) as { type?: TGoalCategory; addOptions?: boolean };
-  const { parentId = "root", partnerId } = useParams({ strict: false }) as { parentId: string; partnerId: string };
-  const { state }: { state: ILocationState } = useLocation();
-  const { handleAddFeeling } = useFeelingStore();
-  const isPartnerModeActive = !!partnerId;
+  const { type, addOptions } = useSearch({ strict: false }) as {
+    type?: TGoalCategory;
+    mode?: TJournalConfigMode | TGoalConfigMode;
+    addOptions?: boolean;
+  };
 
-  const subGoalsHistory = state?.goalsHistory || [];
+  const { parentId = "root", partnerId } = useParams({ strict: false }) as {
+    parentId: string;
+    partnerId?: string;
+  };
 
   const navigate = useNavigate();
+
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
+
   const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
+  const { moveGoalMutation } = useGoalMoveMutation();
 
-  const enterPressed = useKeyPress("Enter");
-  const plusPressed = useKeyPress("+");
+  const { isPartnerMode, moveHerePartner } = usePartnerModeLogic(partnerId, parentId);
 
-  const handleAddGoal = async (goalType: TGoalCategory, replaceCurrentRoute = true) => {
+  const handleMoveGoalHere = async () => {
+    if (!goalToMove) return;
+
+    if (isPartnerMode && moveHerePartner) {
+      await moveHerePartner(goalToMove);
+    } else {
+      moveGoalMutation({
+        goalId: goalToMove.id,
+        newParentGoalId: parentId,
+      });
+    }
+  };
+
+  const shouldRenderMoveButton = goalToMove && goalToMove.id !== parentId && goalToMove.parentGoalId !== parentId;
+
+  const handleAddGoal = (goalType: TGoalCategory, replaceCurrentRoute = true) => {
     if (add === "myTime") {
-      navigate({ to: "/", search: { type: goalType, mode: "add" }, state, replace: replaceCurrentRoute });
+      navigate({
+        to: "/",
+        search: { type: goalType, mode: "add" },
+        state: (state) => ({ ...state }),
+        replace: replaceCurrentRoute,
+      });
       return;
     }
-    const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
+
+    const prefix = `${isPartnerMode ? `/partners/${partnerId}/` : "/"}goals`;
+
     navigate({
       to: `${prefix}/${parentId || "root"}`,
       search: { type: goalType, mode: "add" },
-      state,
+      state: (state) => ({ ...state }),
       replace: replaceCurrentRoute,
     });
   };
 
-  const handleGlobalAddClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
+  const handleGlobalAddClick = () => {
     if (goalToMove) {
-      if (add === "myGoals" || isPartnerModeActive) {
-        navigate({
-          to: isPartnerModeActive
-            ? `/partners/${partnerId}/goals/${parentId}?addOptions=true`
-            : `/goals/${parentId}?addOptions=true`,
-          state,
-        });
-      }
+      navigate({
+        to: isPartnerMode
+          ? `/partners/${partnerId}/goals/${parentId}?addOptions=true`
+          : `/goals/${parentId}?addOptions=true`,
+        state: (state) => ({ ...state }),
+      });
       return;
     }
 
     if (themeSelection) {
       window.history.back();
-    } else if (add === "myTime" || add === "myGoals" || isPartnerModeActive) {
+      return;
+    }
+
+    if (add === "myJournal") {
+      navigate({
+        to: "/MyJournal",
+        search: { mode: "addJournal" },
+        state: (state) => ({ ...state }),
+      });
+      return;
+    }
+
+    if (add === "myTime" || add === "myGoals" || isPartnerMode) {
       handleAddGoal("Standard", false);
-    } else if (add === "myJournal") {
-      handleAddFeeling();
     }
   };
 
-  const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
-    if (add === "myGoals" || isPartnerModeActive) {
-      navigate({ to: `/goals/${parentId}`, search: { addOptions: true }, state });
+  const handleLongPress = () => {
+    if (add === "myGoals") {
+      navigate({ to: `/goals/${parentId}`, search: { addOptions: true }, state: (state) => ({ ...state }) });
     } else if (add === "myTime") {
-      navigate({ to: "/", search: { addOptions: true }, state });
+      navigate({ to: "/", search: { addOptions: true }, state: (state) => ({ ...state }) });
     }
   };
+
   const { handlers } = useLongPress({
     onLongPress: handleLongPress,
     onClick: handleGlobalAddClick,
@@ -120,52 +188,26 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
 
-  const { moveGoalMutation } = useGoalMoveMutation();
-
-  const handleMoveGoalHere = async () => {
-    if (!goalToMove) return;
-    // TODO: try to simplify this logic later
-    if (isPartnerModeActive) {
-      let rootGoal = goalToMove;
-      if (state?.goalsHistory && state?.goalsHistory?.length > 0) {
-        // TODO: understand this later
-        const rootGoalId = state.goalsHistory[0].goalID;
-        rootGoal = (await getSharedWMGoalById(rootGoalId)) || goalToMove;
-      }
-      suggestChanges(
-        rootGoal,
-        { ...goalToMove, parentGoalId: parentId || goalToMove.parentGoalId },
-        subGoalsHistory.length,
-      );
-    } else {
-      moveGoalMutation({ goalId: goalToMove.id, newParentGoalId: parentId });
-    }
-  };
+  const enterPressed = useKeyPress("Enter");
+  const plusPressed = useKeyPress("+");
 
   useEffect(() => {
     if ((plusPressed || enterPressed) && !type) {
-      // @ts-ignore
-      handleGlobalAddClick(new MouseEvent("click"));
+      handleGlobalAddClick();
     }
   }, [plusPressed, enterPressed]);
-
-  const shouldRenderMoveButton = goalToMove && goalToMove.id !== parentId && goalToMove.parentGoalId !== parentId;
 
   if (addOptions) {
     return (
       <>
-        <Backdrop
-          opacity={0.5}
-          onClick={(e) => {
-            e.stopPropagation();
-            window.history.back();
-          }}
-        />
+        <Backdrop opacity={0.5} onClick={() => window.history.back()} />
+
         {goalToMove ? (
           <>
             <AddGoalOption handleClick={handleMoveGoalHere} bottom={144} disabled={!shouldRenderMoveButton}>
               {t("Move here")}
             </AddGoalOption>
+
             <AddGoalOption
               handleClick={() => {
                 setGoalToMove(null);
@@ -179,20 +221,14 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         ) : (
           <>
             <AddGoalOption
-              handleClick={() => {
-                handleAddGoal("Budget");
-              }}
+              handleClick={() => handleAddGoal("Budget")}
               disabled={!isAddingBudgetGoalAllowed}
               bottom={144}
             >
               {t("addBtnBudget")}
             </AddGoalOption>
-            <AddGoalOption
-              handleClick={() => {
-                handleAddGoal("Standard");
-              }}
-              bottom={74}
-            >
+
+            <AddGoalOption handleClick={() => handleAddGoal("Standard")} bottom={74}>
               {t("addBtnGoal")}
             </AddGoalOption>
           </>
@@ -200,6 +236,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       </>
     );
   }
+
   return (
     <button
       type="button"
