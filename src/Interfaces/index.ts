@@ -13,8 +13,6 @@ export interface ILocationState {
   displayAddGoal?: string; // parent id of the goal to be added
   displayShareModal?: GoalItem; // show share modal
   displayConfirmation?: TConfirmActionState; // show confirmation modal
-  displayBackResModal?: boolean; // show backup restore modal
-  displayLangChangeModal?: boolean; // show language change modal
   displayNoteModal?: number; // show saved note of feeling id
   displayInputNoteModal?: number; // show input modal for adding note for id
   changeTheme?: boolean; // theme changer mode

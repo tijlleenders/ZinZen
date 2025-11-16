@@ -7,7 +7,6 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import verticalDots from "@assets/images/verticalDots.svg";
 import { darkModeState } from "@src/store";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
-import useGlobalStore from "@src/hooks/useGlobalStore";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 type BeforeInstallPromptEvent = Event & {
@@ -18,7 +17,6 @@ type BeforeInstallPromptEvent = Event & {
 const Settings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { handleBackResModal, handleBackLangModal } = useGlobalStore();
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const setThemeSelection = useSetRecoilState(themeSelectionMode);
@@ -53,9 +51,17 @@ const Settings = () => {
         } else if (ele === t("blog")) {
           window.open("https://blog.zinzen.me", "_self");
         } else if (ele === t("backup")) {
-          handleBackResModal();
+          navigate({
+            to: ".",
+            search: { show: "backupModal" },
+            state: (state) => ({ ...state }),
+          });
         } else if (ele === t("changeLanguage")) {
-          handleBackLangModal();
+          navigate({
+            to: ".",
+            search: { show: "langChangeModal" },
+            state: (state) => ({ ...state }),
+          });
         } else if (ele === t("Install")) {
           if (deferredPrompt) {
             await deferredPrompt.prompt();

@@ -1,12 +1,12 @@
 import React from "react";
 import { Transaction } from "dexie";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useQueryClient } from "react-query";
 
 import { db } from "@models";
 import ZModal from "@src/common/ZModal";
 import { syncVersion } from "@src/models/dbSchema";
-import { backupRestoreModal, displayToast } from "@src/store";
+import { displayToast } from "@src/store";
 
 import "dexie-export-import";
 import "./index.scss";
@@ -22,8 +22,7 @@ const restoreImg =
 
 const exportManager = new ExportManager(new JsonExportStrategy());
 
-const BackupRestoreModal = () => {
-  const open = useRecoilValue(backupRestoreModal);
+const BackupRestoreModal = ({ open }: { open: boolean }) => {
   const setShowToast = useSetRecoilState(displayToast);
   const queryClient = useQueryClient();
 

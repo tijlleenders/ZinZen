@@ -1,47 +1,38 @@
-/* eslint-disable no-param-reassign */
-import React, { useLayoutEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-
-import { ILanguage } from "@src/Interfaces";
+import React, { useMemo } from "react";
+import { useRecoilValue } from "recoil";
 import { i18n } from "@src/translations/i18n";
 
-import { languageChangeModal, languageSelectionState } from "@src/store";
+import { languageSelectionState } from "@src/store";
 import "./index.scss";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
 import { getLanguages } from "@src/constants/languages";
 import ZModal from "@src/common/ZModal";
 
-export const LanguageChangeModal = () => {
-  const [, setPosition] = useState(1);
-  const open = useRecoilValue(languageChangeModal);
-  const [IsLanguageChosen] = useRecoilState(languageSelectionState);
-  const langSelected = (lang: string, newPos: number) => {
-    if (i18n.language.includes(lang)) {
-      setPosition(newPos);
-      return true;
-    }
-    return false;
-  };
+export const LanguageChangeModal = ({ open }: { open: boolean }) => {
+  if (!open) return null;
 
-  const languages: ILanguage[] = getLanguages();
+  const isLanguageChosen = useRecoilValue(languageSelectionState);
+  const allLanguages = getLanguages();
 
-  const [Languages, setLanguages] = useState(languages);
+  const sortedLanguages = useMemo(() => {
+    const activeLang = i18n.language;
 
-  useLayoutEffect(() => {
-    languages.forEach((element) => {
-      if (langSelected(element.langId, element.sno)) {
-        languages[0].sno = element.sno;
-        languages[0].selected = false;
-        element.sno = 1;
-        element.selected = true;
-      }
-    });
-    setLanguages(languages);
-  }, [IsLanguageChosen]);
+    const selected = allLanguages.filter((l) => activeLang.includes(l.langId));
+    const others = allLanguages.filter((l) => !activeLang.includes(l.langId));
+
+    return [
+      ...selected.map((l) => ({ ...l, selected: true, sno: 1 })),
+      ...others.map((l, index) => ({
+        ...l,
+        selected: false,
+        sno: index + 2,
+      })),
+    ];
+  }, [isLanguageChosen, allLanguages, i18n.language]);
 
   return (
-    <ZModal type="languageChangeModal" open={!!open} onCancel={() => window.history.back()} width={200}>
-      <LanguagesList languages={Languages} type="modal" />
+    <ZModal type="languageChangeModal" open={open} width={200}>
+      <LanguagesList languages={sortedLanguages} type="modal" />
     </ZModal>
   );
 };

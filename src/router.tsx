@@ -34,8 +34,6 @@ declare module "@tanstack/react-router" {
     displayAddGoal?: string;
     displayShareModal?: any;
     displayConfirmation?: any;
-    displayBackResModal?: boolean;
-    displayLangChangeModal?: boolean;
     displayNoteModal?: number;
     actionModalType?: ActionModal;
     displaySearch?: boolean;

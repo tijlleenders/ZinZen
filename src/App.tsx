@@ -2,14 +2,10 @@ import React, { useEffect } from "react";
 import { notification } from "antd";
 import { RouterProvider } from "@tanstack/react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
+import { darkModeState, displayToast } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
-
-import BackupRestoreModal from "@components/BackupRestoreModal";
-
-import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
 
 import useApp from "./hooks/useApp";
 import { themeState } from "./store/ThemeState";
@@ -28,9 +24,6 @@ const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
   const [api, contextHolder] = notification.useNotification();
   const [showToast, setShowToast] = useRecoilState(displayToast);
-
-  const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
-  const displayLanguageChangeModal = useRecoilValue(languageChangeModal);
   const openNotification = () => {
     api.info({
       style: { backgroundColor: "var(--secondary-background)" },
@@ -80,8 +73,6 @@ const App = () => {
         {isLanguageChosen}
         {contextHolder}
         <RouterProvider router={router} />
-        {displayBackupRestoreModal && <BackupRestoreModal />}
-        {displayLanguageChangeModal && <LanguageChangeModal />}
       </div>
     </div>
   );
