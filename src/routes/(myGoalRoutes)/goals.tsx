@@ -1,6 +1,6 @@
 import React from "react";
-import AppLayout from "@src/layouts/AppLayout";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import AppLayout from "@src/layouts/AppLayout/AppLayout";
 
 const RouteComponent = () => {
   return (

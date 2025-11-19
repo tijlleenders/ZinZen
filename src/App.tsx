@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { notification } from "antd";
 import { RouterProvider } from "@tanstack/react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, displayToast } from "@store";
@@ -68,12 +67,12 @@ const App = () => {
   }, []);
 
   return (
-    <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
-      <div className={`App-${darkModeEnabled ? "dark" : "light"}`}>
-        {isLanguageChosen}
-        {contextHolder}
-        <RouterProvider router={router} />
-      </div>
+    <div
+      className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]} App-${darkModeEnabled ? "dark" : "light"}`}
+    >
+      {isLanguageChosen}
+      {contextHolder}
+      <RouterProvider router={router} />
     </div>
   );
 };

@@ -19,7 +19,6 @@ import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
-import { removeBackTicks } from "@src/utils/patterns";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
 
@@ -131,19 +130,6 @@ const useGoalActions = () => {
     );
   };
 
-  const copyCode = (title: string) => {
-    let goalTitle = removeBackTicks(title);
-    navigator.clipboard.writeText(goalTitle);
-    const MAX_LENGTH = 15;
-    if (goalTitle.length > MAX_LENGTH) {
-      goalTitle = `${goalTitle
-        .split(" ")
-        .slice(0, MAX_LENGTH - 1)
-        .join(" ")}...`;
-    }
-    goalTitle = `${goalTitle} copied!`;
-    showMessage("Code copied to clipboard", goalTitle);
-  };
   return {
     addGoal,
     restoreDeletedGoal,
@@ -151,7 +137,6 @@ const useGoalActions = () => {
     updateGoal,
     shareGoalWithRelId,
     addContact,
-    copyCode,
   };
 };
 

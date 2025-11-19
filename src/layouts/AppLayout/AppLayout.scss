@@ -1,0 +1,34 @@
+.appLayout {
+  display: flex;
+  place-items: center;
+  flex-direction: column;
+  max-width: 600px;
+  min-width: 236px;
+  position: relative;
+  flex: 1;
+
+  .appLayout-children {
+    width: 100%;
+
+    height: calc(100vh - 112px);
+
+    margin-top: 60px;
+    margin-bottom: 7px;
+    padding-bottom: 100px;
+
+    overflow: scroll;
+    scroll-behavior: smooth;
+
+    z-index: 0;
+  }
+}
+
+.appLayout-children::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+.appLayout-children::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 140, 140, 0.5);
+  border-radius: 4px;
+}

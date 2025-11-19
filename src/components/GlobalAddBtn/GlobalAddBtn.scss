@@ -1,0 +1,91 @@
+.global-addBtn {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 130px;
+  border-radius: 50%;
+  border: none;
+  background: var(--selection-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  width: 56px;
+  height: 56px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-goal-pill-btn {
+  display: flex;
+  border-radius: 30px;
+  position: absolute;
+  border: 1px solid var(--icon-grad-1);
+  font-size: 18px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--secondary-background);
+  padding: 5px;
+  width: 180px;
+  right: 35px;
+
+  &.disabled {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .button-text {
+    padding-left: 5px;
+  }
+
+  .goal-btn-circle {
+    border-radius: 50%;
+    border: none;
+    background: var(--selection-color);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    width: 56px;
+    height: 56px;
+    color: white;
+    cursor: pointer;
+
+    .add-icon {
+      padding: 2px 0 0 0 !important;
+      filter: brightness(0) invert(1);
+    }
+  }
+}
+
+:where(.css-dev-only-do-not-override-98ntnt).ant-float-btn-default .ant-float-btn-body {
+  background: var(--selection-color);
+  transition: background-color 0.2s;
+}
+
+.ant-float-btn {
+  position: absolute;
+  height: 56px;
+  width: 56px;
+  bottom: 6em;
+
+  // Extra small (≤320px)
+  @media (max-width: 320px) {
+    right: 1em;
+  }
+
+  // Small mobile (321px–480px)
+  @media (min-width: 321px) and (max-width: 480px) {
+    right: 2em;
+  }
+
+  // Tablet (481px–768px)
+  @media (min-width: 481px) and (max-width: 768px) {
+    right: 5em;
+  }
+
+  // Desktop (≥769px)
+  @media (min-width: 769px) {
+    right: 5em;
+  }
+
+  .ant-float-btn-icon {
+    width: 100% !important;
+  }
+}

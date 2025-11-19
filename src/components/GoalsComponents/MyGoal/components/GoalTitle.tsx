@@ -2,8 +2,8 @@ import React from "react";
 import { removeBackTicks, replaceUrlsWithText, isGoalCode, summarizeUrl } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import useGoalActions from "@src/hooks/useGoalActions";
 import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
+import { useCopyCode } from "../hooks/useCopyCode";
 
 interface GoalTitleProps {
   goal: GoalItem;
@@ -59,9 +59,8 @@ const UrlComponent = ({
 
 const GoalTitle = ({ goal, isImpossible, onTitleClick }: GoalTitleProps) => {
   const { t } = useTranslation();
-  const { copyCode } = useGoalActions();
   const { id, title } = goal;
-
+  const copyCode = useCopyCode();
   const isCodeSnippet = isGoalCode(title);
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
   const textParts = replacedString.split(/(zURL-\d+)/g);

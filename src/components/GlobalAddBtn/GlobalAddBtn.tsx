@@ -10,7 +10,7 @@ import Backdrop from "@src/common/Backdrop";
 
 import { themeSelectionMode } from "@src/store/ThemeState";
 
-import "./index.scss";
+import "../index.scss";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
@@ -20,7 +20,9 @@ import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
 import { TGoalConfigMode, TJournalConfigMode } from "@src/types";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
-import { useGoalMoveMutation } from "../hooks/api/Goals/mutations/useGoalMoveMutation";
+import { FloatButton } from "antd";
+import "./GlobalAddBtn.scss";
+import { useGoalMoveMutation } from "@src/hooks/api/Goals/mutations/useGoalMoveMutation";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -238,22 +240,23 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   }
 
   return (
-    <button
-      type="button"
+    <FloatButton
       className="global-addBtn"
+      icon={
+        <img
+          style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
+          src={themeSelection ? correct : GlobalAddIcon}
+          alt="add goal | add feeling | add group"
+        />
+      }
       onClick={onClick}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       onContextMenu={(e) => e.preventDefault()}
-    >
-      <img
-        style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
-        src={themeSelection ? correct : GlobalAddIcon}
-        alt="add goal | add feeling | add group"
-      />
-    </button>
+      style={{ background: "var(--selectionColor)" }}
+    />
   );
 };
 

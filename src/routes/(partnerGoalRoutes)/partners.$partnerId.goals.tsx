@@ -1,6 +1,6 @@
 import React from "react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import AppLayout from "@src/layouts/AppLayout";
+import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { TGoalConfigMode } from "@src/types";

@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "@tanstack/react-router";
 import { useGetAllContacts } from "@src/hooks/api/Contacts/queries/useGetAllContacts";
 import Contacts from "@src/helpers/Contacts";
-import AppLayout from "@src/layouts/AppLayout";
+import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import { PageTitle } from "@src/constants/pageTitle";
 import "@pages/GoalsPage/GoalsPage.scss";
 

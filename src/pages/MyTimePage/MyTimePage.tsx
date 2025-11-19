@@ -3,7 +3,7 @@ import MyTimeline from "@components/MyTimeComponents/MyTimeline/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
 import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
-import AppLayout from "@src/layouts/AppLayout";
+import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
 import useScheduler from "@src/hooks/useScheduler";
 import "./MyTimePage.scss";
@@ -90,7 +90,7 @@ export const MyTimePage = () => {
 
   if (state?.displayFocus) {
     return (
-      <AppLayout title="myTime">
+      <AppLayout title="myTime" showAddBtn={false}>
         <SubHeader title="Focus" />
         <Focus />
       </AppLayout>

@@ -1,6 +1,6 @@
 import React from "react";
-import { createFileRoute, useSearch } from "@tanstack/react-router";
-import AppLayout from "@src/layouts/AppLayout";
+import { createFileRoute } from "@tanstack/react-router";
+import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { TJournalConfigMode } from "@src/types";
 
