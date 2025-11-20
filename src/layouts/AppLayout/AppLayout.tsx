@@ -3,13 +3,14 @@ import BottomNavbar from "@components/BottomNavbar/BottomNavbar";
 import Header from "@components/Header/Header";
 import Search from "@src/common/Search";
 import { useSearchState } from "@src/hooks/useSearchState";
+import { PageTitle } from "@src/constants/pageTitle";
 import "./AppLayout.scss";
 import GlobalAddBtn from "@components/GlobalAddBtn/GlobalAddBtn";
 
 // TODO: create test for display of GlobalAddBtn
 
 export interface AppLayoutProps {
-  title: string;
+  title: PageTitle;
   children: ReactNode;
   showAddBtn?: boolean;
   enableSearch?: boolean;

@@ -23,6 +23,7 @@ import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { FloatButton } from "antd";
 import "./GlobalAddBtn.scss";
 import { useGoalMoveMutation } from "@src/hooks/api/Goals/mutations/useGoalMoveMutation";
+import { PageTitle } from "@src/constants/pageTitle";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -124,7 +125,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const shouldRenderMoveButton = goalToMove && goalToMove.id !== parentId && goalToMove.parentGoalId !== parentId;
 
   const handleAddGoal = (goalType: TGoalCategory, replaceCurrentRoute = true) => {
-    if (add === "myTime") {
+    if (add === PageTitle.MyTime) {
       navigate({
         to: "/",
         search: { type: goalType, mode: "add" },
@@ -160,7 +161,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       return;
     }
 
-    if (add === "myJournal") {
+    if (add === PageTitle.MyJournal) {
       navigate({
         to: "/MyJournal",
         search: { mode: "addJournal" },
@@ -169,15 +170,15 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       return;
     }
 
-    if (add === "myTime" || add === "myGoals" || isPartnerMode) {
+    if (add === PageTitle.MyTime || add === PageTitle.MyGoals || isPartnerMode) {
       handleAddGoal("Standard", false);
     }
   };
 
   const handleLongPress = () => {
-    if (add === "myGoals") {
+    if (add === PageTitle.MyGoals) {
       navigate({ to: `/goals/${parentId}`, search: { addOptions: true }, state: (state) => ({ ...state }) });
-    } else if (add === "myTime") {
+    } else if (add === PageTitle.MyTime) {
       navigate({ to: "/", search: { addOptions: true }, state: (state) => ({ ...state }) });
     }
   };

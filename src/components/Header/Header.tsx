@@ -4,24 +4,17 @@ import { useNavigate, useParams } from "@tanstack/react-router";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
-import searchIcon from "@assets/images/searchIcon.svg";
-import darkModeIcon from "@assets/images/darkModeIcon.svg";
-import lightModeIcon from "@assets/images/lightModeIcon.svg";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
-import PartnerModeTour from "@components/PartnerModeTour";
-
-import { darkModeState, displayToast, flipAnimationState } from "@src/store";
+import { displayToast, flipAnimationState } from "@src/store";
 import { displayPartnerModeTour } from "@src/store/TourState";
-import { showSearchState } from "@src/store/GoalsState";
-import { LocalStorageKeys } from "@src/constants/localStorageKeys";
-import HeaderBtn from "./HeaderBtn";
+import { PageTitle } from "@src/constants/pageTitle";
+import HeaderActions from "./HeaderActions";
 import "./Header.scss";
 
-const Header = ({ title }: { title: string }) => {
+const Header = ({ title }: { title: PageTitle }) => {
   const { t } = useTranslation();
-  const [showSearch, setShowSearch] = useRecoilState(showSearchState);
   const { parentId } = useParams({ strict: false }) as { parentId: string };
   const { data: parentGoal } = useGetGoalById(parentId);
   const navigate = useNavigate();
@@ -58,21 +51,6 @@ const Header = ({ title }: { title: string }) => {
     return () => clearTimeout(timer);
   }, [isFlipping]);
 
-  const currentHour = new Date().getHours();
-  const isNighttime = currentHour >= 18 || currentHour < 6;
-
-  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-
-  const handleDarkModeClick = () => {
-    localStorage.setItem(LocalStorageKeys.DARK_MODE, darkModeStatus ? "off" : "on");
-    setDarkModeStatus(!darkModeStatus);
-  };
-
-  const handleLightModeClick = () => {
-    localStorage.setItem(LocalStorageKeys.DARK_MODE, darkModeStatus ? "off" : "on");
-    setDarkModeStatus(!darkModeStatus);
-  };
-
   return (
     <div className="header">
       <div className="header-logo-title">
@@ -80,10 +58,10 @@ const Header = ({ title }: { title: string }) => {
           <img className={isFlipping ? "logo-flip" : ""} src={zinzenLightLogo} alt="ZinZen" ref={zinZenLogoRef} />
         </div>
 
-        <PartnerModeTour refTarget={zinZenLogoRef} />
+        {/* <PartnerModeTour refTarget={zinZenLogoRef} /> */}
         <h6
           onClickCapture={() => {
-            if (title === "myGoals") {
+            if (title === PageTitle.MyGoals) {
               if (!parentGoal) return;
               window.history.go(-parentGoal.depth || 0);
             }
@@ -92,21 +70,8 @@ const Header = ({ title }: { title: string }) => {
           {t(title)}
         </h6>
       </div>
-      <div className="header-items">
-        {isNighttime || darkModeStatus ? (
-          <HeaderBtn
-            path={darkModeStatus ? lightModeIcon : darkModeIcon}
-            alt={`${darkModeStatus ? "light" : "dark"} mode`}
-            onClick={handleDarkModeClick}
-          />
-        ) : (
-          <HeaderBtn path={darkModeIcon} alt="light mode" onClick={handleLightModeClick} />
-        )}
-        {title === "myGoals" && (
-          <HeaderBtn path={searchIcon} alt="zinzen search" onClick={() => setShowSearch(!showSearch)} />
-        )}
-        <HeaderBtn path="" alt="zinzen settings" />
-      </div>
+
+      <HeaderActions title={title} />
     </div>
   );
 };

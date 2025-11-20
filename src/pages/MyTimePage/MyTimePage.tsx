@@ -5,6 +5,7 @@ import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
+import { PageTitle } from "@src/constants/pageTitle";
 import useScheduler from "@src/hooks/useScheduler";
 import "./MyTimePage.scss";
 import "@translations/i18n";
@@ -90,7 +91,7 @@ export const MyTimePage = () => {
 
   if (state?.displayFocus) {
     return (
-      <AppLayout title="myTime" showAddBtn={false}>
+      <AppLayout title={PageTitle.MyTime} showAddBtn={false}>
         <SubHeader title="Focus" />
         <Focus />
       </AppLayout>
@@ -98,7 +99,7 @@ export const MyTimePage = () => {
   }
 
   return (
-    <AppLayout title="myTime">
+    <AppLayout title={PageTitle.MyTime}>
       <>
         <SchedulerErrorModal />
         {goalCategories.includes(goalType) && (
