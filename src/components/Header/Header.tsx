@@ -15,9 +15,7 @@ const Header = ({ title, onTitleClick, onLogoClick }: HeaderProps) => {
   return (
     <div className="header">
       <HeaderLogo onLogoClick={onLogoClick} />
-
       <HeaderTitle title={title} onTitleClick={onTitleClick} />
-
       <HeaderActions title={title} />
     </div>
   );
