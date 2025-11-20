@@ -16,6 +16,9 @@ export interface AppLayoutProps {
   enableSearch?: boolean;
   onTitleClick?: () => void;
   onLogoClick?: () => void;
+  onScheduleClick?: () => void;
+  onGoalsClick?: () => void;
+  onJournalClick?: () => void;
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({
@@ -25,6 +28,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   enableSearch = false,
   onTitleClick,
   onLogoClick,
+  onScheduleClick,
+  onGoalsClick,
+  onJournalClick,
 }) => {
   const { showSearch } = useSearchState();
 
@@ -37,7 +43,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       )}
       <div className="appLayout-children">{children}</div>
       {showAddBtn && <GlobalAddBtn add={title} />}
-      <BottomNavbar />
+      <BottomNavbar onScheduleClick={onScheduleClick} onGoalsClick={onGoalsClick} onJournalClick={onJournalClick} />
     </div>
   );
 };

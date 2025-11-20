@@ -18,8 +18,10 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
+import { useBottomNavbarNavigation } from "@src/hooks/useBottomNavbarNavigation";
 
 export const MyTimePage = () => {
+  const { onGoalsClick, onJournalClick } = useBottomNavbarNavigation();
   const today = new Date();
   const { tasks } = useScheduler();
   const { generateInitialSchedule } = useScheduler();
@@ -91,7 +93,12 @@ export const MyTimePage = () => {
 
   if (state?.displayFocus) {
     return (
-      <AppLayout title={PageTitle.MyTime} showAddBtn={false}>
+      <AppLayout
+        title={PageTitle.MyTime}
+        showAddBtn={false}
+        onGoalsClick={onGoalsClick}
+        onJournalClick={onJournalClick}
+      >
         <SubHeader title="Focus" />
         <Focus />
       </AppLayout>
@@ -99,7 +106,7 @@ export const MyTimePage = () => {
   }
 
   return (
-    <AppLayout title={PageTitle.MyTime}>
+    <AppLayout title={PageTitle.MyTime} onGoalsClick={onGoalsClick} onJournalClick={onJournalClick}>
       <>
         <SchedulerErrorModal />
         {goalCategories.includes(goalType) && (
