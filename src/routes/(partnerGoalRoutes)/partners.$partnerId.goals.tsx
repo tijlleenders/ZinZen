@@ -14,7 +14,7 @@ export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/g
     const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);
 
     return (
-      <AppLayout title={`${partnerName}'s Goals`}>
+      <AppLayout title={`${partnerName}'s Goals`} enableSearch>
         <Outlet />
       </AppLayout>
     );

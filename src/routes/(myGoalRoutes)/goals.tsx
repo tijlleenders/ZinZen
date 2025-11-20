@@ -4,7 +4,7 @@ import AppLayout from "@src/layouts/AppLayout/AppLayout";
 
 const RouteComponent = () => {
   return (
-    <AppLayout title="myGoals">
+    <AppLayout title="myGoals" enableSearch>
       <Outlet />
     </AppLayout>
   );

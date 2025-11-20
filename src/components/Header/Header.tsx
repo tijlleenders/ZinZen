@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef } from "react";
-import { useNavigate, useParams, useRouterState } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
@@ -12,12 +12,11 @@ import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 import PartnerModeTour from "@components/PartnerModeTour";
 
-import { darkModeState, displayToast, flipAnimationState, searchActive } from "@src/store";
+import { darkModeState, displayToast, flipAnimationState } from "@src/store";
 import { displayPartnerModeTour } from "@src/store/TourState";
 import { showSearchState } from "@src/store/GoalsState";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import HeaderBtn from "./HeaderBtn";
-import Search from "../../common/Search";
 import "./Header.scss";
 
 const Header = ({ title }: { title: string }) => {
@@ -29,7 +28,6 @@ const Header = ({ title }: { title: string }) => {
   const setShowToast = useSetRecoilState(displayToast);
 
   const [partnerModeTour, setPartnerModeTour] = useRecoilState(displayPartnerModeTour);
-  const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [isFlipping, setIsFlipping] = useRecoilState(flipAnimationState);
 
   const zinZenLogoRef = useRef(null);
@@ -54,19 +52,6 @@ const Header = ({ title }: { title: string }) => {
     }
     navigate({ to: "/partners" });
   };
-  const displaySearchState = useRouterState({
-    select: (state) => state.location.state.displaySearch || false,
-  });
-
-  const handlePopState = () => {
-    if (displaySearch || displaySearchState) {
-      setDisplaySearch(displaySearchState || false);
-    }
-  };
-
-  useEffect(() => {
-    handlePopState();
-  }, [displaySearchState]);
 
   useEffect(() => {
     const timer = isFlipping ? setTimeout(() => setIsFlipping(false), 500) : undefined;
@@ -90,44 +75,38 @@ const Header = ({ title }: { title: string }) => {
 
   return (
     <div className="header">
-      {showSearch ? (
-        <Search />
-      ) : (
-        <>
-          <div className="header-logo-title">
-            <div className="header-logo-wrapper" onClickCapture={handlePartner}>
-              <img className={isFlipping ? "logo-flip" : ""} src={zinzenLightLogo} alt="ZinZen" ref={zinZenLogoRef} />
-            </div>
+      <div className="header-logo-title">
+        <div className="header-logo-wrapper" onClickCapture={handlePartner}>
+          <img className={isFlipping ? "logo-flip" : ""} src={zinzenLightLogo} alt="ZinZen" ref={zinZenLogoRef} />
+        </div>
 
-            <PartnerModeTour refTarget={zinZenLogoRef} />
-            <h6
-              onClickCapture={() => {
-                if (title === "myGoals") {
-                  if (!parentGoal) return;
-                  window.history.go(-parentGoal.depth || 0);
-                }
-              }}
-            >
-              {t(title)}
-            </h6>
-          </div>
-          <div className="header-items">
-            {isNighttime || darkModeStatus ? (
-              <HeaderBtn
-                path={darkModeStatus ? lightModeIcon : darkModeIcon}
-                alt={`${darkModeStatus ? "light" : "dark"} mode`}
-                onClick={handleDarkModeClick}
-              />
-            ) : (
-              <HeaderBtn path={darkModeIcon} alt="light mode" onClick={handleLightModeClick} />
-            )}
-            {title === "myGoals" && (
-              <HeaderBtn path={searchIcon} alt="zinzen search" onClick={() => setShowSearch(!showSearch)} />
-            )}
-            <HeaderBtn path="" alt="zinzen settings" />
-          </div>
-        </>
-      )}
+        <PartnerModeTour refTarget={zinZenLogoRef} />
+        <h6
+          onClickCapture={() => {
+            if (title === "myGoals") {
+              if (!parentGoal) return;
+              window.history.go(-parentGoal.depth || 0);
+            }
+          }}
+        >
+          {t(title)}
+        </h6>
+      </div>
+      <div className="header-items">
+        {isNighttime || darkModeStatus ? (
+          <HeaderBtn
+            path={darkModeStatus ? lightModeIcon : darkModeIcon}
+            alt={`${darkModeStatus ? "light" : "dark"} mode`}
+            onClick={handleDarkModeClick}
+          />
+        ) : (
+          <HeaderBtn path={darkModeIcon} alt="light mode" onClick={handleLightModeClick} />
+        )}
+        {title === "myGoals" && (
+          <HeaderBtn path={searchIcon} alt="zinzen search" onClick={() => setShowSearch(!showSearch)} />
+        )}
+        <HeaderBtn path="" alt="zinzen settings" />
+      </div>
     </div>
   );
 };

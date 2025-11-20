@@ -4,18 +4,15 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
 import Backdrop from "@src/common/Backdrop";
 import Icon from "@src/common/Icon";
-import GlobalAddBtn from "@components/GlobalAddBtn";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 import { darkModeState } from "@src/store";
 
 interface ThemeSelectionControlsProps {
   onClose: () => void;
-  isAddBtnVisible: boolean;
-  title: string;
 }
 
-const ThemeSelectionControls: React.FC<ThemeSelectionControlsProps> = ({ onClose, isAddBtnVisible, title }) => {
+const ThemeSelectionControls: React.FC<ThemeSelectionControlsProps> = ({ onClose }) => {
   const [theme, setTheme] = useRecoilState(themeState);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const setThemeSelection = useSetRecoilState(themeSelectionMode);
@@ -88,7 +85,6 @@ const ThemeSelectionControls: React.FC<ThemeSelectionControlsProps> = ({ onClose
         >
           <Icon title="ArrowIcon" />
           <p>Next</p>
-          {isAddBtnVisible && <GlobalAddBtn add={title} />}
         </button>
       </BottomNavLayout>
     </>

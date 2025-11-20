@@ -4,37 +4,21 @@ import { useRecoilValue } from "recoil";
 import { useNavigate } from "@tanstack/react-router";
 
 import { themeSelectionMode } from "@src/store/ThemeState";
-import { useGetParams } from "@src/hooks/useGetParams";
 import { getGoalById } from "@src/api/GoalsAPI";
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
 
 import "./BottomNavbar.scss";
-import { PageTitle } from "@src/constants/pageTitle";
-import { moveGoalState } from "@src/store/moveGoalState";
 import { ILocationState } from "@src/Interfaces";
 import Icon from "@src/common/Icon";
 import { BottomNavButton } from "./BottomNavButton";
 import ThemeSelectionControls from "./ThemeSelectionControls";
 
-const BottomNavbar = ({ title }: { title: string }) => {
+const BottomNavbar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { getParams } = useGetParams();
-
-  const goalToMove = useRecoilValue(moveGoalState);
   const themeSelection = useRecoilValue(themeSelectionMode);
 
   const currentPage = window.location.pathname.split("/")[1];
-
-  const { partnerId = "" } = getParams() as {
-    partnerId: string;
-  };
-  const { parentId = "" } = getParams() as { parentId: string };
-
-  const isPartnerModeActive = Boolean(partnerId);
-
-  const isAddBtnVisible =
-    title !== "Focus" && title !== PageTitle.Contacts && (isPartnerModeActive ? Boolean(goalToMove) : true);
 
   const goToHome = (state: ILocationState) => {
     if (currentPage !== "") {
@@ -53,14 +37,12 @@ const BottomNavbar = ({ title }: { title: string }) => {
       navigate({
         to: "/goals/$parentId",
         params: { parentId: "root" },
-        state: (prevState) => ({
-          ...prevState,
-          ...state,
-        }),
+        state: (prevState) => ({ ...prevState, ...state }),
       });
       return;
     }
 
+    const parentId = window.location.pathname.split("/")[2];
     getGoalById(parentId).then((goal) => {
       if (goal) {
         window.history.go(-goal.depth);
@@ -91,7 +73,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
   };
 
   if (themeSelection) {
-    return <ThemeSelectionControls isAddBtnVisible={isAddBtnVisible} onClose={window.history.back} title={title} />;
+    return <ThemeSelectionControls onClose={window.history.back} />;
   }
 
   return (
