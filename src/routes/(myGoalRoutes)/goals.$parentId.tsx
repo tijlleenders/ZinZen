@@ -13,6 +13,7 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import { PageTitle } from "@src/constants/pageTitle";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import { useHeaderLogoHandlers } from "@src/hooks/useHeaderLogoHandlers";
 
 export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
   validateSearch: (search: { type?: TGoalCategory; mode?: TGoalConfigMode }) => search,
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
     const { data: deletedGoals } = useGetDeletedGoals(parentId || "root");
     const { data: archivedGoals } = useGetArchivedGoals(parentId || "root");
     const { mode, type } = search;
+    const { handleEnterPartnerMode } = useHeaderLogoHandlers();
     return (
       <AppLayout
         title={PageTitle.MyGoals}
@@ -39,6 +41,7 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
           if (!parentGoal) return;
           window.history.go(-parentGoal.depth || 0);
         }}
+        onLogoClick={handleEnterPartnerMode}
       >
         <MyGoals
           activeGoals={activeGoals || []}
