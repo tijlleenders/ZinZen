@@ -10,6 +10,9 @@ import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { TGoalConfigMode } from "@src/types";
 import { TGoalCategory } from "@src/models/GoalItem";
+import AppLayout from "@src/layouts/AppLayout/AppLayout";
+import { PageTitle } from "@src/constants/pageTitle";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
   validateSearch: (search: { type?: TGoalCategory; mode?: TGoalConfigMode }) => search,
@@ -23,12 +26,20 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
   component: () => {
     const search = Route.useSearch();
     const { parentId } = Route.useParams();
+    const { data: parentGoal } = useGetGoalById(parentId);
     const { data: activeGoals, isLoading: isLoadingActiveGoals } = useGetActiveGoals(parentId || "root");
     const { data: deletedGoals } = useGetDeletedGoals(parentId || "root");
     const { data: archivedGoals } = useGetArchivedGoals(parentId || "root");
     const { mode, type } = search;
     return (
-      <>
+      <AppLayout
+        title={PageTitle.MyGoals}
+        enableSearch
+        onTitleClick={() => {
+          if (!parentGoal) return;
+          window.history.go(-parentGoal.depth || 0);
+        }}
+      >
         <MyGoals
           activeGoals={activeGoals || []}
           isLoadingActiveGoals={isLoadingActiveGoals}
@@ -39,7 +50,7 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
         {mode === "add" && type && (
           <ConfigGoal key={`add-${parentId}`} type={type} goal={createGoalObjectFromTags()} mode="add" />
         )}
-      </>
+      </AppLayout>
     );
   },
 });

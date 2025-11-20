@@ -1,42 +1,12 @@
 .header {
   position: fixed;
   display: flex;
+  align-items: center;
   width: 100%;
   background: var(--secondary-background);
   max-width: 600px;
   height: 58px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-
-  .header-logo-title {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex: 1;
-
-    .header-logo-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-grow: 0;
-      height: 58px;
-      padding-left: 20px;
-      padding-right: 16px;
-    }
-
-    img {
-      height: 30px;
-      width: 30px;
-    }
-  }
-
-  h6 {
-    line-height: 27px;
-    font-weight: 500;
-    cursor: pointer;
-    flex: 1;
-    padding: 14px 0 14px 0;
-  }
 }
 
 .header-items {
@@ -78,19 +48,6 @@
 .header-dropdown-dark {
   span {
     color: white !important;
-  }
-}
-
-.logo-flip {
-  animation: flipAnimation 0.8s forwards infinite;
-}
-
-@keyframes flipAnimation {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
   }
 }
 

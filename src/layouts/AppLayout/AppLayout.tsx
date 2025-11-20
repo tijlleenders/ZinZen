@@ -14,14 +14,27 @@ export interface AppLayoutProps {
   children: ReactNode;
   showAddBtn?: boolean;
   enableSearch?: boolean;
+  onTitleClick?: () => void;
+  onLogoClick?: () => void;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children, title, showAddBtn = true, enableSearch = false }) => {
+const AppLayout: React.FC<AppLayoutProps> = ({
+  children,
+  title,
+  showAddBtn = true,
+  enableSearch = false,
+  onTitleClick,
+  onLogoClick,
+}) => {
   const { showSearch } = useSearchState();
 
   return (
     <div className="appLayout">
-      {enableSearch && showSearch ? <Search /> : <Header title={title} />}
+      {enableSearch && showSearch ? (
+        <Search />
+      ) : (
+        <Header title={title} onTitleClick={onTitleClick} onLogoClick={onLogoClick} />
+      )}
       <div className="appLayout-children">{children}</div>
       {showAddBtn && <GlobalAddBtn add={title} />}
       <BottomNavbar />

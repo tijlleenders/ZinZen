@@ -1,0 +1,13 @@
+.header-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.275rem;
+  line-height: 27px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 14px 0 14px 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

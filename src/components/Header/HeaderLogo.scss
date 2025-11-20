@@ -1,0 +1,23 @@
+.header-logo {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.logo-flip {
+  animation: flipAnimation 0.8s forwards infinite;
+}
+
+@keyframes flipAnimation {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+
