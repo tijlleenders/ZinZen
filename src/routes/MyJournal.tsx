@@ -6,6 +6,7 @@ import { TJournalConfigMode } from "@src/types";
 import { PageTitle } from "@src/constants/pageTitle";
 import { useHeaderLogoHandlers } from "@src/hooks/useHeaderLogoHandlers";
 import { useBottomNavbarNavigation } from "@src/hooks/useBottomNavbarNavigation";
+import JournalFab from "@components/fab/JournalFab";
 
 export const Route = createFileRoute("/MyJournal")({
   validateSearch: (search: { mode?: TJournalConfigMode }) => search,
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/MyJournal")({
         onGoalsClick={onGoalsClick}
       >
         <FeelingsPage showAddFeelingsModal={mode === "addJournal"} />
+        <JournalFab />
       </AppLayout>
     );
   },

@@ -5,6 +5,7 @@ import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGet
 import { TGoalCategory } from "@src/models/GoalItem";
 import { TGoalConfigMode } from "@src/types";
 import { useHeaderLogoHandlers } from "@src/hooks/useHeaderLogoHandlers";
+import { PageTitle } from "@src/constants/pageTitle";
 
 export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/goals")({
   validateSearch: (search: { type?: TGoalCategory; mode?: TGoalConfigMode }) => search,
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/g
     const { handleExitPartnerMode } = useHeaderLogoHandlers();
 
     return (
-      <AppLayout title={`${partnerName}'s Goals`} enableSearch onLogoClick={handleExitPartnerMode}>
+      <AppLayout title={`${partnerName}'s Goals` as PageTitle} enableSearch onLogoClick={handleExitPartnerMode}>
         <Outlet />
       </AppLayout>
     );

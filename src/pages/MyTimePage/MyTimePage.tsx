@@ -19,6 +19,7 @@ import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
 import { useBottomNavbarNavigation } from "@src/hooks/useBottomNavbarNavigation";
+import MyTimeFab from "@components/fab/MyTimeFab";
 
 export const MyTimePage = () => {
   const { onGoalsClick, onJournalClick } = useBottomNavbarNavigation();
@@ -93,12 +94,7 @@ export const MyTimePage = () => {
 
   if (state?.displayFocus) {
     return (
-      <AppLayout
-        title={PageTitle.MyTime}
-        showAddBtn={false}
-        onGoalsClick={onGoalsClick}
-        onJournalClick={onJournalClick}
-      >
+      <AppLayout title={PageTitle.MyTime} onGoalsClick={onGoalsClick} onJournalClick={onJournalClick}>
         <SubHeader title="Focus" />
         <Focus />
       </AppLayout>
@@ -128,6 +124,7 @@ export const MyTimePage = () => {
         )}
         <NotNowModal />
       </>
+      <MyTimeFab />
     </AppLayout>
   );
 };

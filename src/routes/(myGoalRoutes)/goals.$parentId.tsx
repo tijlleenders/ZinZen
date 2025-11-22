@@ -1,4 +1,5 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import { createFileRoute } from "@tanstack/react-router";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { getActiveGoals } from "@src/api/GoalsAPI";
@@ -15,6 +16,11 @@ import { PageTitle } from "@src/constants/pageTitle";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useHeaderLogoHandlers } from "@src/hooks/useHeaderLogoHandlers";
 import { useBottomNavbarNavigation } from "@src/hooks/useBottomNavbarNavigation";
+import { themeSelectionMode } from "@src/store/ThemeState";
+import { moveGoalState } from "@src/store/moveGoalState";
+import GoalsFab from "@components/fab/GoalsFab";
+import GoalMoveFab from "@components/fab/GoalMoveFab";
+import ThemeConfirmFab from "@components/fab/ThemeConfirmFab";
 
 export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
   validateSearch: (search: { type?: TGoalCategory; mode?: TGoalConfigMode }) => search,
@@ -35,6 +41,8 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
     const { mode, type } = search;
     const { handleEnterPartnerMode } = useHeaderLogoHandlers();
     const { onScheduleClick, onJournalClick, onGoalsGoBack } = useBottomNavbarNavigation();
+    const themeSelection = useRecoilValue(themeSelectionMode);
+    const goalToMove = useRecoilValue(moveGoalState);
 
     return (
       <AppLayout
@@ -59,6 +67,7 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
         {mode === "add" && type && (
           <ConfigGoal key={`add-${parentId}`} type={type} goal={createGoalObjectFromTags()} mode="add" />
         )}
+        {themeSelection ? <ThemeConfirmFab /> : goalToMove ? <GoalMoveFab /> : <GoalsFab />}
       </AppLayout>
     );
   },
