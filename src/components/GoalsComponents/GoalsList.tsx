@@ -1,5 +1,5 @@
 import { GoalItem } from "@src/models/GoalItem";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   DndContext,
   closestCenter,
@@ -11,69 +11,61 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { ImpossibleGoal } from "@src/Interfaces";
-import { useGoalSelection } from "@src/hooks/useGoalSelection";
 import { useUpdateGoalPositions } from "@src/hooks/api/Goals/mutations/useUpdateGoalPositions";
-
-import SortableItem from "./MyGoal/SortableItem";
+import { useGoalKeyboardNavigation } from "@src/hooks/useGoalKeyboardNavigation";
+import { POINTER_SENSOR_CONFIG, TOUCH_SENSOR_CONFIG } from "@src/constants/dndConfig";
+import GoalItemWrapper from "./GoalItemWrapper";
 
 interface GoalsListProps {
   goals: GoalItem[];
 }
 
+const addImpossibleProp = (goal: GoalItem): ImpossibleGoal => {
+  const isImpossibleFromGoal = goal.impossible === true;
+
+  return {
+    ...goal,
+    impossible: isImpossibleFromGoal,
+  };
+};
+
 const GoalsList = ({ goals }: GoalsListProps) => {
   const { mutate: updatePositions } = useUpdateGoalPositions();
-
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 10,
-      },
-    }),
+    useSensor(PointerSensor, POINTER_SENSOR_CONFIG),
+    useSensor(TouchSensor, TOUCH_SENSOR_CONFIG),
   );
 
-  const addImpossibleProp = (goal: GoalItem): ImpossibleGoal => {
-    const isImpossibleFromGoal = goal.impossible === true;
+  const updatedGoals = useMemo(() => goals.map(addImpossibleProp), [goals]);
 
-    return {
-      ...goal,
-      impossible: isImpossibleFromGoal,
-    };
-  };
+  const itemIds = useMemo(() => updatedGoals.map((goal) => goal.id), [updatedGoals]);
 
-  const updatedGoals = goals.map(addImpossibleProp);
+  const getGoalsPos = useCallback(
+    (id: string | number | undefined) => goals.findIndex((goal) => goal.id === id),
+    [goals],
+  );
 
-  const getGoalsPos = (id: string | number | undefined) => goals.findIndex((goal) => goal.id === id);
+  const handleDragEnd = useCallback(
+    async (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (active.id !== over?.id) {
+        const originalPos = getGoalsPos(active.id);
+        const newPos = getGoalsPos(over?.id);
+        const newItems = arrayMove(goals, originalPos, newPos);
+        updatePositions({ goals: newItems });
+      }
+    },
+    [goals, getGoalsPos, updatePositions],
+  );
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (active.id !== over?.id) {
-      const originalPos = getGoalsPos(active.id);
-      const newPos = getGoalsPos(over?.id);
-      const newItems = arrayMove(goals, originalPos, newPos);
-      updatePositions({ goals: newItems });
-    }
-  };
-
-  const focusedGoal = useGoalSelection(goals);
+  useGoalKeyboardNavigation({ goals });
 
   return (
     <div className="d-flex f-col">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
-          {updatedGoals.map((goal: ImpossibleGoal) => (
-            <div
-              key={`sortable-${goal.id}`}
-              style={focusedGoal?.id === goal.id ? { borderLeft: `${goal.goalColor} 3px solid` } : {}}
-              className={focusedGoal?.id === goal.id ? "focused-goal" : ""}
-            >
-              <SortableItem key={`sortable-${goal.id}`} goal={goal} />
-            </div>
+        <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+          {updatedGoals.map((goal: ImpossibleGoal, index: number) => (
+            <GoalItemWrapper key={`goal-wrapper-${goal.id}`} goal={goal} index={index} />
           ))}
         </SortableContext>
       </DndContext>
