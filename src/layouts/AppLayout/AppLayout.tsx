@@ -12,21 +12,9 @@ export interface AppLayoutProps {
   enableSearch?: boolean;
   onTitleClick?: () => void;
   onLogoClick?: () => void;
-  onScheduleClick?: () => void;
-  onGoalsClick?: () => void;
-  onJournalClick?: () => void;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({
-  children,
-  title,
-  enableSearch = false,
-  onTitleClick,
-  onLogoClick,
-  onScheduleClick,
-  onGoalsClick,
-  onJournalClick,
-}) => {
+const AppLayout: React.FC<AppLayoutProps> = ({ children, title, enableSearch = false, onTitleClick, onLogoClick }) => {
   const { showSearch } = useSearchState();
 
   return (
@@ -37,7 +25,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         <Header title={title} onTitleClick={onTitleClick} onLogoClick={onLogoClick} />
       )}
       <div className="appLayout-children">{children}</div>
-      <BottomNavbar onScheduleClick={onScheduleClick} onGoalsClick={onGoalsClick} onJournalClick={onJournalClick} />
+      <BottomNavbar />
     </div>
   );
 };

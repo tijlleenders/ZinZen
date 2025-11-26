@@ -1,20 +1,16 @@
 import React from "react";
-import Settings from "./Settings";
+import "./HeaderBtn.scss";
 
-const HeaderBtn = ({ path, alt, onClick }: { path: string; alt: string; onClick?: () => void }) => {
+interface HeaderBtnProps {
+  path: string;
+  alt: string;
+  onClick?: () => void;
+}
+
+const HeaderBtn = ({ path, alt, onClick }: HeaderBtnProps) => {
   return (
-    <div style={{ alignSelf: "center", display: "flex" }}>
-      {alt === "zinzen settings" ? (
-        <Settings />
-      ) : (
-        <img
-          onClickCapture={onClick}
-          className="theme-icon header-icon"
-          src={path}
-          alt={alt}
-          style={{ padding: "10px" }}
-        />
-      )}
+    <div className="header-btn-wrapper">
+      <img onClickCapture={onClick} className="theme-icon header-icon" src={path} alt={alt} />
     </div>
   );
 };

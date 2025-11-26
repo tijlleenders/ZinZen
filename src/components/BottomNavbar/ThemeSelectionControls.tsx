@@ -7,6 +7,7 @@ import Icon from "@src/common/Icon";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 import { darkModeState } from "@src/store";
+import "./ThemeSelectionControls.scss";
 
 interface ThemeSelectionControlsProps {
   onClose: () => void;
@@ -51,11 +52,7 @@ const ThemeSelectionControls: React.FC<ThemeSelectionControlsProps> = ({ onClose
           }}
           className="bottom-nav-item"
         >
-          <div
-            style={{
-              transform: "scaleX(-1)",
-            }}
-          >
+          <div className="theme-controls-prev">
             <Icon title="ArrowIcon" />
           </div>
           <p>Prev</p>
@@ -77,11 +74,7 @@ const ThemeSelectionControls: React.FC<ThemeSelectionControlsProps> = ({ onClose
             e.stopPropagation();
             themeChange(1);
           }}
-          style={{
-            padding: 7.5,
-            gap: 10,
-          }}
-          className="bottom-nav-item"
+          className="bottom-nav-item theme-controls-next"
         >
           <Icon title="ArrowIcon" />
           <p>Next</p>

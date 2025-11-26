@@ -40,7 +40,6 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
     const { data: archivedGoals } = useGetArchivedGoals(parentId || "root");
     const { mode, type } = search;
     const { handleEnterPartnerMode } = useHeaderLogoHandlers();
-    const { onScheduleClick, onJournalClick, onGoalsGoBack } = useBottomNavbarNavigation();
     const themeSelection = useRecoilValue(themeSelectionMode);
     const goalToMove = useRecoilValue(moveGoalState);
 
@@ -53,9 +52,6 @@ export const Route = createFileRoute("/(myGoalRoutes)/goals/$parentId")({
           window.history.go(-parentGoal.depth || 0);
         }}
         onLogoClick={handleEnterPartnerMode}
-        onScheduleClick={onScheduleClick}
-        onGoalsClick={onGoalsGoBack}
-        onJournalClick={onJournalClick}
       >
         <MyGoals
           activeGoals={activeGoals || []}

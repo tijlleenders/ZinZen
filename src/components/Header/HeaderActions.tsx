@@ -5,6 +5,7 @@ import searchIcon from "@assets/images/searchIcon.svg";
 import { PageTitle } from "@src/constants/pageTitle";
 import { useHeaderActions } from "./useHeaderActions";
 import HeaderBtn from "./HeaderBtn";
+import SettingsButton from "./SettingsButton";
 
 interface HeaderActionsProps {
   title: PageTitle;
@@ -17,7 +18,7 @@ const HeaderActions = ({ title }: HeaderActionsProps) => {
     <div className="header-items">
       <HeaderBtn path={darkModeIconConfig.icon} alt={darkModeIconConfig.alt} onClick={handleDarkModeToggle} />
       {title === PageTitle.MyGoals && <HeaderBtn path={searchIcon} alt="zinzen search" onClick={handleSearchToggle} />}
-      <HeaderBtn path="" alt="zinzen settings" />
+      <SettingsButton />
     </div>
   );
 };

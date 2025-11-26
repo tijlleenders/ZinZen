@@ -42,11 +42,6 @@ export const displayConfirmation = atom({
   default: defaultConfirmationObj,
 });
 
-export const searchActive = atom({
-  key: "searchActive",
-  default: false,
-});
-
 export const displayLoader = atom({
   key: "displayLoader",
   default: false as boolean,
