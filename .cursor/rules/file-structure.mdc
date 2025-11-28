@@ -1,0 +1,328 @@
+---
+description: File and directory structure guidelines for organizing React applications by function rather than feature, using barrel files for clean imports.
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: false
+---
+
+# File and Directory Structure
+
+## Core Principle: Organize by Function, Not by Feature
+
+Structure your application by **function** (components, hooks, helpers, utils) rather than by **feature** (search, users, admin). This approach reduces decision fatigue, avoids categorization conflicts, and stays maintainable as the product evolves.
+
+## Directory Structure
+
+```
+src/
+├── components/          # All React components
+├── hooks/              # Generic, reusable hooks
+├── helpers/            # Project-specific helper functions
+├── utils.ts            # Generic utility functions (reusable across projects)
+├── constants.ts        # App-wide constants (colors, breakpoints, config)
+└── ...
+```
+
+## Components
+
+### Component Directory Structure
+
+Each component gets its own directory with the following structure:
+
+```
+src/
+└── components/
+    └── FileViewer/
+        ├── Directory.tsx              # Sub-component
+        ├── File.tsx                   # Sub-component
+        ├── FileContent.tsx            # Sub-component
+        ├── Sidebar.tsx                # Sub-component
+        ├── FileViewer.helpers.ts      # Component-specific helpers
+        ├── FileViewer.types.ts        # Component-specific types
+        ├── FileViewer.tsx             # Main component
+        ├── use-file-viewer.ts         # Component-specific hook (optional)
+        └── index.ts                   # Barrel file for clean imports
+```
+
+### Barrel Files (index.ts)
+
+Every component directory should have an `index.ts` that re-exports the main component:
+
+```typescript
+// components/FileViewer/index.ts
+export * from "./FileViewer";
+export { default } from "./FileViewer";
+```
+
+**Benefits:**
+
+- Clean imports: `import FileViewer from '@/components/FileViewer'` instead of `import FileViewer from '@/components/FileViewer/FileViewer'`
+- Clean editor tabs: Shows "FileViewer.tsx" instead of multiple "index.ts" files
+- Maintains component spectrum: Main component file is clearly identifiable
+
+### Component File Naming
+
+- **Main component**: `ComponentName.tsx` (PascalCase)
+- **Sub-components**: `SubComponentName.tsx` (PascalCase)
+- **Helpers**: `ComponentName.helpers.ts` (kebab-case with component prefix)
+- **Types**: `ComponentName.types.ts` (kebab-case with component prefix)
+- **Hooks**: `use-component-name.ts` (kebab-case, starts with "use")
+
+### Component-Specific Files
+
+Keep files that are only used by a specific component within that component's directory:
+
+- **Sub-components**: Smaller components used exclusively by the main component
+- **Helper functions**: `ComponentName.helpers.ts`
+- **TypeScript types**: `ComponentName.types.ts`
+- **Custom hooks**: `use-component-name.ts` (if only used by this component)
+
+**Example:**
+
+```typescript
+// components/FileViewer/FileViewer.helpers.ts
+export function traverseTree(tree: FileTree): FileNode[] {
+  // Helper function only used by FileViewer
+}
+
+// components/FileViewer/FileViewer.types.ts
+export type FileTree = {
+  name: string;
+  children: FileNode[];
+};
+
+// components/FileViewer/FileViewer.tsx
+import { traverseTree } from "./FileViewer.helpers";
+import type { FileTree } from "./FileViewer.types";
+```
+
+## Hooks
+
+### Component-Specific Hooks
+
+If a hook is only used by a single component, keep it in that component's directory:
+
+```
+components/
+└── FileViewer/
+    ├── FileViewer.tsx
+    └── use-file-viewer.ts    # Only used by FileViewer
+```
+
+### Generic Hooks
+
+Generic, reusable hooks belong in `src/hooks/`:
+
+```
+src/
+└── hooks/
+    ├── use-boop.ts
+    ├── use-bounding-box.ts
+    ├── use-effect-on-change.ts
+    ├── use-has-mounted.ts
+    ├── use-is-onscreen.ts
+    ├── use-throttled-state.ts
+    └── use-window-dimensions.ts
+```
+
+**Naming Convention:** Use kebab-case for hook files: `use-hook-name.ts`
+
+**Example:**
+
+```typescript
+// hooks/use-boop.ts
+export default function useBoop({ x = 0, y = 0, rotation = 0 }) {
+  // Generic hook that can be used anywhere
+}
+```
+
+## Helpers
+
+**Location:** `src/helpers/`
+
+**Purpose:** Project-specific functions that wouldn't make sense to share between projects.
+
+**Naming:** `feature.helpers.ts` (kebab-case with feature prefix)
+
+**Example:**
+
+```typescript
+// helpers/category.helpers.ts
+export function sortCategoriesByPostCount(categories: Category[]): Category[] {
+  // Project-specific logic for this blog
+}
+
+export function getFormattedCategoryName(category: Category): string {
+  // Project-specific formatting
+}
+```
+
+**When to move from component to helpers:**
+
+- If a function in `ComponentName.helpers.ts` is needed by multiple components
+- Move it to `src/helpers/` with an appropriate name
+
+## Utils
+
+**Location:** `src/utils.ts` (single file)
+
+**Purpose:** Generic, reusable utility functions that could be used across any project.
+
+**Distinction from Helpers:**
+
+- **Helpers**: Project-specific, tied to your application's domain
+- **Utils**: Generic, abstract functions (like lodash functions)
+
+**Examples:**
+
+```typescript
+// utils.ts
+export function sampleOne<T>(arr: readonly T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function moveCursorWithinInput(input: HTMLInputElement, position: number): void {
+  if (!input.setSelectionRange) return;
+  input.focus();
+  input.setSelectionRange(position, position);
+}
+
+export const getDistanceBetweenPoints = (p1: { x: number; y: number }, p2: { x: number; y: number }): number => {
+  const deltaX = Math.abs(p2.x - p1.x);
+  const deltaY = Math.abs(p2.y - p1.y);
+  return Math.sqrt(deltaX ** 2 + deltaY ** 2);
+};
+```
+
+## Constants
+
+**Location:** `src/constants.ts` (single file)
+
+**Purpose:** App-wide constants including:
+
+- Style constants (colors, font sizes, breakpoints)
+- Public keys and configuration
+- Shared application data
+
+**Example:**
+
+```typescript
+// constants.ts
+export const COLORS = {
+  primary: "#007bff",
+  secondary: "#6c757d",
+  success: "#28a745",
+} as const;
+
+export const BREAKPOINTS = {
+  mobile: 768,
+  tablet: 1024,
+  desktop: 1440,
+} as const;
+```
+
+## Import Paths
+
+### Use Bundle Aliases
+
+Configure your bundler to use aliases (e.g., `@/` pointing to `src/`) for cleaner imports:
+
+```typescript
+// ❌ Bad - Relative paths
+import { sortCategories } from "../../helpers/category.helpers";
+import Button from "../../../components/Button";
+
+// ✅ Good - Bundle aliases
+import { sortCategories } from "@/helpers/category.helpers";
+import Button from "@/components/Button";
+```
+
+**Benefits:**
+
+- No need to count `../` levels
+- Imports don't break when moving files
+- Cleaner, more readable import statements
+
+**Configuration Example (jsconfig.json for VS Code):**
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
+## Multiple Components Per File
+
+**Rule:** Files can contain multiple components if they're closely related.
+
+**Guideline:** Once a component becomes non-trivial, extract it to its own file for clarity and organization.
+
+```typescript
+// ✅ Acceptable - Small, related components
+// components/Button/Button.tsx
+export const Button = ({ children, onClick }: ButtonProps) => {
+  return <button onClick={onClick}>{children}</button>;
+};
+
+export const IconButton = ({ icon, onClick }: IconButtonProps) => {
+  return (
+    <Button onClick={onClick}>
+      <Icon name={icon} />
+    </Button>
+  );
+};
+```
+
+## Checklist
+
+When creating a new component:
+
+- [ ] Create component directory: `ComponentName/`
+- [ ] Create main component file: `ComponentName.tsx`
+- [ ] Create barrel file: `index.ts` with re-exports
+- [ ] Place component-specific files in the same directory:
+  - [ ] `ComponentName.helpers.ts` (if needed)
+  - [ ] `ComponentName.types.ts` (if needed)
+  - [ ] Sub-components (if needed)
+  - [ ] `use-component-name.ts` (if hook is component-specific)
+- [ ] Use bundle aliases for imports (`@/components/...`)
+- [ ] Move generic hooks to `src/hooks/` if reusable
+- [ ] Move shared helpers to `src/helpers/` if used by multiple components
+
+## Anti-Patterns to Avoid
+
+1. **Feature-based organization**: Don't organize by feature (search/, users/, admin/)
+2. **No barrel files**: Don't skip `index.ts` - it makes imports cleaner
+3. **Mixing concerns**: Don't put generic utilities in component-specific files
+4. **Deep nesting**: Avoid deeply nested component directories
+5. **Inconsistent naming**: Stick to your naming convention (kebab-case for files, PascalCase for components)
+
+## Tradeoffs
+
+### Barrel Files
+
+**Concern:** Barrel files add an extra layer of indirection, potentially slowing down bundlers.
+
+**Reality:** In most applications, barrel files represent <1% of modules. The bundler spends most of its time processing `node_modules`. The developer experience benefits far outweigh the minimal performance cost.
+
+**Exception:** If building an NPM package with hundreds of modules, consider avoiding barrel files.
+
+### Function vs Feature Organization
+
+**Function-based (Recommended):**
+
+- ✅ No decision fatigue about where files belong
+- ✅ Consistent structure across projects
+- ✅ Easy to find files (use Command Palette/Go to File)
+- ✅ No need to reorganize as product evolves
+
+**Feature-based:**
+
+- ❌ Constant categorization decisions
+- ❌ Blurry boundaries between features
+- ❌ Requires reorganization as product changes
+- ❌ Different developers have different mental models
