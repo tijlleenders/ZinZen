@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useParams, useRouterState } from "@tanstack/react-router";
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
@@ -13,8 +12,6 @@ import { FabMenuOption } from "./FabOptionsMenu/FabOptionsMenu.types";
 import { useFabMenu } from "./FabOptionsMenu/useFabMenu";
 
 const PartnerGoalMoveFab: React.FC = () => {
-  const { t } = useTranslation();
-
   const { parentId = "root" } = useParams({ strict: false }) as {
     parentId: string;
     partnerId: string;
@@ -62,12 +59,12 @@ const PartnerGoalMoveFab: React.FC = () => {
   const options: FabMenuOption[] = useMemo(() => {
     return [
       {
-        label: t("Move here"),
+        label: "Move here",
         onClick: handleMoveGoalHere,
         disabled: !shouldRenderMoveButton,
       },
       {
-        label: t("Cancel"),
+        label: "Cancel",
         onClick: handleCancel,
       },
     ];

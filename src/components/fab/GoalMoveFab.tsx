@@ -1,38 +1,22 @@
 import React, { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { useGoalMoveMutation } from "@src/hooks/api/Goals/mutations/useGoalMoveMutation";
-import { TGoalCategory } from "@src/models/GoalItem";
-import { TGoalConfigMode } from "@src/types";
 import GlobalFab from "./GlobalFab";
 import { FabMenuOption } from "./FabOptionsMenu/FabOptionsMenu.types";
+import { useFabMenu } from "./FabOptionsMenu/useFabMenu";
 
 const GoalMoveFab: React.FC = () => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
   const goalToMove = useRecoilValue(moveGoalState);
   const setGoalToMove = useSetRecoilState(moveGoalState);
   const { moveGoalMutation } = useGoalMoveMutation();
 
-  const { addOptions } = useSearch({ strict: false }) as {
-    type?: TGoalCategory;
-    mode?: TGoalConfigMode;
-    addOptions?: boolean;
-  };
-
   const { parentId = "root" } = useParams({ strict: false }) as {
     parentId: string;
   };
-
-  const handleClick = () => {
-    navigate({
-      to: `/goals/${parentId}?addOptions=true`,
-      state: (state) => ({ ...state }),
-    });
-  };
+  const { openMenu, open } = useFabMenu();
 
   const handleMoveGoalHere = useCallback(() => {
     if (!goalToMove) return;
@@ -52,19 +36,15 @@ const GoalMoveFab: React.FC = () => {
     window.history.back();
   }, [setGoalToMove]);
 
-  const handleCloseMenu = () => {
-    window.history.back();
-  };
-
   const options: FabMenuOption[] = useMemo(() => {
     return [
       {
-        label: t("Move here"),
+        label: "Move here",
         onClick: handleMoveGoalHere,
         disabled: !shouldRenderMoveButton,
       },
       {
-        label: t("Cancel"),
+        label: "Cancel",
         onClick: handleCancel,
       },
     ];
@@ -73,10 +53,12 @@ const GoalMoveFab: React.FC = () => {
   return (
     <GlobalFab
       icon={<img src={GlobalAddIcon} alt="move goal" />}
-      onClick={handleClick}
-      showMenu={addOptions ?? false}
-      options={options}
-      onCloseMenu={handleCloseMenu}
+      onClick={handleMoveGoalHere}
+      menu={{
+        show: open,
+        onLongPress: openMenu,
+        options,
+      }}
     />
   );
 };

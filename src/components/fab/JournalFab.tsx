@@ -8,7 +8,7 @@ const JournalFab: React.FC = () => {
 
   const handleClick = () => {
     navigate({
-      to: "/MyJournal",
+      to: ".",
       search: { mode: "addJournal" },
       state: (state) => ({ ...state }),
     });

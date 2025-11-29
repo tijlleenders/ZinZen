@@ -6,9 +6,9 @@ import { useGetSharedWMActiveGoals } from "@src/hooks/api/SharedWMGoals/useGetSh
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import { themeSelectionMode } from "@src/store/ThemeState";
 import { moveGoalState } from "@src/store/moveGoalState";
-import PartnerGoalsFab from "@components/fab/PartnerGoalsFab";
 import PartnerGoalMoveFab from "@components/fab/PartnerGoalMoveFab";
 import ThemeConfirmFab from "@components/fab/ThemeConfirmFab";
+import GoalsFab from "@components/fab/GoalsFab";
 
 export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/goals/$parentId")({
   component: () => {
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/g
     return (
       <>
         <PartnerGoals activeSharedWMGoals={activeSharedWMGoals} parentId={parentId} partnerId={partnerId} />
-        {themeSelection ? <ThemeConfirmFab /> : goalToMove ? <PartnerGoalMoveFab /> : <PartnerGoalsFab />}
+        {themeSelection ? <ThemeConfirmFab /> : goalToMove ? <PartnerGoalMoveFab /> : <GoalsFab />}
       </>
     );
   },
