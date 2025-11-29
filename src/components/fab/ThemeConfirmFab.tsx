@@ -1,6 +1,6 @@
 import React from "react";
 import correct from "@assets/images/correct.svg";
-import FabButton from "./FabButton";
+import FabButton from "./FabButton/FabButton";
 
 const ThemeConfirmFab: React.FC = () => {
   const handleClick = () => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
@@ -7,11 +7,14 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { TGoalConfigMode } from "@src/types";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import { useKeyPress } from "@src/hooks/useKeyPress";
-import FabButton from "./FabButton";
-import FabOptionsMenu, { FabOption } from "./FabOptionsMenu";
+import GlobalFab from "./GlobalFab";
+import { FabMenuOption } from "./FabOptionsMenu/FabOptionsMenu.types";
 
 const GoalsFab: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const canAddBudgetGoal = useRecoilValue(allowAddingBudgetGoal);
+
   const { type, addOptions } = useSearch({ strict: false }) as {
     type?: TGoalCategory;
     mode?: TGoalConfigMode;
@@ -22,15 +25,12 @@ const GoalsFab: React.FC = () => {
     parentId: string;
   };
 
-  const navigate = useNavigate();
-  const canAddBudgetGoal = useRecoilValue(allowAddingBudgetGoal);
-
-  const handleAddStandardGoal = () => {
+  const handleAddStandardGoal = (replace = false) => {
     navigate({
       to: `/goals/${parentId || "root"}`,
       search: { type: "Standard", mode: "add" },
       state: (state) => ({ ...state }),
-      replace: true,
+      replace,
     });
   };
 
@@ -64,29 +64,40 @@ const GoalsFab: React.FC = () => {
     }
   }, [plusPressed, enterPressed]);
 
-  if (addOptions) {
-    const options: FabOption[] = [
+  const handleAddGoalOptionClick = () => {
+    handleAddStandardGoal(true);
+  };
+
+  const handleGoalFabClick = () => {
+    handleAddStandardGoal();
+  };
+
+  const options: FabMenuOption[] = useMemo(() => {
+    const opts: FabMenuOption[] = [
       {
         label: t("Standard"),
-        onClick: handleAddStandardGoal,
+        onClick: handleAddGoalOptionClick,
       },
     ];
 
     if (canAddBudgetGoal) {
-      options.push({
+      opts.push({
         label: t("Budget"),
         onClick: handleAddBudgetGoal,
       });
     }
 
-    return <FabOptionsMenu options={options} onClose={handleCloseMenu} />;
-  }
+    return opts;
+  }, [canAddBudgetGoal, handleAddStandardGoal, handleAddBudgetGoal]);
 
   return (
-    <FabButton
+    <GlobalFab
       icon={<img src={GlobalAddIcon} alt="add goal" />}
-      onClick={handleAddStandardGoal}
+      onClick={handleGoalFabClick}
       onLongPress={handleLongPress}
+      showMenu={addOptions ?? false}
+      options={options}
+      onCloseMenu={handleCloseMenu}
     />
   );
 };

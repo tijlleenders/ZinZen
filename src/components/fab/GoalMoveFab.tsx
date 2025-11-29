@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
@@ -7,11 +7,16 @@ import { moveGoalState } from "@src/store/moveGoalState";
 import { useGoalMoveMutation } from "@src/hooks/api/Goals/mutations/useGoalMoveMutation";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { TGoalConfigMode } from "@src/types";
-import FabButton from "./FabButton";
-import FabOptionsMenu, { FabOption } from "./FabOptionsMenu";
+import GlobalFab from "./GlobalFab";
+import { FabMenuOption } from "./FabOptionsMenu/FabOptionsMenu.types";
 
 const GoalMoveFab: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const goalToMove = useRecoilValue(moveGoalState);
+  const setGoalToMove = useSetRecoilState(moveGoalState);
+  const { moveGoalMutation } = useGoalMoveMutation();
+
   const { addOptions } = useSearch({ strict: false }) as {
     type?: TGoalCategory;
     mode?: TGoalConfigMode;
@@ -21,11 +26,6 @@ const GoalMoveFab: React.FC = () => {
   const { parentId = "root" } = useParams({ strict: false }) as {
     parentId: string;
   };
-
-  const navigate = useNavigate();
-  const goalToMove = useRecoilValue(moveGoalState);
-  const setGoalToMove = useSetRecoilState(moveGoalState);
-  const { moveGoalMutation } = useGoalMoveMutation();
 
   const handleClick = () => {
     navigate({
@@ -56,8 +56,8 @@ const GoalMoveFab: React.FC = () => {
     window.history.back();
   };
 
-  if (addOptions) {
-    const options: FabOption[] = [
+  const options: FabMenuOption[] = useMemo(() => {
+    return [
       {
         label: t("Move here"),
         onClick: handleMoveGoalHere,
@@ -68,11 +68,17 @@ const GoalMoveFab: React.FC = () => {
         onClick: handleCancel,
       },
     ];
+  }, [handleMoveGoalHere, handleCancel, shouldRenderMoveButton]);
 
-    return <FabOptionsMenu options={options} onClose={handleCloseMenu} />;
-  }
-
-  return <FabButton icon={<img src={GlobalAddIcon} alt="move goal" />} onClick={handleClick} />;
+  return (
+    <GlobalFab
+      icon={<img src={GlobalAddIcon} alt="move goal" />}
+      onClick={handleClick}
+      showMenu={addOptions ?? false}
+      options={options}
+      onCloseMenu={handleCloseMenu}
+    />
+  );
 };
 
 export default GoalMoveFab;

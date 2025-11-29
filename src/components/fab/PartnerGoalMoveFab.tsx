@@ -1,32 +1,26 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useNavigate, useParams, useRouterState, useSearch } from "@tanstack/react-router";
+import { useParams, useRouterState } from "@tanstack/react-router";
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
-import { GoalItem } from "@src/models/GoalItem";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
-import { TGoalCategory } from "@src/models/GoalItem";
-import { TGoalConfigMode } from "@src/types";
-import FabButton from "./FabButton";
-import FabOptionsMenu, { FabOption } from "./FabOptionsMenu";
+import { GoalItem } from "@src/models/GoalItem";
+import GlobalFab from "./GlobalFab";
+import { FabMenuOption } from "./FabOptionsMenu/FabOptionsMenu.types";
+import { useFabMenu } from "./FabOptionsMenu/useFabMenu";
 
 const PartnerGoalMoveFab: React.FC = () => {
   const { t } = useTranslation();
-  const { addOptions } = useSearch({ strict: false }) as {
-    type?: TGoalCategory;
-    mode?: TGoalConfigMode;
-    addOptions?: boolean;
-  };
 
-  const { parentId = "root", partnerId } = useParams({ strict: false }) as {
+  const { parentId = "root" } = useParams({ strict: false }) as {
     parentId: string;
     partnerId: string;
   };
 
-  const navigate = useNavigate();
+  const { openMenu, open } = useFabMenu();
   const goalToMove = useRecoilValue(moveGoalState);
   const setGoalToMove = useSetRecoilState(moveGoalState);
 
@@ -36,21 +30,14 @@ const PartnerGoalMoveFab: React.FC = () => {
     select: (s) => s.location.state?.rootGoalId,
   });
 
-  const handleClick = () => {
-    navigate({
-      to: `/partners/${partnerId}/goals/${parentId}?addOptions=true`,
-      state: (state) => ({ ...state }),
-    });
-  };
-
   const moveHerePartner = useCallback(
-    async (goalToMove: GoalItem) => {
-      let rootGoal = goalToMove;
+    async (goal: GoalItem) => {
+      let rootGoal = goal;
       if (rootGoalId) {
-        rootGoal = (await getSharedWMGoalById(rootGoalId)) || goalToMove;
+        rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
       }
 
-      suggestChanges(rootGoal, { ...goalToMove, parentGoalId: parentId }, parentGoal?.depth || 0);
+      suggestChanges(rootGoal, { ...goal, parentGoalId: parentId }, parentGoal?.depth || 0);
     },
     [rootGoalId, parentId, parentGoal?.depth],
   );
@@ -72,12 +59,8 @@ const PartnerGoalMoveFab: React.FC = () => {
     window.history.back();
   }, [setGoalToMove]);
 
-  const handleCloseMenu = () => {
-    window.history.back();
-  };
-
-  if (addOptions) {
-    const options: FabOption[] = [
+  const options: FabMenuOption[] = useMemo(() => {
+    return [
       {
         label: t("Move here"),
         onClick: handleMoveGoalHere,
@@ -88,11 +71,19 @@ const PartnerGoalMoveFab: React.FC = () => {
         onClick: handleCancel,
       },
     ];
+  }, [handleMoveGoalHere, handleCancel, shouldRenderMoveButton]);
 
-    return <FabOptionsMenu options={options} onClose={handleCloseMenu} />;
-  }
-
-  return <FabButton icon={<img src={GlobalAddIcon} alt="move goal" />} onClick={handleClick} />;
+  return (
+    <GlobalFab
+      icon={<img src={GlobalAddIcon} alt="move goal" />}
+      onClick={handleMoveGoalHere}
+      menu={{
+        show: open,
+        onLongPress: openMenu,
+        options,
+      }}
+    />
+  );
 };
 
 export default PartnerGoalMoveFab;

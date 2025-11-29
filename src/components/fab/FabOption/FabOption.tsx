@@ -1,15 +1,15 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
-import "./FabOptionsMenu.scss";
+import "../FabOptionsMenu/FabOptionsMenu.scss";
 
 interface FabOptionProps {
-  children: ReactNode;
+  text: string;
   bottom: number;
   disabled?: boolean;
   handleClick: () => void;
 }
 
-const FabOption: React.FC<FabOptionProps> = ({ children, bottom, disabled, handleClick }) => {
+const FabOption: React.FC<FabOptionProps> = ({ text, bottom, disabled, handleClick }) => {
   return (
     <button
       type="button"
@@ -21,7 +21,7 @@ const FabOption: React.FC<FabOptionProps> = ({ children, bottom, disabled, handl
         handleClick();
       }}
     >
-      <span className="button-text">{children}</span>
+      <span className="button-text">{text}</span>
       <span className="goal-btn-circle place-middle fw-600">
         <img className="add-icon" src={GlobalAddIcon} alt="add goal" />
       </span>

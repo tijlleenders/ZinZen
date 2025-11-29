@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
-import FabButton from "./FabButton";
+import FabButton from "./FabButton/FabButton";
 
 const JournalFab: React.FC = () => {
   const navigate = useNavigate();
