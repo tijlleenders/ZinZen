@@ -7,15 +7,13 @@ import "./Header.scss";
 
 interface HeaderProps {
   title: PageTitle;
-  onTitleClick?: () => void;
-  onLogoClick?: () => void;
 }
 
-const Header = ({ title, onTitleClick, onLogoClick }: HeaderProps) => {
+const Header = ({ title }: HeaderProps) => {
   return (
     <div className="header">
-      <HeaderLogo onLogoClick={onLogoClick} />
-      <HeaderTitle title={title} onTitleClick={onTitleClick} />
+      <HeaderLogo />
+      <HeaderTitle title={title} />
       <HeaderActions title={title} />
     </div>
   );

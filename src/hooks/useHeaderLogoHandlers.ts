@@ -11,7 +11,15 @@ export const useHeaderLogoHandlers = () => {
   const [partnerModeTour, setPartnerModeTour] = useRecoilState(displayPartnerModeTour);
   const setIsFlipping = useSetRecoilState(flipAnimationState);
 
-  const handleEnterPartnerMode = async () => {
+  const isInPartnerMode = () => {
+    return window.location.pathname.startsWith("/partners");
+  };
+
+  const disablePartnerTour = () => {
+    if (partnerModeTour) setPartnerModeTour(false);
+  };
+
+  const enterPartnerMode = async () => {
     setIsFlipping(true);
     const partners = await getAllContacts();
     if (partners.length === 0) {
@@ -22,19 +30,23 @@ export const useHeaderLogoHandlers = () => {
       });
       return;
     }
-    if (partnerModeTour) {
-      setPartnerModeTour(false);
-    }
+    disablePartnerTour();
     navigate({ to: "/partners" });
   };
 
-  const handleExitPartnerMode = async () => {
+  const exitPartnerMode = () => {
     setIsFlipping(true);
-    if (partnerModeTour) {
-      setPartnerModeTour(false);
-    }
+    disablePartnerTour();
     navigate({ to: "/goals/$parentId", params: { parentId: "root" }, replace: true });
   };
 
-  return { handleEnterPartnerMode, handleExitPartnerMode };
+  const togglePartnerMode = async () => {
+    if (isInPartnerMode()) {
+      exitPartnerMode();
+    } else {
+      await enterPartnerMode();
+    }
+  };
+
+  return { togglePartnerMode };
 };

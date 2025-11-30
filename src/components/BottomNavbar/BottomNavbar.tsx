@@ -1,30 +1,19 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useRecoilValue } from "recoil";
-import { useMatchRoute } from "@tanstack/react-router";
-
-import { themeSelectionMode } from "@src/store/ThemeState";
-import { useBottomNavbarNavigation } from "@src/hooks/useBottomNavbarNavigation";
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
-
-import "./BottomNavbar.scss";
+import { useBottomNavbarNavigation } from "@src/hooks/useBottomNavbarNavigation";
 import Icon from "@src/common/Icon";
 import { BottomNavButton } from "./BottomNavButton";
-import ThemeSelectionControls from "./ThemeSelectionControls";
 
-const BottomNavbar: React.FC = () => {
+export const BottomNavbar = () => {
   const { t } = useTranslation();
-  const themeSelection = useRecoilValue(themeSelectionMode);
-  const matchRoute = useMatchRoute();
   const { onScheduleClick, onGoalsClick, onJournalClick } = useBottomNavbarNavigation();
 
-  const isScheduleActive = !!matchRoute({ to: "/", fuzzy: false });
-  const isGoalsActive = !!matchRoute({ to: "/goals/$parentId", fuzzy: true });
-  const isJournalActive = !!matchRoute({ to: "/MyJournal", fuzzy: false });
+  const currentPage = window.location.pathname.split("/")[1];
 
-  if (themeSelection) {
-    return <ThemeSelectionControls onClose={() => window.history.back()} />;
-  }
+  const isScheduleActive = currentPage === "";
+  const isGoalsActive = currentPage === "goals";
+  const isJournalActive = currentPage === "MyJournal";
 
   return (
     <BottomNavLayout>
@@ -44,8 +33,7 @@ const BottomNavbar: React.FC = () => {
 
       <BottomNavButton
         active={isJournalActive}
-        onClick={(e) => {
-          e.stopPropagation();
+        onClick={() => {
           onJournalClick?.();
         }}
       >
@@ -55,5 +43,3 @@ const BottomNavbar: React.FC = () => {
     </BottomNavLayout>
   );
 };
-
-export default BottomNavbar;

@@ -4,12 +4,11 @@ import { useRecoilState } from "recoil";
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import { flipAnimationState } from "@src/store";
 import "./HeaderLogo.scss";
+import { useHeaderLogoHandlers } from "@src/hooks/useHeaderLogoHandlers";
+import PartnerModeTour from "@components/PartnerModeTour";
 
-interface HeaderLogoProps {
-  onLogoClick?: () => void;
-}
-
-const HeaderLogo = ({ onLogoClick }: HeaderLogoProps) => {
+const HeaderLogo = () => {
+  const { togglePartnerMode } = useHeaderLogoHandlers();
   const [isFlipping, setIsFlipping] = useRecoilState(flipAnimationState);
   const zinZenLogoRef = useRef<HTMLImageElement>(null);
 
@@ -25,9 +24,9 @@ const HeaderLogo = ({ onLogoClick }: HeaderLogoProps) => {
         src={zinzenLightLogo}
         alt="ZinZen"
         ref={zinZenLogoRef}
-        onClickCapture={onLogoClick}
+        onClickCapture={togglePartnerMode}
       />
-      {/* <PartnerModeTour refTarget={zinZenLogoRef} /> */}
+      <PartnerModeTour refTarget={zinZenLogoRef} />
     </>
   );
 };

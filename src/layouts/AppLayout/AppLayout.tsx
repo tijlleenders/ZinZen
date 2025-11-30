@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import BottomNavbar from "@components/BottomNavbar/BottomNavbar";
+import BottomBarContainer from "@components/BottomNavbar/BottomBarContainer";
 import Header from "@components/Header/Header";
 import Search from "@src/common/Search";
 import { useSearchState } from "@src/hooks/useSearchState";
@@ -10,22 +10,16 @@ export interface AppLayoutProps {
   title: PageTitle;
   children: ReactNode;
   enableSearch?: boolean;
-  onTitleClick?: () => void;
-  onLogoClick?: () => void;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children, title, enableSearch = false, onTitleClick, onLogoClick }) => {
+const AppLayout: React.FC<AppLayoutProps> = ({ children, title, enableSearch = false }) => {
   const { showSearch } = useSearchState();
 
   return (
     <div className="appLayout">
-      {enableSearch && showSearch ? (
-        <Search />
-      ) : (
-        <Header title={title} onTitleClick={onTitleClick} onLogoClick={onLogoClick} />
-      )}
+      {enableSearch && showSearch ? <Search /> : <Header title={title} />}
       <div className="appLayout-children">{children}</div>
-      <BottomNavbar />
+      <BottomBarContainer />
     </div>
   );
 };

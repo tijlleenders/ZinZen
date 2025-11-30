@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
@@ -9,11 +9,7 @@ import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 import { darkModeState } from "@src/store";
 import "./ThemeSelectionControls.scss";
 
-interface ThemeSelectionControlsProps {
-  onClose: () => void;
-}
-
-const ThemeSelectionControls: React.FC<ThemeSelectionControlsProps> = ({ onClose }) => {
+const ThemeSelectionControls = () => {
   const [theme, setTheme] = useRecoilState(themeState);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const setThemeSelection = useSetRecoilState(themeSelectionMode);
@@ -24,10 +20,9 @@ const ThemeSelectionControls: React.FC<ThemeSelectionControlsProps> = ({ onClose
     };
   }, [setThemeSelection]);
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     setThemeSelection(false);
-    onClose();
-  }, [onClose, setThemeSelection]);
+  };
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;

@@ -4,7 +4,6 @@ import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { TGoalConfigMode } from "@src/types";
-import { useHeaderLogoHandlers } from "@src/hooks/useHeaderLogoHandlers";
 import { PageTitle } from "@src/constants/pageTitle";
 
 export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/goals")({
@@ -14,10 +13,9 @@ export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/g
     const { data: partner } = useGetContactByPartnerId(partnerId || "");
     const { name = "" } = partner || {};
     const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);
-    const { handleExitPartnerMode } = useHeaderLogoHandlers();
 
     return (
-      <AppLayout title={`${partnerName}'s Goals` as PageTitle} enableSearch onLogoClick={handleExitPartnerMode}>
+      <AppLayout title={`${partnerName}'s Goals` as PageTitle} enableSearch>
         <Outlet />
       </AppLayout>
     );
