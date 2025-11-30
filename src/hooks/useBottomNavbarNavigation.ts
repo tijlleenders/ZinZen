@@ -1,13 +1,11 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { ILocationState } from "@src/Interfaces";
-import { getGoalById } from "@src/api/GoalsAPI";
 
 export interface BottomNavbarNavigationHandlers {
   onScheduleClick?: () => void;
   onGoalsClick?: () => void;
   onJournalClick?: () => void;
-  onGoalsGoBack?: () => void;
 }
 
 export const useBottomNavbarNavigation = (): BottomNavbarNavigationHandlers => {
@@ -32,11 +30,13 @@ export const useBottomNavbarNavigation = (): BottomNavbarNavigationHandlers => {
 
   const handleGoalsClick = useCallback(() => {
     const newState = createNavigationState();
-    navigate({
-      to: "/goals/$parentId",
-      params: { parentId: "root" },
-      state: (prevState) => ({ ...prevState, ...newState }),
-    });
+    if (!window.location.pathname.includes("/goals")) {
+      navigate({
+        to: "/goals/$parentId",
+        params: { parentId: "root" },
+        state: (prevState) => ({ ...prevState, ...newState }),
+      });
+    }
   }, [navigate, createNavigationState]);
 
   const handleJournalClick = useCallback(() => {
@@ -50,19 +50,9 @@ export const useBottomNavbarNavigation = (): BottomNavbarNavigationHandlers => {
     });
   }, [navigate, createNavigationState]);
 
-  const handleGoalsGoBack = useCallback(() => {
-    const currentParentId = window.location.pathname.split("/")[2];
-    getGoalById(currentParentId).then((goal) => {
-      if (goal) {
-        window.history.go(-goal.depth);
-      }
-    });
-  }, []);
-
   return {
     onScheduleClick: handleScheduleClick,
     onGoalsClick: handleGoalsClick,
     onJournalClick: handleJournalClick,
-    onGoalsGoBack: handleGoalsGoBack,
   };
 };

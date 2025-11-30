@@ -1,16 +1,23 @@
-import MyGoal, { ActionModal } from "@components/GoalsComponents/MyGoal/MyGoal";
+import MyGoal from "@components/GoalsComponents/MyGoal/MyGoal";
+import { ActionModal } from "@components/GoalsComponents/MyGoal/types";
 import ZAccordion from "@src/common/Accordion";
-import { TrashItem } from "@src/models/TrashItem";
+import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
+const DeletedGoals = ({ parentId }: { parentId: string }) => {
   const darkMode = useRecoilValue(darkModeState);
+
+  const { data: goals } = useGetDeletedGoals(parentId || "root");
+
+  if (!goals) {
+    return null;
+  }
 
   return (
     <div className="archived-drawer">
-      {deletedGoals.length > 0 && (
+      {goals.length > 0 && (
         <ZAccordion
           showCount
           style={{
@@ -21,7 +28,7 @@ const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
             {
               header: "Trash",
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              body: deletedGoals.map(({ deletedAt: _deletedAt, ...goal }) => (
+              body: goals.map(({ deletedAt: _deletedAt, ...goal }) => (
                 <MyGoal
                   key={`goal-${goal.id}`}
                   goal={{ ...goal, impossible: false }}

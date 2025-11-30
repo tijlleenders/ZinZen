@@ -1,12 +1,20 @@
-import MyGoal, { ActionModal } from "@components/GoalsComponents/MyGoal/MyGoal";
+import MyGoal from "@components/GoalsComponents/MyGoal/MyGoal";
+import { ActionModal } from "@components/GoalsComponents/MyGoal/types";
 import ZAccordion from "@src/common/Accordion";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 
-const AvailableGoalHints = ({ hints }: { hints: GoalItem[] }) => {
+const AvailableGoalHints = ({ parentGoal }: { parentGoal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
+  const hints =
+    parentGoal && parentGoal.hints?.availableGoalHints
+      ? parentGoal.hints.availableGoalHints.map((hint) =>
+          createGoalObjectFromTags({ ...hint, parentGoalId: parentGoal.id, id: hint.id }),
+        )
+      : [];
 
   return (
     <div className="archived-drawer">

@@ -1,28 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { ReactNode, useEffect } from "react";
-import { Link, useLocation, useNavigate, useParams } from "@tanstack/react-router";
-import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
-import { isGoalCode } from "@src/utils/patterns";
-import NotificationSymbol from "@src/common/NotificationSymbol";
-import useGoalActions from "@src/hooks/useGoalActions";
-import TriangleIcon from "@src/assets/TriangleIcon";
-import { CopyIcon } from "@src/assets/CopyIcon";
+import React, { useEffect } from "react";
+import { useParams } from "@tanstack/react-router";
+import { ImpossibleGoal } from "@src/Interfaces";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { glowGoalIdState } from "@src/store/GlowGoalIdState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
-import { GoalIcon } from "./components/GoalIcon";
+import { GoalIconRenderer } from "./components/GoalIconRenderer";
 import { ZItemContainer } from "../ZItemContainer";
-
-// eslint-disable-next-line no-shadow
-export enum ActionModal {
-  ACTIVE = "active",
-  DELETED = "deleted",
-  ARCHIVED = "archived",
-  HINTS = "hints",
-}
+import { ActionModal } from "./types";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -31,58 +19,11 @@ interface MyGoalProps {
   actionModal?: ActionModal;
 }
 
-const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, children }) => {
-  return (
-    <div className="goal-dd-inner" style={{ borderColor: color }}>
-      {children}
-    </div>
-  );
-};
-
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, actionModal = ActionModal.ACTIVE }) => {
-  const { parentId = "root", partnerId } = useParams({ strict: false });
+  const { partnerId } = useParams({ strict: false });
   const isPartnerModeActive = !!partnerId;
-  const { copyCode } = useGoalActions();
   const goalToMove = useRecoilValue(moveGoalState);
   const [glowGoalId, setGlowGoalId] = useRecoilState(glowGoalIdState);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const redirect = (state: object, isDropdown = false, actionModalType = ActionModal.ACTIVE) => {
-    const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
-    if (isDropdown) {
-      const searchparam = goal.newUpdates ? "showNewChanges" : "showOptions";
-      navigate({
-        to: `${prefix}/${parentId}/${goal.id}?${searchparam}=${actionModalType}`,
-        state: { ...state, actionModalType },
-      });
-    } else {
-      navigate({ to: `${prefix}/${goal.id}`, state });
-    }
-  };
-
-  const handleGoalClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-
-    if (isGoalCode(goal.title)) {
-      copyCode(goal.title);
-      return;
-    }
-
-    const newState: ILocationState = {
-      ...location.state,
-      goalsHistory: [
-        ...(location.state?.goalsHistory || []),
-        {
-          goalID: goal.id || "root",
-          goalColor: goal.goalColor || "#ffffff",
-          goalTitle: goal.title || "",
-        },
-      ],
-    };
-    redirect(newState);
-  };
 
   useEffect(() => {
     if (glowGoalId === goal.id) {
@@ -103,10 +44,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, ac
 
   const innerBorderColor = goal.sublist.length > 0 ? goal.goalColor : "transparent";
 
-  const titleContainsVideoLink =
-    goal.title.includes("youtube") || goal.title.includes("peertube") || goal.title.includes("youtu");
-  const titleIsCode = isGoalCode(goal.title);
-
   return (
     <ZItemContainer
       id={`goal-${goal.id}`}
@@ -114,35 +51,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, ac
       dataTestId={`goal-${goal.title}`}
       isGoalToBeMoved={goalToMove?.id === goal.id}
     >
-      <Link
-        preload="intent"
-        to={
-          isPartnerModeActive ? "/partners/$partnerId/goals/$parentId/$activeGoalId" : "/goals/$parentId/$activeGoalId"
-        }
-        params={{ parentId: goal.parentGoalId, activeGoalId: goal.id }}
-        style={{ touchAction: "none" }}
-        search={goal.newUpdates ? { showNewChanges: "true" } : { showOptions: actionModal.toString() }}
-        state={location.state}
-        {...dragAttributes}
-        {...dragListeners}
-      >
-        {titleIsCode ? (
-          <CopyIcon color={goal.goalColor} size={37} borderWidth={4} borderColor={innerBorderColor} />
-        ) : titleContainsVideoLink ? (
-          <TriangleIcon color={goal.goalColor} size={37} borderWidth={4} borderColor={goal.goalColor} />
-        ) : (
-          <GoalIcon color={goal.goalColor} showDottedBorder={!(goal.timeBudget?.perDay == null)}>
-            <InnerCircle color={innerBorderColor}>
-              {goal.newUpdates && (
-                <NotificationSymbol color={goal.goalColor} dataTestId={`notification-dot-${goal.title}`} />
-              )}
-            </InnerCircle>
-          </GoalIcon>
-        )}
-      </Link>
-      <div className="goal-tile" onClick={handleGoalClick} role="presentation">
-        <GoalTitle goal={goal} isImpossible={goal.impossible} onTitleClick={handleGoalClick} />
-      </div>
+      <GoalIconRenderer
+        goal={goal}
+        innerBorderColor={innerBorderColor}
+        dragAttributes={dragAttributes}
+        dragListeners={dragListeners}
+        actionModal={actionModal}
+      />
+      <GoalTitle goal={goal} />
       {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
     </ZItemContainer>
   );

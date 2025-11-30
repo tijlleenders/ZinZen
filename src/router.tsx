@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createRouter } from "@tanstack/react-router";
 import { QueryClient, MutationCache } from "react-query";
-import { ActionModal } from "@components/GoalsComponents/MyGoal/MyGoal";
+import { ActionModal } from "@components/GoalsComponents/MyGoal/types";
 import { routeTree } from "./routeTree.gen";
 
 const EXCLUDED_MUTATION_KEYS = ["archiveGoal", "addGoal", "updatePositions"];

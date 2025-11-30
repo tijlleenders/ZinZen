@@ -20,7 +20,7 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
       </Link>
       <Link
         style={{ textDecoration: "none" }}
-        className="goal-tile"
+        className="goal-title"
         data-testid={`contact-${contact.name}`}
         params={{ partnerId: contact.id, parentId: "root" }}
         to="/partners/$partnerId/goals/$parentId"

@@ -117,6 +117,27 @@ export const getHistoryUptoGoal = async (id: string) => {
   return history;
 };
 
+export const calculateGoalDepth = async (goalId: string): Promise<number> => {
+  if (goalId === "root") {
+    return 0;
+  }
+
+  let depth = 0;
+  let currentGoalId = goalId;
+
+  while (currentGoalId !== "root") {
+    const currentGoal: GoalItem | undefined = await getGoal(currentGoalId);
+    if (!currentGoal) {
+      break;
+    }
+    // eslint-disable-next-line no-plusplus
+    depth++;
+    currentGoalId = currentGoal.parentGoalId;
+  }
+
+  return depth;
+};
+
 export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
   let typeAtPriority: typeOfChange | "none" = "none";
   if (goalChanges.subgoals.length > 0) {

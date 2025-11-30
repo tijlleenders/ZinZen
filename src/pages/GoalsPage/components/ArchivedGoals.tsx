@@ -1,12 +1,18 @@
-import MyGoal, { ActionModal } from "@components/GoalsComponents/MyGoal/MyGoal";
+import MyGoal from "@components/GoalsComponents/MyGoal/MyGoal";
+import { ActionModal } from "@components/GoalsComponents/MyGoal/types";
 import ZAccordion from "@src/common/Accordion";
-import { GoalItem } from "@src/models/GoalItem";
+import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useRecoilValue } from "recoil";
 
-const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
+const ArchivedGoals = ({ parentId }: { parentId: string }) => {
   const darkMode = useRecoilValue(darkModeState);
+  const { data: goals } = useGetArchivedGoals(parentId || "root");
+
+  if (!goals) {
+    return null;
+  }
 
   return (
     <div>

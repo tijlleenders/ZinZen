@@ -12,7 +12,6 @@ import {
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { ImpossibleGoal } from "@src/Interfaces";
 import { useUpdateGoalPositions } from "@src/hooks/api/Goals/mutations/useUpdateGoalPositions";
-import { useGoalKeyboardNavigation } from "@src/hooks/useGoalKeyboardNavigation";
 import { POINTER_SENSOR_CONFIG, TOUCH_SENSOR_CONFIG } from "@src/constants/dndConfig";
 import GoalItemWrapper from "./GoalItemWrapper";
 
@@ -57,8 +56,6 @@ const GoalsList = ({ goals }: GoalsListProps) => {
     },
     [goals, getGoalsPos, updatePositions],
   );
-
-  useGoalKeyboardNavigation({ goals });
 
   return (
     <div className="d-flex f-col">
