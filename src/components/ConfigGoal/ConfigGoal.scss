@@ -56,13 +56,6 @@
     padding: 10px;
     border-radius: 4px;
   }
-  .timepicker {
-    padding: 12px;
-    .ant-select-arrow {
-      padding: 0 6px !important;
-    }
-  }
-  .timepicker > .ant-select-selector,
   .datepicker {
     border: none !important;
   }
@@ -95,16 +88,6 @@
   color: #fff;
   background: var(--selection-color);
 }
-@media (max-width: 475px) {
-  .date-div {
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 0px !important;
-    p {
-      width: 100%;
-    }
-  }
-}
 
 .action-btn-container {
   text-align: center;
@@ -132,14 +115,4 @@
 .schedule-status {
   margin-top: 8px;
   text-align: center;
-}
-
-.apply-changes-btn {
-  flex: 1;
-  text-align: center;
-  padding: 10px 24px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

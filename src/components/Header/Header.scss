@@ -28,32 +28,29 @@
   height: 1.1rem !important;
 }
 
-.header-dropdown,
-.header-dropdown-dark {
+/* --- Dropdown --- */
+.header-dropdown {
   width: 400px !important;
-  ul {
-    background-color: var(--secondary-background) !important;
-
-    li {
-      margin: 15px 0 !important;
-      span {
-        font-size: 18px;
-      }
-    }
-  }
-  .ant-switch-inner {
-    background: var(--primary-background);
-  }
 }
-.header-dropdown-dark {
-  span {
-    color: white !important;
-  }
+
+.header-dropdown ul {
+  background-color: var(--secondary-background) !important;
+}
+
+.header-dropdown ul li {
+  margin: 15px 0 !important;
+}
+
+.header-dropdown ul li span {
+  font-size: 18px;
+}
+
+.header-dropdown .ant-switch-inner {
+  background: var(--primary-background);
 }
 
 @media (max-width: 475px) {
-  .header-dropdown,
-  .header-dropdown-dark {
+  .header-dropdown {
     width: 75% !important;
   }
 }
