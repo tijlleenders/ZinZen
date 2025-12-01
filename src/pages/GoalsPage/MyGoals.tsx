@@ -21,7 +21,7 @@ interface MyGoalsProps {
 }
 
 export const MyGoals = ({ parentId }: MyGoalsProps) => {
-  const { data: activeGoals, isLoading: isLoadingActiveGoals } = useGetActiveGoals(parentId || "root");
+  const { data: activeGoals } = useGetActiveGoals(parentId || "root");
 
   const { data: parentGoal } = useGetGoalById(parentId);
 

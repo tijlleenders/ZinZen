@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactNode } from "react";
 import { ImpossibleGoal } from "@src/Interfaces";
 import { isGoalCode } from "@src/utils/patterns";

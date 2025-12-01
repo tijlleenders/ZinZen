@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { GoalItem } from "@src/models/GoalItem";
-import { deleteSharedGoal, deleteGoal } from "@src/controllers/GoalController";
+import { deleteSharedGoal } from "@src/api/SharedWMAPI";
+import { deleteGoal } from "@src/controllers/GoalController";
 import { useSetRecoilState } from "recoil";
 import { displayToast } from "@src/store";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";

@@ -1,23 +1,22 @@
 // @ts-nocheck
 import React from "react";
 import { RecoilRoot } from "recoil";
-import { act, fireEvent, render } from "@testing-library/react";
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
 
 import * as api from "@api/FeedbackAPI";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { expect } from "@jest/globals";
-import { BrowserRouter } from "react-router-dom";
 
 global.alert = jest.fn();
-global.fetch = jest.fn(() => {
+global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () =>
       Promise.resolve({
         status: "success",
         message: "Thank you so much for your feedback!",
       }),
-  });
-});
+  }),
+);
 
 beforeEach(() => {
   fetch.mockClear();
@@ -28,48 +27,59 @@ describe("Feedback Page", () => {
     const res = await api.submitFeedback("this is a jest call");
     expect(res.status).toEqual("success");
   });
+
   it("submitFeedback API failure flow", async () => {
     fetch.mockImplementationOnce(() => Promise.reject(new Error("Api error")));
     const res = await api.submitFeedback("this is a jest call");
     expect(res.status).toEqual("error");
   });
-  it("Feedback Page success flow  ", async () => {
+
+  it("Feedback Page success flow", async () => {
     const { findAllByText, getByText } = render(
       <RecoilRoot>
-        <BrowserRouter>
-          <FeedbackPage />
-        </BrowserRouter>
+        <FeedbackPage />
       </RecoilRoot>,
     );
+
+    await waitFor(() => {
+      expect(getByText("Submit")).toBeInTheDocument();
+    });
+
     const button = getByText("Submit");
     fireEvent.click(button);
-    await act(async () =>
-      render(
-        <RecoilRoot>
-          <BrowserRouter>
-            <FeedbackPage />
-          </BrowserRouter>
-        </RecoilRoot>,
-      ),
-    );
+
+    await act(async () => {
+      await new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 0);
+      });
+    });
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const boxes = await findAllByText("★");
     expect(boxes[0].parentElement).toHaveClass("notDecided");
   });
 
-  it("Feedback Page Failure flow  ", async () => {
+  it("Feedback Page Failure flow", async () => {
     fetch.mockImplementationOnce(() => Promise.reject(new Error("Api error")));
 
     const { findAllByText, getByText } = render(
       <RecoilRoot>
-        <BrowserRouter>
-          <FeedbackPage />
-        </BrowserRouter>
+        <FeedbackPage />
       </RecoilRoot>,
     );
+
+    await waitFor(() => {
+      expect(getByText("Submit")).toBeInTheDocument();
+    });
+
     const button = getByText("Submit");
     fireEvent.click(button);
+
+    await act(async () => {
+      await new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 0);
+      });
+    });
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const boxes = await findAllByText("★");

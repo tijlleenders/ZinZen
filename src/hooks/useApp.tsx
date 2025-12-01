@@ -31,7 +31,7 @@ function useApp() {
   const confirmationState = useRecoilValue(displayConfirmation);
   const queryClient = useQueryClient();
   useProcessSharedGoalData();
-
+  const { generateInitialSchedule } = useScheduler();
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts().then(async (contacts) => {
@@ -131,7 +131,7 @@ function useApp() {
       await checkUpdates();
       await createDefaultGoals();
       try {
-        // await generateInitialSchedule();
+        await generateInitialSchedule();
       } catch (error) {
         console.error("Failed to generate initial schedule:", error);
       }

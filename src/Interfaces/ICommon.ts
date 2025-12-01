@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { SetterOrUpdater } from "recoil";
 
 export interface IBackdrop {
   opacity: number;

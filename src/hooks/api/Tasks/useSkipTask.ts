@@ -1,6 +1,6 @@
 import { addTaskSkippedEvent } from "@src/api/TaskHistoryAPI";
 import { ITask } from "@src/Interfaces/Task";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import forgetTune from "@assets/forget.mp3";
 import { useSetRecoilState } from "recoil";
 import { displayToast } from "@src/store";
@@ -9,7 +9,6 @@ import { displayReschedule } from "@src/store/TaskState";
 const forgetSound = new Audio(forgetTune);
 
 export const useSkipTask = () => {
-  const queryClient = useQueryClient();
   const setShowToast = useSetRecoilState(displayToast);
   const setDisplayReschedule = useSetRecoilState(displayReschedule);
 

@@ -3,8 +3,7 @@ import { db } from "@models";
 import ContactItem from "@src/models/ContactItem";
 import { getRelationshipStatus } from "@src/services/contact.service";
 import { v4 as uuidv4 } from "uuid";
-import { deleteSharedGoal } from "@src/controllers/GoalController";
-import { getAllSharedWMGoalByPartner } from "../SharedWMAPI";
+import { deleteSharedGoal, getAllSharedWMGoalByPartner } from "../SharedWMAPI";
 import { getAllGoals } from "../GoalsAPI";
 
 export const getAllContacts = async () => {

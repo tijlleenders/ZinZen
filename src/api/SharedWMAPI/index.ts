@@ -4,7 +4,6 @@ import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { addGoal, addIntoSublist, getGoalById, updateGoal } from "../GoalsAPI";
-import { getContactByRelId } from "../ContactsAPI";
 import { getSharedGoalMetadataByGoalId } from "../SharedGoalNotMoved";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
@@ -36,7 +35,7 @@ export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
   let updatedParticipants = participants || [];
 
   if (relId) {
-    const contact = await getContactByRelId(relId);
+    const contact = await db.contactsCollection.where("relId").equals(relId).first();
     if (contact) {
       const contactExists = updatedParticipants.some((p) => p.relId === relId);
       if (!contactExists) {
@@ -242,5 +241,22 @@ export const updateSharedWMParentSublist = async (oldParentId: string, newParent
   if (newParentGoal) {
     const updatedNewSublist = [...(newParentGoal.sublist || []), goalId];
     await updateSharedWMGoal(newParentId, { sublist: updatedNewSublist });
+  }
+};
+
+export const deleteSharedGoal = async (goal: GoalItem) => {
+  await removeSharedWMGoalWithChildrens(goal);
+
+  if (goal.parentGoalId !== "root") {
+    getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
+      const parentGoalSublist = parentGoal.sublist;
+      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
+
+      if (childGoalIndex !== -1) {
+        parentGoalSublist.splice(childGoalIndex, 1);
+      }
+
+      await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
+    });
   }
 };
