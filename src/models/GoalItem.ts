@@ -54,5 +54,4 @@ export interface GoalItem {
   timestamp: number;
   impossible?: boolean;
   hints?: HintItem;
-  depth: number;
 }

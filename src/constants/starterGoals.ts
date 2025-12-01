@@ -33,7 +33,6 @@ starterGoals.push(
   {
     title: "Sleep 😴🌙",
     goalTags: {
-      depth: 2,
       beforeTime: 7,
       afterTime: 22,
       id: otherGoalIds[0],
@@ -56,7 +55,6 @@ starterGoals.push(
     title: "Hobby project 🚂🚋",
     goalTags: {
       id: otherGoalIds[1],
-      depth: 1,
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -77,7 +75,6 @@ starterGoals.push(
     title: "House chores 🏡🧹🛠️",
     goalTags: {
       id: otherGoalIds[2],
-      depth: 1,
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -98,7 +95,6 @@ starterGoals.push(
     title: "Family time 🥰",
     goalTags: {
       id: otherGoalIds[3],
-      depth: 1,
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -119,7 +115,6 @@ starterGoals.push(
     title: "Work 💪🏽",
     goalTags: {
       id: otherGoalIds[4],
-      depth: 1,
       afterTime: 6,
       beforeTime: 18,
       timeBudget: {
@@ -140,7 +135,6 @@ starterGoals.push(
     title: "Daily habits 🔁",
     goalTags: {
       id: dailyHabitsId,
-      depth: 1,
       sublist: [otherGoalIds[5], otherGoalIds[6], otherGoalIds[7], otherGoalIds[8], otherGoalIds[9]],
       category: "Cluster",
     },
@@ -149,7 +143,6 @@ starterGoals.push(
     title: "Walk 🚶🏽",
     goalTags: {
       id: otherGoalIds[5],
-      depth: 2,
       afterTime: 6,
       beforeTime: 21,
       timeBudget: {
@@ -171,7 +164,6 @@ starterGoals.push(
     title: "Me time 🧘🏽😌",
     goalTags: {
       id: otherGoalIds[6],
-      depth: 2,
       afterTime: 5,
       beforeTime: 23,
       timeBudget: {
@@ -193,7 +185,6 @@ starterGoals.push(
     title: "Dinner 🍽️",
     goalTags: {
       id: otherGoalIds[7],
-      depth: 2,
       afterTime: 18,
       beforeTime: 20,
       timeBudget: {
@@ -215,7 +206,6 @@ starterGoals.push(
     title: "Lunch 🥪",
     goalTags: {
       id: otherGoalIds[8],
-      depth: 2,
       afterTime: 12,
       beforeTime: 14,
       timeBudget: {
@@ -237,7 +227,6 @@ starterGoals.push(
     title: "Breakfast 🥐🥣",
     goalTags: {
       id: otherGoalIds[9],
-      depth: 2,
       afterTime: 6,
       beforeTime: 9,
       timeBudget: {

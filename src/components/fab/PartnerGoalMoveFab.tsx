@@ -5,7 +5,7 @@ import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
-import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import { calculateSharedGoalDepth } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";
 import GlobalFab from "./GlobalFab";
 import { FabMenuOption } from "./FabOptionsMenu/FabOptionsMenu.types";
@@ -21,8 +21,6 @@ const PartnerGoalMoveFab: React.FC = () => {
   const goalToMove = useRecoilValue(moveGoalState);
   const setGoalToMove = useSetRecoilState(moveGoalState);
 
-  const { data: parentGoal } = useGetGoalById(parentId, false);
-
   const rootGoalId = useRouterState({
     select: (s) => s.location.state?.rootGoalId,
   });
@@ -34,9 +32,10 @@ const PartnerGoalMoveFab: React.FC = () => {
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
       }
 
-      suggestChanges(rootGoal, { ...goal, parentGoalId: parentId }, parentGoal?.depth || 0);
+      const depth = await calculateSharedGoalDepth(parentId);
+      suggestChanges(rootGoal, { ...goal, parentGoalId: parentId }, depth);
     },
-    [rootGoalId, parentId, parentGoal?.depth],
+    [rootGoalId, parentId],
   );
 
   const handleMoveGoalHere = useCallback(async () => {

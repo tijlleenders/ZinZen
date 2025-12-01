@@ -90,7 +90,6 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     participants: [],
     newUpdates: false,
     category: "Standard",
-    depth: 1,
     ...obj,
   };
   if (newGoal.notificationGoalId === "root") {

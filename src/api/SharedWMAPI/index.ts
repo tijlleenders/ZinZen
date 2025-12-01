@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-param-reassign */
+/* eslint-disable no-await-in-loop */
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
@@ -259,4 +260,25 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
       await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
     });
   }
+};
+
+export const calculateSharedGoalDepth = async (goalId: string): Promise<number> => {
+  if (goalId === "root") {
+    return 0;
+  }
+
+  let depth = 0;
+  let currentGoalId = goalId;
+
+  while (currentGoalId !== "root") {
+    const currentGoal: GoalItem | undefined = await getSharedWMGoalById(currentGoalId);
+    if (!currentGoal) {
+      break;
+    }
+    // eslint-disable-next-line no-plusplus
+    depth++;
+    currentGoalId = currentGoal.parentGoalId;
+  }
+
+  return depth;
 };
