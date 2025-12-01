@@ -15,7 +15,6 @@ import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
-import useScheduler from "./useScheduler";
 import { useProcessSharedGoalData } from "./useProcessSharedGoalData";
 
 // TODO: fix the scheduler issue
@@ -31,7 +30,6 @@ function useApp() {
   const confirmationState = useRecoilValue(displayConfirmation);
   const queryClient = useQueryClient();
   useProcessSharedGoalData();
-  const { generateInitialSchedule } = useScheduler();
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts().then(async (contacts) => {
@@ -130,11 +128,6 @@ function useApp() {
 
       await checkUpdates();
       await createDefaultGoals();
-      try {
-        await generateInitialSchedule();
-      } catch (error) {
-        console.error("Failed to generate initial schedule:", error);
-      }
     };
 
     initializeApp();

@@ -1,9 +1,10 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
+import useScheduler from "@src/hooks/useScheduler";
 
 import { ITask, TaskStatusFromScheduler } from "@src/Interfaces/Task";
 import { useTranslation } from "react-i18next";
@@ -35,6 +36,19 @@ const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
   const toggleTaskOptions = (taskId: string) => {
     setActiveTaskId((prevTaskId) => (prevTaskId === taskId ? null : taskId));
   };
+
+  const { generateInitialSchedule } = useScheduler();
+
+  useEffect(() => {
+    const scheduleTasks = async () => {
+      try {
+        await generateInitialSchedule();
+      } catch (error) {
+        console.error("Failed to generate initial schedule:", error);
+      }
+    };
+    scheduleTasks();
+  }, []);
 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>

@@ -38,6 +38,7 @@ import BudgetPerHr from "./BudgetPerHr";
 import BudgetPerWeek from "./BudgetPerWeek";
 import OnDays from "./OnDays";
 import ColorPicker from "./components/ColorPicker";
+import ScheduleStatusDisplay from "./components/ScheduleStatusDisplay";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -327,9 +328,18 @@ const ConfigGoalContent = ({
                 defaultValue={formState.hintOption}
               />
             </div>
-            {scheduleStatus && (
-              <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
-            )}
+            <ScheduleStatusDisplay
+              goal={goal}
+              formState={formState}
+              type={type}
+              parentGoal={parentGoal}
+              dependencies={{
+                budgetAfterTime: budgetGoal?.afterTime,
+                budgetBeforeTime: budgetGoal?.beforeTime,
+                budgetPerDayHrs: budgetGoal?.perDayHrs,
+                budgetPerWeekHrs: budgetGoal?.perWeekHrs,
+              }}
+            />
           </>
         )}
       </div>
