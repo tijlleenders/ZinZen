@@ -14,6 +14,7 @@
   cursor: pointer;
   bottom: 6em;
   transition: background-color 0.2s;
+  z-index: 1000;
 
   // Extra small (≤320px)
   @media (max-width: 320px) {

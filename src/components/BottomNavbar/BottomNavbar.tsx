@@ -7,13 +7,22 @@ import { BottomNavButton } from "./BottomNavButton";
 
 export const BottomNavbar = () => {
   const { t } = useTranslation();
-  const { onScheduleClick, onGoalsClick, onJournalClick } = useBottomNavbarNavigation();
+  const { onScheduleClick, onGoalsClick, onJournalClick, onBackToRootGoal } = useBottomNavbarNavigation();
 
   const currentPage = window.location.pathname.split("/")[1];
 
   const isScheduleActive = currentPage === "";
   const isGoalsActive = currentPage === "goals";
   const isJournalActive = currentPage === "MyJournal";
+
+  const handleGoalsClick = () => {
+    const isGoalsRoute = window.location.pathname.startsWith("/goals");
+    if (isGoalsRoute) {
+      onBackToRootGoal?.();
+    } else {
+      onGoalsClick?.();
+    }
+  };
 
   return (
     <BottomNavLayout>
@@ -26,7 +35,7 @@ export const BottomNavbar = () => {
         <Icon active={isScheduleActive} title="CalendarIcon" />
         <p>{t("Schedule")}</p>
       </BottomNavButton>
-      <BottomNavButton active={isGoalsActive} onClick={() => onGoalsClick?.()} testId="navigation-button-Goals">
+      <BottomNavButton active={isGoalsActive} onClick={handleGoalsClick} testId="navigation-button-Goals">
         <Icon active={isGoalsActive} title="GoalsIcon" />
         <p>{t("Goals")}</p>
       </BottomNavButton>

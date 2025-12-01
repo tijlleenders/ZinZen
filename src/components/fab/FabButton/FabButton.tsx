@@ -28,6 +28,7 @@ const FabButton: React.FC<FabButtonProps> = ({ icon, onClick, onLongPress, longP
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       onContextMenu={(e) => e.preventDefault()}
+      data-testid="fab-button"
     >
       {icon}
     </button>

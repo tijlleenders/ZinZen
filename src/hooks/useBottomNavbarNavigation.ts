@@ -1,11 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { ILocationState } from "@src/Interfaces";
+import { calculateGoalDepth } from "@src/helpers/GoalProcessor";
 
 export interface BottomNavbarNavigationHandlers {
   onScheduleClick?: () => void;
   onGoalsClick?: () => void;
   onJournalClick?: () => void;
+  onBackToRootGoal?: () => void;
 }
 
 export const useBottomNavbarNavigation = (): BottomNavbarNavigationHandlers => {
@@ -50,9 +52,21 @@ export const useBottomNavbarNavigation = (): BottomNavbarNavigationHandlers => {
     });
   }, [navigate, createNavigationState]);
 
+  const handleBackToRootGoal = useCallback(async () => {
+    const currentParentId = window.location.pathname.split("/")[2];
+    if (currentParentId === "root") {
+      return;
+    }
+    const depth = await calculateGoalDepth(currentParentId);
+    if (depth > 0) {
+      window.history.go(-depth);
+    }
+  }, []);
+
   return {
     onScheduleClick: handleScheduleClick,
     onGoalsClick: handleGoalsClick,
     onJournalClick: handleJournalClick,
+    onBackToRootGoal: handleBackToRootGoal,
   };
 };

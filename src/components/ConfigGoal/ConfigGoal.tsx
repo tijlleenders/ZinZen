@@ -387,6 +387,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
       window.history.back();
       setSuggestedGoal(null);
     } else {
+      console.log("handleCancel", formState);
       await handleSave(isEditMode, formState);
       window.history.back();
     }
