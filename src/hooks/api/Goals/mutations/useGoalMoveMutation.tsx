@@ -30,7 +30,6 @@ export const useGoalMoveMutation = () => {
     },
     onSettled: () => {
       setGoalToMove(null);
-      window.history.back();
     },
   });
 

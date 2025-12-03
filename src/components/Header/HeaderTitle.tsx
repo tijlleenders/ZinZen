@@ -24,7 +24,7 @@ const HeaderTitle = ({ title }: HeaderTitleProps) => {
     }
   }, [goalsRoute]);
   return (
-    <h1 className="header-title" onClickCapture={handleTitleClick}>
+    <h1 className="header-title" data-testid="header-title" onClickCapture={handleTitleClick}>
       {t(title)}
     </h1>
   );

@@ -40,7 +40,10 @@ const GoalMoveFab: React.FC = () => {
     return [
       {
         label: "Move here",
-        onClick: handleMoveGoalHere,
+        onClick: () => {
+          handleMoveGoalHere();
+          window.history.back();
+        },
         disabled: !shouldRenderMoveButton,
       },
       {

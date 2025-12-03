@@ -5,6 +5,7 @@ import React from "react";
 
 const Backdrop: React.FC<IBackdrop> = ({ customStyle, opacity, onClick }) => (
   <div
+    data-testid="backdrop"
     style={{
       position: "fixed",
       top: 0,
