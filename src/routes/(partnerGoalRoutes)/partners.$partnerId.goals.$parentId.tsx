@@ -12,12 +12,20 @@ export const Route = createFileRoute("/(partnerGoalRoutes)/partners/$partnerId/g
   component: () => {
     const { parentId = "root", partnerId = "" } = Route.useParams();
     const { data: contact } = useGetContactByPartnerId(partnerId);
-    const { data: activeSharedWMGoals = [] } = useGetSharedWMActiveGoals(parentId, contact?.relId);
+    const { data: activeSharedWMGoals = [], isLoading: isLoadingGoals } = useGetSharedWMActiveGoals(
+      parentId,
+      contact?.relId,
+    );
     const goalToMove = useRecoilValue(moveGoalState);
 
     return (
       <>
-        <PartnerGoals activeSharedWMGoals={activeSharedWMGoals} parentId={parentId} partnerId={partnerId} />
+        <PartnerGoals
+          activeSharedWMGoals={activeSharedWMGoals}
+          isLoadingSubgoals={isLoadingGoals}
+          parentId={parentId}
+          partnerId={partnerId}
+        />
         {contact?.accepted && (goalToMove ? <PartnerGoalMoveFab /> : <GoalsFab />)}
       </>
     );

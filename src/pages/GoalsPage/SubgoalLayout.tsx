@@ -4,7 +4,7 @@ import GoalHistory from "@components/GoalsComponents/GoalSublist/components/Goal
 import { GoalItem } from "@src/models/GoalItem";
 import { searchQueryState } from "@src/store/GoalsState";
 import { useRouterState } from "@tanstack/react-router";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 import "./SubgoalLayout.scss";
@@ -12,13 +12,23 @@ import "@src/components/GoalsComponents/GoalSublist/GoalSublist.scss";
 
 const SubgoalLayout = ({
   subgoalsPresent = false,
+  isLoadingSubgoals = false,
   parentGoal,
 }: {
   subgoalsPresent?: boolean;
+  isLoadingSubgoals?: boolean;
   parentGoal?: GoalItem;
 }) => {
   const { t } = useTranslation();
   const [showConfig, setShowConfig] = useState(!subgoalsPresent);
+  const prevSubgoalsPresentRef = useRef(subgoalsPresent);
+
+  useEffect(() => {
+    if (!prevSubgoalsPresentRef.current && subgoalsPresent && showConfig) {
+      setShowConfig(false);
+    }
+    prevSubgoalsPresentRef.current = subgoalsPresent;
+  }, [subgoalsPresent, showConfig]);
   const goalsHistory = useRouterState({
     select: (state) => state.location.state.goalsHistory || [],
   });
@@ -39,7 +49,7 @@ const SubgoalLayout = ({
         ) : null}
       </button>
       <div className="sublist-list-container" style={{ marginTop: !showConfig ? "10px" : "0px" }}>
-        {showConfig && parentGoal && searchQuery === "" && (
+        {showConfig && !isLoadingSubgoals && parentGoal && searchQuery === "" && (
           <div className="config-goal-container">
             <ConfigGoal
               key={`edit-${parentGoal.id}`}

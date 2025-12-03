@@ -13,12 +13,13 @@ import ZinZenBgImage from "./ZinzenBgImage";
 
 interface PartnerGoalsProps {
   activeSharedWMGoals: GoalItem[];
+  isLoadingSubgoals?: boolean;
   parentId: string;
   partnerId: string;
 }
 
 // TODO: Add shared archived goals
-const PartnerGoals = ({ activeSharedWMGoals, parentId, partnerId }: PartnerGoalsProps) => {
+const PartnerGoals = ({ activeSharedWMGoals, isLoadingSubgoals = false, parentId, partnerId }: PartnerGoalsProps) => {
   const { data: contact } = useGetContactByPartnerId(partnerId);
   const { data: parentGoal } = useGetSharedWMGoalById(parentId);
 
@@ -37,6 +38,7 @@ const PartnerGoals = ({ activeSharedWMGoals, parentId, partnerId }: PartnerGoals
       {isSublist && (
         <SubgoalLayout
           subgoalsPresent={activeSharedWMGoals && activeSharedWMGoals.length > 0}
+          isLoadingSubgoals={isLoadingSubgoals}
           parentGoal={parentGoal}
         />
       )}

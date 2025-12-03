@@ -21,7 +21,7 @@ interface MyGoalsProps {
 }
 
 export const MyGoals = ({ parentId }: MyGoalsProps) => {
-  const { data: activeGoals } = useGetActiveGoals(parentId || "root");
+  const { data: activeGoals, isLoading: isLoadingGoals } = useGetActiveGoals(parentId || "root");
 
   const { data: parentGoal } = useGetGoalById(parentId);
 
@@ -29,7 +29,13 @@ export const MyGoals = ({ parentId }: MyGoalsProps) => {
 
   return (
     <div className="goals-container">
-      {isSublist && <SubgoalLayout subgoalsPresent={activeGoals && activeGoals.length > 0} parentGoal={parentGoal} />}
+      {isSublist && (
+        <SubgoalLayout
+          subgoalsPresent={activeGoals && activeGoals.length > 0}
+          isLoadingSubgoals={isLoadingGoals}
+          parentGoal={parentGoal}
+        />
+      )}
       <div className="my-goals-content">
         {activeGoals && <ActiveGoals goals={activeGoals} />}
         {isSublist && parentGoal && <AvailableGoalHints parentGoal={parentGoal} />}
