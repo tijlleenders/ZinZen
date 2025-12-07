@@ -32,8 +32,6 @@ Rules are automatically included in your AI context based on file patterns (glob
 You can manually reference any rule using the `@ruleName` syntax:
 
 - `@react-general-guidelines` - Load React best practices
-- `@component-spectrum` - Load component architecture guidelines
-- `@file-structure` - Load file organization guidelines
 
 ### Rule Types Used
 
