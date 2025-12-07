@@ -107,7 +107,7 @@ test.describe("Goal Sharing Feature", () => {
     console.log(`User B is reloading the page to check for shared goal visibility...`);
     await userBPage.goto("http://127.0.0.1:3000/", { timeout: 30000 });
     await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
-    await userBPage.getByRole("img", { name: "ZinZen" }).click({ timeout: 10000 });
+    await userBPage.getByRole("img", { name: "ZinZen" }).first().click({ timeout: 10000 });
     await userBPage.waitForTimeout(2000);
     await userBPage.reload({ timeout: 30000 });
     await userBPage.getByTestId(`contact-B`).locator("div").first().click({ timeout: 10000 });
@@ -121,16 +121,16 @@ test.describe("Goal Sharing Feature", () => {
       .locator("div")
       .first()
       .click({ timeout: 10000 });
-    await userBPage.getByTestId("zmodal").getByText("Collaborate").click({ timeout: 10000 });
+
+    await userBPage.getByTestId("zmodal").getByTestId("collaborate-action").click({ timeout: 10000 });
     await userBPage.getByRole("button", { name: "Collaborate on goal" }).click({ timeout: 10000 });
 
-    await userBPage.getByRole("button", { name: "Goals" }).click({ timeout: 10000 });
+    await userBPage.getByRole("img", { name: "ZinZen" }).first().click({ timeout: 10000 });
     invitationLink = await addContact(userBPage, "C", currentGoalTitle);
     await acceptContactInvitation(userCPage, invitationLink, "C");
     await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
 
     await goToAppPage(userBPage, "Goals", true);
-
     console.log(`User B is opening the share goal modal for "${currentGoalTitle}"...`);
     await shareGoalFlow(userBPage, currentGoalTitle, "C");
 
@@ -168,7 +168,7 @@ test.describe("Goal Sharing Feature", () => {
 
   userCollaborationScenarios.forEach(({ sharer, receiver, sharerPage, receiverPage }) => {
     test("check if collaboration works between users correctly", async () => {
-      await userAPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userAPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
 
       await userAPage.getByRole("button", { name: "Goals" }).click({ timeout: 10000 });
       await userAPage
@@ -179,7 +179,7 @@ test.describe("Goal Sharing Feature", () => {
         .click({ timeout: 10000 });
       await userAPage.getByTestId("zmodal").getByText("Edit").click({ timeout: 10000 });
       await userAPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by A`);
-      await userAPage.locator(".ant-modal-wrap").click({ timeout: 10000 });
+      await userAPage.keyboard.press("Enter");
 
       await userAPage.waitForResponse(
         async (res) => {
@@ -196,7 +196,7 @@ test.describe("Goal Sharing Feature", () => {
         { timeout: 30000 },
       );
 
-      await userBPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userBPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
       await userBPage.waitForTimeout(2000);
@@ -231,7 +231,7 @@ test.describe("Goal Sharing Feature", () => {
         await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible({ timeout: 15000 });
       });
 
-      await userCPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userCPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
       await userCPage.waitForTimeout(2000);
       await userCPage.reload({ timeout: 30000 });
@@ -258,7 +258,7 @@ test.describe("Goal Sharing Feature", () => {
         .click({ timeout: 10000 });
       await userBPage.getByTestId("zmodal").getByText("Edit").first().click({ timeout: 10000 });
       await userBPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by B`);
-      await userBPage.locator(".ant-modal-wrap").click({ timeout: 10000 });
+      await userBPage.keyboard.press("Enter");
 
       await userBPage.waitForResponse(
         async (res) => {
@@ -270,7 +270,7 @@ test.describe("Goal Sharing Feature", () => {
         { timeout: 30000 },
       );
 
-      await userCPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userCPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
       await userCPage.waitForTimeout(2000);
       await userCPage.reload({ timeout: 30000 });
@@ -290,7 +290,7 @@ test.describe("Goal Sharing Feature", () => {
         await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible({ timeout: 15000 });
       });
 
-      await userAPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userAPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
       await userAPage.waitForTimeout(2000);
       await userAPage.reload({ timeout: 30000 });
@@ -320,9 +320,9 @@ test.describe("Goal Sharing Feature", () => {
         .click({ timeout: 10000 });
       await userCPage.getByTestId("zmodal").getByText("Edit").first().click({ timeout: 10000 });
       await userCPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by C`);
-      await userCPage.locator(".ant-modal-wrap").click({ timeout: 10000 });
+      await userCPage.keyboard.press("Enter");
 
-      await userBPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userBPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
       await userBPage.waitForTimeout(2000);
       await userBPage.reload({ timeout: 30000 });
@@ -356,7 +356,7 @@ test.describe("Goal Sharing Feature", () => {
         await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible({ timeout: 15000 });
       });
 
-      await userAPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userAPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
       await userAPage.waitForTimeout(2000);
       await userAPage.reload({ timeout: 30000 });
