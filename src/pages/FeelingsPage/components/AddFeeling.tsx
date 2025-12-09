@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 import { useQueryClient } from "react-query";
 import { useTranslation } from "react-i18next";
@@ -39,7 +39,7 @@ export const AddFeeling = () => {
       note: feelingNote,
     });
     queryClient.invalidateQueries("feelings");
-    navigate(-1);
+    navigate({ to: "/MyJournal", replace: true });
   };
   return (
     <ZModal type={`notes-modal${darkModeStatus ? "-dark" : ""}`} open>

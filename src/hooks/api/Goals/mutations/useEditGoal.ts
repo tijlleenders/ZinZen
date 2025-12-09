@@ -8,7 +8,7 @@ import plingSound from "@assets/pling.mp3";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { hashObject } from "@src/utils";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useGetGoalById } from "../queries/useGetGoalById";
 
 const editGoalSound = new Audio(plingSound);
@@ -46,7 +46,8 @@ export const useEditGoal = (activeGoalId: string, isModal = false) => {
         await updateGoal(goal, hintOption, activeGoal!);
         if (suggestedGoal) {
           await unarchiveUserGoal(suggestedGoal);
-          navigate(`/goals/${suggestedGoal.parentGoalId === "root" ? "" : suggestedGoal.parentGoalId}`, {
+          navigate({
+            to: `/goals/${suggestedGoal.parentGoalId === "root" ? "" : suggestedGoal.parentGoalId}`,
             state: { ...location.state } as ILocationState,
             replace: true,
           });

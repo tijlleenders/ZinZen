@@ -2,20 +2,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import ZModal from "@src/common/ZModal";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
-import { useNavigate, useParams } from "react-router-dom";
-import { usePartnerContext } from "@src/contexts/partner-context";
-import { displayToast } from "@src/store";
-import { useSetRecoilState } from "recoil";
-import { useDeleteContact } from "@src/hooks/api/Contacts/queries/useDeleteContact";
+import { Link } from "@tanstack/react-router";
+import ContactItem from "@src/models/ContactItem";
+import { useDeleteContact } from "@src/hooks/api/Contacts/mutations/useDeleteContact";
 
-const ContactActionModal = () => {
-  const navigate = useNavigate();
+const ContactActionModal = ({ contact }: { contact: ContactItem }) => {
   const { t } = useTranslation();
-  const setShowToast = useSetRecoilState(displayToast);
-  const { partnerId } = useParams();
 
-  const { deleteContactMutation } = useDeleteContact(partnerId ?? "");
-  const { partner: contact, isSuccess } = usePartnerContext();
+  const { deleteContactMutation } = useDeleteContact(contact.id);
 
   const handleDeleteContact = async () => {
     try {
@@ -29,18 +23,6 @@ const ContactActionModal = () => {
     return null;
   }
 
-  if (!isSuccess) {
-    setShowToast({
-      open: true,
-      message: "Error fetching contact",
-      extra: "",
-    });
-  }
-
-  const handleEditContactClick = () => {
-    navigate(`/partners/${partnerId}/?mode=edit`, { replace: true });
-  };
-
   return (
     <ZModal open width={400} type="interactables-modal">
       <div style={{ textAlign: "left" }} className="header-title">
@@ -52,10 +34,15 @@ const ContactActionModal = () => {
         <button type="button" className="goal-action-archive shareOptions-btn" onClick={handleDeleteContact}>
           <ActionDiv label={t("Delete")} icon="Delete" />
         </button>
-
-        <button type="button" className="goal-action-archive shareOptions-btn" onClick={handleEditContactClick}>
+        <Link
+          to="/partners/$partnerId"
+          replace
+          search={{ mode: "edit", type: "contact" }}
+          params={{ partnerId: contact.id }}
+          className="goal-action-archive shareOptions-btn"
+        >
           <ActionDiv label={t("Edit")} icon="Edit" />
-        </button>
+        </Link>
       </div>
     </ZModal>
   );

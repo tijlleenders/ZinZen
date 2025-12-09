@@ -678,4 +678,4 @@ const Icon: React.FC<IconProps> = ({ title, active }) => {
   }
 };
 
-export default Icon;
+export default React.memo(Icon, (prev, next) => prev.title === next.title && prev.active === next.active);

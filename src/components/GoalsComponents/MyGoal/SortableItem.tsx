@@ -22,4 +22,6 @@ const SortableItem = ({ goal }: SortableItemProps) => {
   );
 };
 
-export default SortableItem;
+export default React.memo(SortableItem, (prevProps, nextProps) => {
+  return prevProps.goal === nextProps.goal;
+});

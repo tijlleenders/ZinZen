@@ -133,7 +133,7 @@ test.describe("Goal Sharing Feature", () => {
   userCollaborationScenarios.forEach(({ sharer, receiver, sharerPage, receiverPage }) => {
     test("sharer moves a subgoal into shared goal and check if it is not visible in User receiver MyGoal", async () => {
       console.log(`User ${sharer} is moving a subgoal into the shared goal...`);
-      await sharerPage().goto("http://127.0.0.1:3000/goals");
+      await sharerPage().goto("http://127.0.0.1:3000/goals/root");
       // create 2 goals
       await createGoalFromGoalPage(sharerPage(), subgoalTitle);
 
@@ -150,8 +150,7 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
 
-      await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await sharerPage().getByTestId("fab-button").click();
 
       await sharerPage().waitForTimeout(3000);
 
@@ -201,7 +200,7 @@ test.describe("Goal Sharing Feature", () => {
       });
 
       // move the subgoal to root goal
-      await sharerPage().getByTestId(`navigation-button-Goals`).click();
+      await sharerPage().getByTestId("header-title").click();
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
         .locator("div")
@@ -214,8 +213,7 @@ test.describe("Goal Sharing Feature", () => {
 
       await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
-      await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await sharerPage().getByTestId("fab-button").click();
 
       await sharerPage().waitForResponse(
         async (res) => {
@@ -253,8 +251,7 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
 
-      await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await sharerPage().getByTestId("fab-button").click();
       await sharerPage().waitForResponse(
         async (res) => {
           if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
@@ -301,8 +298,7 @@ test.describe("Goal Sharing Feature", () => {
       await receiverPage().getByRole("button", { name: "Move goal" }).click();
 
       await receiverPage().getByRole("img", { name: "my goals" }).click();
-      await receiverPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await receiverPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await receiverPage().getByTestId("fab-button").click();
 
       await receiverPage().waitForResponse(
         async (res) => {
@@ -319,7 +315,7 @@ test.describe("Goal Sharing Feature", () => {
         { timeout: 30000 },
       );
 
-      await sharerPage().goto("http://127.0.0.1:3000/goals");
+      await sharerPage().goto("http://127.0.0.1:3000/goals/root");
       // first verify that the notification dot exists
       await sharerPage().waitForTimeout(2000);
       await sharerPage().reload({ timeout: 30000 });
@@ -352,7 +348,7 @@ test.describe("Goal Sharing Feature", () => {
     test("move should work correct if private goal is present in the shared hierarchy", async () => {
       const privateGoalTitle = "Private Goal";
       const sharedSubgoalTitle = "Shared Subgoal";
-      await sharerPage().goto("http://127.0.0.1:3000/goals");
+      await sharerPage().goto("http://127.0.0.1:3000/goals/root");
       // create 3 goals
       await createGoalFromGoalPage(sharerPage(), privateGoalTitle);
       await createGoalFromGoalPage(sharerPage(), sharedSubgoalTitle);
@@ -376,8 +372,7 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
 
-      await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await sharerPage().getByTestId("fab-button").click();
 
       await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
@@ -405,8 +400,7 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
 
-      await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await sharerPage().getByTestId("fab-button").click();
 
       // share subgoal with receiver
       await shareGoalFlow(sharerPage(), sharedSubgoalTitle, receiver);
@@ -454,8 +448,7 @@ test.describe("Goal Sharing Feature", () => {
 
       await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
-      await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await sharerPage().getByTestId("fab-button").click();
 
       await sharerPage().waitForResponse(
         async (res) => {
@@ -506,8 +499,7 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
 
-      await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await sharerPage().getByTestId("fab-button").click();
       await sharerPage().waitForResponse(
         async (res) => {
           if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {

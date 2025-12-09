@@ -2,7 +2,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { useMutation, useQueryClient } from "react-query";
 import { updatePositionIndex } from "@src/api/GCustomAPI";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 
 interface UpdateGoalPositionsParams {
   goals: GoalItem[];
@@ -10,7 +10,7 @@ interface UpdateGoalPositionsParams {
 
 export const useUpdateGoalPositions = () => {
   const queryClient = useQueryClient();
-  const { parentId = "root" } = useParams();
+  const { parentId = "root" } = useParams({ strict: false });
 
   return useMutation({
     mutationKey: ["goals", "updatePositions"],

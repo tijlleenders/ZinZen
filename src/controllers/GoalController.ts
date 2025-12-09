@@ -4,7 +4,6 @@ import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
-import { getSharedWMGoal, removeSharedWMGoalWithChildrens, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import {
   getGoal,
   addGoal,
@@ -206,7 +205,10 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
     return { parentGoal };
   }
 
-  await addGoal({ ...newGoal, hints: { ...newGoal.hints, hintOptionEnabled: hintOption, availableGoalHints } });
+  await addGoal({
+    ...newGoal,
+    hints: { ...newGoal.hints, hintOptionEnabled: hintOption, availableGoalHints },
+  });
   return { parentGoal: null };
 };
 
@@ -263,23 +265,6 @@ export const restoreGoal = async (goal: GoalItem, ancestors: string[]) => {
     console.log("Update Sent");
   });
   await restoreUserGoal(goal);
-};
-
-export const deleteSharedGoal = async (goal: GoalItem) => {
-  await removeSharedWMGoalWithChildrens(goal);
-
-  if (goal.parentGoalId !== "root") {
-    getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
-      const parentGoalSublist = parentGoal.sublist;
-      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
-
-      if (childGoalIndex !== -1) {
-        parentGoalSublist.splice(childGoalIndex, 1);
-      }
-
-      await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
-    });
-  }
 };
 
 export const updateRootGoal = async (goalId: string, newNotificationGoalId: string) => {

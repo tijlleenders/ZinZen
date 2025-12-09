@@ -113,7 +113,7 @@ export async function goToAppPage(page: Page, appPageName: AppPageName, reload =
 }
 
 export async function createGoalFromGoalPage(page: Page, goalTitle: string) {
-  await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+  await page.getByTestId("fab-button").click();
   const titleInputContainer = page.getByPlaceholder("Goal title");
   await titleInputContainer.fill(goalTitle);
   await titleInputContainer.press("Enter");

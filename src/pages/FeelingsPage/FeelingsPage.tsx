@@ -1,7 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { message } from "antd";
-import { useLocation } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRouterState } from "@tanstack/react-router";
 import React, { useEffect, useRef } from "react";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 
@@ -10,7 +9,6 @@ import LoadingContainer from "@src/common/LoadingContainer";
 
 import { AddFeeling } from "@pages/FeelingsPage/components/AddFeeling";
 import { IFeelingItem } from "@src/models";
-import { displayAddFeeling } from "@src/store/FeelingsState";
 import { fetchFeelings, updateFeeling } from "@src/api/FeelingsAPI";
 import { getTitleForDate, groupFeelingsByDate } from "@src/utils/journal";
 
@@ -19,11 +17,14 @@ import NoteModal from "./components/NoteModal";
 
 import "./FeelingsPage.scss";
 
-export const FeelingsPage = () => {
-  const location = useLocation();
+export const FeelingsPage = ({ showAddFeelingsModal }: { showAddFeelingsModal: boolean }) => {
   const queryClient = useQueryClient();
-  const { displayNoteModal, note } = location.state || {};
-  const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
+  const displayNoteModal = useRouterState({
+    select: (state) => state.location.state.displayNoteModal,
+  });
+  const note = useRouterState({
+    select: (state) => state.location.state.note,
+  });
 
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery("feelings", fetchFeelings, {
     getNextPageParam: (lastPage) => (lastPage.feelings.length ? lastPage.nextPage : undefined),
@@ -69,9 +70,9 @@ export const FeelingsPage = () => {
       {status === "loading" && <LoadingContainer />}
       <div>{data && renderFeelings(data.pages.flatMap((page) => page.feelings))}</div>
       <div ref={loadMoreRef} />
-      {displayNoteModal >= 0 && (
+      {displayNoteModal && !!displayNoteModal && (
         <NoteModal
-          open={displayNoteModal}
+          open={!!displayNoteModal}
           defaultValue={note}
           saveNote={async (newNote = "") => {
             await updateFeeling(displayNoteModal, { note: newNote });

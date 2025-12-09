@@ -1,38 +1,35 @@
 import { GoalIcon } from "@components/GoalsComponents/MyGoal/components/GoalIcon";
 import { ZItemContainer } from "@components/GoalsComponents/ZItemContainer";
-import { usePartnerContext } from "@src/contexts/partner-context";
 import ContactItem from "@src/models/ContactItem";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
+import { setCurrentPartnerInLocalStorage } from "@src/utils/partnerStorage";
 
 const Contacts = ({ contact }: { contact: ContactItem }) => {
-  const navigate = useNavigate();
-  const { setCurrentPartnerInLocalStorage } = usePartnerContext();
-
   return (
     <ZItemContainer id={`contact-${contact.id}`} dataTestId={`contact-${contact.name}`}>
-      <div
-        style={{ touchAction: "none" }}
-        onClickCapture={(e) => {
-          e.stopPropagation();
-          navigate(`/partners/${contact.id}/?showOptions=true`);
-        }}
+      <Link
+        style={{ touchAction: "none", textDecoration: "none" }}
+        params={{ partnerId: contact.id }}
+        to="/partners/$partnerId"
+        search={{ showOptions: "contactOptions" }}
       >
         <GoalIcon color="#007bff" showDottedBorder={false}>
           {contact.name[0]}
         </GoalIcon>
-      </div>
-      <div
-        aria-hidden
-        className="goal-tile"
+      </Link>
+      <Link
+        style={{ textDecoration: "none" }}
+        className="goal-title"
         data-testid={`contact-${contact.name}`}
+        params={{ partnerId: contact.id, parentId: "root" }}
+        to="/partners/$partnerId/goals/$parentId"
         onClick={() => {
           setCurrentPartnerInLocalStorage(contact.id);
-          navigate(`/partners/${contact.id}/goals`);
         }}
       >
         {contact.name}
-      </div>
+      </Link>
     </ZItemContainer>
   );
 };

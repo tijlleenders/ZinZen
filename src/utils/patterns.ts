@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 export function replaceUrlsWithText(inputString: string) {
   const urlRegex = /(?:tel:\s*\+?\d{10,}|https?:\/\/[\w.-]+\.[\w]{2,}(?:\/[\S]*)?|\b[\w.-]+\.[\w]{2,}(?:\/[\S]*)?)/gi;
 

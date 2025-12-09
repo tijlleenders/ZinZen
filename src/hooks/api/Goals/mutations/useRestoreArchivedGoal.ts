@@ -3,23 +3,20 @@ import { GoalItem } from "@src/models/GoalItem";
 import { useMutation, useQueryClient } from "react-query";
 
 import plingSound from "@assets/pling.mp3";
-import { displayToast, lastAction } from "@src/store";
+import { displayToast } from "@src/store";
 import { useSetRecoilState } from "recoil";
-import { GoalActions } from "@src/constants/actions";
 
 const restoreGoalSound = new Audio(plingSound);
 
 export const useRestoreArchivedGoal = () => {
   const setShowToast = useSetRecoilState(displayToast);
-  const setLastAction = useSetRecoilState(lastAction);
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ goal }: { goal: GoalItem }) => unarchiveUserGoal(goal),
     mutationKey: ["goals"],
     onSuccess: () => {
-      setLastAction(GoalActions.GOAL_RESTORED);
-      queryClient.invalidateQueries(["reminders"]);
+      queryClient.invalidateQueries({ queryKey: ["scheduler", "reminders"] });
       restoreGoalSound.play();
     },
     onError: () => {

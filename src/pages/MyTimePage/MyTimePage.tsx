@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyTimeline from "@components/MyTimeComponents/MyTimeline/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
 import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
-import AppLayout from "@src/layouts/AppLayout";
+import AppLayout from "@src/layouts/AppLayout/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
+import { PageTitle } from "@src/constants/pageTitle";
 import useScheduler from "@src/hooks/useScheduler";
 import "./MyTimePage.scss";
 import "@translations/i18n";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearch } from "@tanstack/react-router";
 import { Row } from "antd";
 import SchedulerErrorModal from "@components/MyTimeComponents/SchedulerErrorModal";
 import NotNowModal from "@components/MyTimeComponents/NotNow/NotNowModal";
@@ -17,14 +18,21 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
+import MyTimeFab from "@components/fab/MyTimeFab";
 
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks } = useScheduler();
+  const { generateInitialSchedule } = useScheduler();
+
+  useEffect(() => {
+    generateInitialSchedule();
+  }, []);
+
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const { state } = useLocation();
-  const [searchParams] = useSearchParams();
-  const goalType = (searchParams.get("type") as TGoalCategory) || "";
+  const search = useSearch({ strict: false });
+  const goalType = (search?.type as TGoalCategory) || "";
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -84,7 +92,7 @@ export const MyTimePage = () => {
 
   if (state?.displayFocus) {
     return (
-      <AppLayout title="myTime">
+      <AppLayout title={PageTitle.MyTime}>
         <SubHeader title="Focus" />
         <Focus />
       </AppLayout>
@@ -92,7 +100,7 @@ export const MyTimePage = () => {
   }
 
   return (
-    <AppLayout title="myTime">
+    <AppLayout title={PageTitle.MyTime}>
       <>
         <SchedulerErrorModal />
         {goalCategories.includes(goalType) && (
@@ -114,6 +122,7 @@ export const MyTimePage = () => {
         )}
         <NotNowModal />
       </>
+      <MyTimeFab />
     </AppLayout>
   );
 };

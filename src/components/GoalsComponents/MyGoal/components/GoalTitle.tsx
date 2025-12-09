@@ -2,13 +2,12 @@ import React from "react";
 import { removeBackTicks, replaceUrlsWithText, isGoalCode, summarizeUrl } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import useGoalActions from "@src/hooks/useGoalActions";
 import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
+import { useCopyCode } from "../hooks/useCopyCode";
+import { useGoalClick } from "../hooks/useGoalClick";
 
 interface GoalTitleProps {
   goal: GoalItem;
-  isImpossible: boolean;
-  onTitleClick?: (e: React.MouseEvent) => void;
 }
 
 const UrlComponent = ({
@@ -57,11 +56,11 @@ const UrlComponent = ({
   return <UrlHandlerComponent key={`${goalId}-url-${urlIndex}`} />;
 };
 
-const GoalTitle = ({ goal, isImpossible, onTitleClick }: GoalTitleProps) => {
+const GoalTitle = ({ goal }: GoalTitleProps) => {
   const { t } = useTranslation();
-  const { copyCode } = useGoalActions();
   const { id, title } = goal;
-
+  const copyCode = useCopyCode();
+  const { handleGoalClick } = useGoalClick(goal);
   const isCodeSnippet = isGoalCode(title);
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
   const textParts = replacedString.split(/(zURL-\d+)/g);
@@ -69,7 +68,7 @@ const GoalTitle = ({ goal, isImpossible, onTitleClick }: GoalTitleProps) => {
   const handleClick = (e: React.MouseEvent) => {
     // Only handle clicks if we're not clicking on a link or code snippet
     if (!(e.target as HTMLElement).closest("button") && !isCodeSnippet) {
-      onTitleClick?.(e);
+      handleGoalClick(e as React.MouseEvent<HTMLDivElement, MouseEvent>);
     }
   };
 
@@ -99,7 +98,7 @@ const GoalTitle = ({ goal, isImpossible, onTitleClick }: GoalTitleProps) => {
 
   return (
     <div aria-hidden className="goal-title" onClick={handleClick} role="button" tabIndex={0}>
-      {isImpossible && "! "}
+      {goal.impossible && "! "}
       {textParts.map((part, index) => renderTextPart(part, index))}
     </div>
   );

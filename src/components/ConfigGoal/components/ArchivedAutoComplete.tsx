@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { GoalItem } from "@src/models/GoalItem";
 import AutocompleteComponent from "@components/ConfigGoal/components/AutoComplete";
 import { fetchArchivedDescendantGoalByTitle } from "@src/api/GoalsAPI";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 
 interface ArchivedAutoCompleteProps {
   onGoalSelect: (goal: GoalItem) => void;
@@ -19,7 +19,7 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
   placeholder,
   isModal = false,
 }) => {
-  const { parentId = "root" } = useParams();
+  const { parentId = "root" } = useParams({ strict: false });
 
   const [filteredGoals, setFilteredGoals] = useState<GoalItem[]>([]);
 

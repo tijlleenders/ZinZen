@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
@@ -33,9 +33,9 @@ export const FAQPage = () => {
     localStorage.removeItem(LocalStorageKeys.PENDING_INVITE);
     vibrateWorks ? navigator.vibrate(100) : null;
     if (invite && invite !== "none") {
-      navigate(`/invite/${invite}`);
+      navigate({ to: `/invite/${invite}`, replace: true });
     } else {
-      navigate("/");
+      navigate({ to: "/", replace: true });
     }
   };
 

@@ -1,22 +1,6 @@
 .ant-breadcrumb + .ant-breadcrumb-item::before {
   content: var(--bs-breadcrumb-divider, ">") !important;
 }
-.sublist-container,
-.sublist-content {
-  max-width: 600px;
-  min-width: 236px;
-  width: 100%;
-  padding-top: 10;
-
-  .clickable-container {
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-  }
-}
 
 .sublist-title {
   margin-left: -10px;
@@ -54,10 +38,4 @@
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
-
-  .autocomplete-container {
-    input {
-      border-radius: 10px;
-    }
-  }
 }

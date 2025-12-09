@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
@@ -39,7 +39,7 @@ const InvitePage = () => {
       setNewContactName("");
     }
     checkForTour();
-    navigate("/");
+    navigate({ to: "/", replace: true });
   };
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const InvitePage = () => {
     }
     if (checkin !== "yes") {
       localStorage.setItem(LocalStorageKeys.PENDING_INVITE, window.location.href.split("invite/")[1]);
-      navigate("/");
+      navigate({ to: "/", replace: true });
     }
   }, []);
   return (

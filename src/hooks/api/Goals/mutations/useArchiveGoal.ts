@@ -5,7 +5,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { displayToast } from "@src/store";
 import { useMutation, useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@tanstack/react-router";
 import { ILocationState } from "@src/Interfaces";
 
 type ArchiveGoalParams = {
@@ -31,7 +31,7 @@ export const useArchiveGoal = () => {
       sendFinalUpdateOnGoal(goal.id, "archived", ancestors, false).then(() => {
         console.log("Update Sent");
       });
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: ["reminders", "scheduler"] });
       await updateTimestamp(goal.id);
       await doneSound.play();
     },

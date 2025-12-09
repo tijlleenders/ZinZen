@@ -1,24 +1,20 @@
 import React, { useEffect } from "react";
 import { notification } from "antd";
-import { BrowserRouter } from "react-router-dom";
+import { RouterProvider } from "@tanstack/react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
+import { darkModeState, displayToast } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
 
-import BackupRestoreModal from "@components/BackupRestoreModal";
-
-import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
-
 import useApp from "./hooks/useApp";
 import { themeState } from "./store/ThemeState";
+import { router } from "./router";
 
 import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
-import { AppRoutes } from "./Routes";
 
 const Context = React.createContext({ name: "Default" });
 
@@ -28,14 +24,9 @@ const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
   const [api, contextHolder] = notification.useNotification();
   const [showToast, setShowToast] = useRecoilState(displayToast);
-
-  const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
-  const displayLanguageChangeModal = useRecoilValue(languageChangeModal);
   const openNotification = () => {
     api.info({
-      style: {
-        backgroundColor: "var(--secondary-background)",
-      },
+      style: { backgroundColor: "var(--secondary-background)" },
       icon: <img src={darkModeEnabled ? darkAvatar : lightAvatar} alt="zinzen message" />,
       closeIcon: null,
       message: `${showToast.message}`,
@@ -77,16 +68,12 @@ const App = () => {
   }, []);
 
   return (
-    <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
-      <div className={`App-${darkModeEnabled ? "dark" : "light"}`}>
-        <BrowserRouter>
-          {isLanguageChosen}
-          {contextHolder}
-          <AppRoutes />
-        </BrowserRouter>
-        {displayBackupRestoreModal && <BackupRestoreModal />}
-        {displayLanguageChangeModal && <LanguageChangeModal />}
-      </div>
+    <div
+      className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]} App-${darkModeEnabled ? "dark" : "light"}`}
+    >
+      {isLanguageChosen}
+      {contextHolder}
+      <RouterProvider router={router} />
     </div>
   );
 };

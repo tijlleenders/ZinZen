@@ -10,20 +10,19 @@ test.describe("Config Goal UI", () => {
 
   test("should add a new goal after pressing Enter key", async ({ page }) => {
     await page.getByRole("button", { name: "Goals" }).click();
-    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click({});
-
+    await page.getByTestId("fab-button").click({});
     const titleInputContainer = page.getByPlaceholder("Goal title");
     const testGoalTitle = "Test Goal";
     await titleInputContainer.fill(testGoalTitle);
     await titleInputContainer.press("Enter");
 
-    const myGoalContainer = page.locator(".myGoals-container");
+    const myGoalContainer = page.locator(".goals-container");
     await expect(myGoalContainer).toContainText(testGoalTitle);
   });
 
   test("should add a new budget after pressing Enter key", async ({ page }) => {
     await page.getByRole("button", { name: "Goals" }).click();
-    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click({
+    await page.getByTestId("fab-button").click({
       delay: 1000,
     });
     await page.getByRole("button", { name: "Budget add goal", exact: true }).click();
@@ -32,8 +31,7 @@ test.describe("Config Goal UI", () => {
     const testBudgetTitle = "Test Budget";
     await titleInputContainer.fill(testBudgetTitle);
     await titleInputContainer.press("Enter");
-
-    const myGoalContainer = page.locator(".myGoals-container");
+    const myGoalContainer = page.locator(".goals-container");
     await expect(myGoalContainer).toContainText(testBudgetTitle);
   });
 });

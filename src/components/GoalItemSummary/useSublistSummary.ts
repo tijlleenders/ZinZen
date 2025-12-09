@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-import { getChildrenGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { lastAction } from "@src/store";
-import { useRecoilValue } from "recoil";
+import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
 
 const classifyChildrenGoalItems = (childrenGoals: GoalItem[]) => {
   let goalsCount = 0;
@@ -10,7 +7,7 @@ const classifyChildrenGoalItems = (childrenGoals: GoalItem[]) => {
 
   childrenGoals.forEach((childGoal) => {
     if (childGoal) {
-      if (childGoal?.timeBudget?.perDay !== null) {
+      if (childGoal.timeBudget?.perDay !== undefined) {
         budgetsCount += 1;
       } else {
         goalsCount += 1;
@@ -22,38 +19,9 @@ const classifyChildrenGoalItems = (childrenGoals: GoalItem[]) => {
 };
 
 export const useSublistSummary = ({ goal }: { goal: GoalItem }) => {
-  const [subGoalsCount, setSubGoalsCount] = useState(0);
-  const [subBudgetsCount, setSubBudgetsCount] = useState(0);
+  const { data: activeGoals } = useGetActiveGoals(goal.id);
 
-  const action = useRecoilValue(lastAction);
+  const { goalsCount, budgetsCount } = classifyChildrenGoalItems(activeGoals || []);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const updateSublistSummary = async () => {
-      try {
-        const childrenGoals = await getChildrenGoals(goal.id);
-        const unArchivedChildrenGoals = childrenGoals.filter((childGoal) => childGoal.archived === "false");
-
-        const { goalsCount, budgetsCount } = classifyChildrenGoalItems(unArchivedChildrenGoals);
-
-        if (isMounted) {
-          setSubGoalsCount(goalsCount);
-          setSubBudgetsCount(budgetsCount);
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error("Error fetching children goals:", error);
-        }
-      }
-    };
-
-    updateSublistSummary();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [goal, action]);
-
-  return { subGoalsCount, subBudgetsCount };
+  return { subGoalsCount: goalsCount, subBudgetsCount: budgetsCount };
 };

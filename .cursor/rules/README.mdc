@@ -18,6 +18,8 @@ This directory contains Zinzen's development guidelines and best practices in th
 
 - **react-general-guidelines.mdc** - Core React development principles (Auto-attached to React files)
 - **react-state-management.mdc** - State management approaches with Recoil (Auto-attached to state files)
+- **component-spectrum.mdc** - Component spectrum architecture pattern for separating UI and business logic (Auto-attached to component files)
+- **file-structure.mdc** - File and directory organization guidelines (organize by function, barrel files, import aliases)
 
 ## How Rules Work
 

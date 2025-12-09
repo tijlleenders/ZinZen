@@ -113,6 +113,7 @@ export const sendUpdatesToSubscriber = async (
   const { relId, type } = sub;
   const changesWithParticipants = changes.map((change) => {
     if ("goal" in change) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { participants, ...goalWithoutParticipants } = change.goal;
       return { ...change, goal: goalWithoutParticipants };
     }

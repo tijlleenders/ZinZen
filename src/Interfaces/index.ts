@@ -13,9 +13,6 @@ export interface ILocationState {
   displayAddGoal?: string; // parent id of the goal to be added
   displayShareModal?: GoalItem; // show share modal
   displayConfirmation?: TConfirmActionState; // show confirmation modal
-  displayBackResModal?: boolean; // show backup restore modal
-  displayLangChangeModal?: boolean; // show language change modal
-  displayAddFeeling?: boolean; // show add feeling modal
   displayNoteModal?: number; // show saved note of feeling id
   displayInputNoteModal?: number; // show input modal for adding note for id
   changeTheme?: boolean; // theme changer mode
@@ -25,7 +22,6 @@ export interface ILocationState {
   displayParticipants?: string; // id of goal whose participants have to be displayed
   displayPartner?: ContactItem; // to show this partner
   displayChanges?: GoalItem; // to show the changes under goal
-  goalType?: "Budget" | "Goal"; // characteristic of the goal
   displayFocus?: boolean; // whether to show the focus component
   allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }

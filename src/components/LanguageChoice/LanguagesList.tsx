@@ -36,7 +36,7 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
   return (
     <div className="containerLang">
       {languages.map((lang: ILanguage, index: number) => (
-        <div onMouseDown={(e) => handleClick(e, lang.langId)}>
+        <div key={lang.langId} role="button" tabIndex={0} onMouseDown={(e) => handleClick(e, lang.langId)}>
           <label
             key={lang.sno}
             ref={(ref) => {

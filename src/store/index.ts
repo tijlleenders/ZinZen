@@ -42,26 +42,6 @@ export const displayConfirmation = atom({
   default: defaultConfirmationObj,
 });
 
-export const lastAction = atom({
-  key: "lastAction",
-  default: "",
-});
-
-export const searchActive = atom({
-  key: "searchActive",
-  default: false,
-});
-
-export const backupRestoreModal = atom({
-  key: "backupRestoreModal",
-  default: false,
-});
-
-export const languageChangeModal = atom({
-  key: "languageChangeModal",
-  default: false,
-});
-
 export const displayLoader = atom({
   key: "displayLoader",
   default: false as boolean,

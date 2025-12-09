@@ -23,7 +23,7 @@ test.describe("Switch Mode", () => {
     await page.getByRole("button", { name: "Switch Mode" }).click();
     await expect(page.locator(".App-light")).not.toBeVisible();
     await expect(page.locator(".App-dark")).toBeVisible();
-    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+    await page.getByTestId("backdrop").click();
   });
 
   test("should change to next theme when Next button is clicked", async () => {
@@ -31,8 +31,8 @@ test.describe("Switch Mode", () => {
     await page.getByRole("menuitem", { name: "Change theme" }).click();
     await page.getByRole("button", { name: "Next" }).click();
     await expect(page.locator(".dark-theme1")).not.toBeVisible();
-    await expect(page.locator(".dark-theme2")).toBeVisible();
-    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+    await expect(page.locator(".dark-theme2").first()).toBeVisible();
+    await page.getByTestId("backdrop").click();
   });
 
   test("should change back to previous theme when Prev button is clicked", async () => {
@@ -40,7 +40,7 @@ test.describe("Switch Mode", () => {
     await page.getByRole("menuitem", { name: "Change theme" }).click();
     await page.getByRole("button", { name: "Prev" }).click();
     await expect(page.locator(".dark-theme2")).not.toBeVisible();
-    await expect(page.locator(".dark-theme1")).toBeVisible();
-    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+    await expect(page.locator(".dark-theme1").first()).toBeVisible();
+    await page.getByTestId("backdrop").click();
   });
 });

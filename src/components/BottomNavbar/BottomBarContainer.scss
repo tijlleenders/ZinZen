@@ -1,0 +1,21 @@
+.bottom-nav-item {
+  width: 100%;
+  max-width: 200px;
+  background: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  p {
+    font-size: 12px;
+    color: #b1b1b1 !important;
+    font-weight: 500;
+  }
+}
+.bottom-nav-item.active {
+  background: var(--secondary-background);
+  border-radius: 8px;
+  p {
+    color: var(--icon-grad-2) !important;
+    font-weight: 600;
+  }
+}

@@ -9,6 +9,13 @@ export interface IParticipant {
   following: boolean;
 }
 
+/**
+ * Goal category types.
+ *
+ * - "Standard": Simple goal with duration.
+ * - "Budget": Budget goal.
+ * - "Cluster": Goal cluster without duration.
+ */
 export type TGoalCategory = "Standard" | "Budget" | "Cluster";
 
 export type TGoalTimeBudget = {

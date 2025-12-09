@@ -23,17 +23,19 @@ const Search = () => {
   };
 
   return (
-    <div className="header-search-container">
-      <button type="button" className="theme-icon ordinary-element" onClick={handleClose}>
-        <img src={backIcon} alt="zinzen search" />
-      </button>
-      <input
-        className="header-search ordinary-element"
-        placeholder={t("search")}
-        autoFocus
-        value={searchQuery}
-        onChange={handleSearch}
-      />
+    <div className="header">
+      <div className="header-search-container">
+        <button type="button" className="theme-icon ordinary-element" onClick={handleClose}>
+          <img src={backIcon} alt="zinzen search" />
+        </button>
+        <input
+          className="header-search ordinary-element"
+          placeholder={t("search")}
+          autoFocus
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+      </div>
     </div>
   );
 };

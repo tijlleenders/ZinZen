@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
-import React, { useLayoutEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { useRecoilValue } from "recoil";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
 import { i18n } from "@src/translations/i18n";
@@ -14,37 +14,22 @@ import { getLanguages } from "@src/constants/languages";
 
 export const LandingPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [, setPosition] = useState(1);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const langSelected = (lang: string, newPos: number) => {
-    if (i18n.language.includes(lang)) {
-      setPosition(newPos);
-      return true;
-    }
-    return false;
-  };
+  const availableLanguages = getLanguages();
 
-  let languages = getLanguages();
+  const priotizedlanguageList = useMemo(() => {
+    const active = i18n.language;
 
-  const [Languages, setLanguages] = useState(languages);
+    const selected = availableLanguages.filter((l) => active.includes(l.langId));
+    const others = availableLanguages.filter((l) => !active.includes(l.langId));
 
-  useLayoutEffect(() => {
-    languages.forEach((element) => {
-      if (langSelected(element.langId, element.sno)) {
-        languages[0].sno = element.sno;
-        languages[0].selected = false;
-        element.sno = 1;
-        element.selected = true;
-      }
-    });
-    languages = languages.sort((a, b) => a.sno - b.sno);
-    setLanguages(languages);
-  }, []);
+    return [...selected.map((l) => ({ ...l, selected: true })), ...others.map((l) => ({ ...l, selected: false }))];
+  }, [i18n.language, availableLanguages]);
 
   const handleNavigateToFaq = (path: string) => {
-    navigate(path);
+    navigate({ to: path, replace: true });
   };
 
   return (
@@ -54,7 +39,7 @@ export const LandingPage = () => {
       </p>
       <p className="subheading">{t("langChoice")}</p>
       <LanguagesList
-        languages={Languages}
+        languages={priotizedlanguageList}
         navigationCallback={(path) => handleNavigateToFaq(path)}
         type="fragment"
         hideSelected

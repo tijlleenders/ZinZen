@@ -10,7 +10,7 @@ test.describe("Header component", () => {
   test("should display the title correctly", async ({ page }) => {
     await page.getByRole("button", { name: "Goals" }).click();
     const heading = page.getByRole("heading");
-    await expect(heading).toHaveText("My goals");
+    await expect(heading.first()).toHaveText("My goals");
   });
 
   test("should show search input when search icon is clicked", async ({ page }) => {

@@ -122,10 +122,13 @@ test.describe("Goal Sharing Feature", () => {
       .locator("div")
       .first()
       .click({ timeout: 10000 });
-    await userBPage.getByTestId("zmodal").getByText("Collaborate").click({ timeout: 10000 });
-    await userBPage.getByRole("button", { name: "Collaborate on goal" }).click({ timeout: 10000 });
-
-    await userBPage.getByRole("button", { name: "Goals" }).click({ timeout: 10000 });
+    await userBPage.getByTestId("zmodal").getByTestId("collaborate-action").click({ timeout: 10000 });
+    await userBPage.waitForTimeout(1000);
+    const collaborateButton = userBPage.getByRole("button", { name: "Collaborate on goal" });
+    await expect(collaborateButton).toBeVisible({ timeout: 10000 });
+    await expect(collaborateButton).toBeEnabled({ timeout: 5000 });
+    await collaborateButton.click({ timeout: 10000 });
+    await userBPage.getByRole("img", { name: "ZinZen" }).first().click({ timeout: 10000 });
     invitationLink = await addContact(userBPage, "C", currentGoalTitle);
     await acceptContactInvitation(userCPage, invitationLink, "C");
     await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
@@ -170,7 +173,7 @@ test.describe("Goal Sharing Feature", () => {
   userCollaborationScenarios.forEach(({ sharer, receiver, sharerPage, receiverPage }) => {
     test("check if move ", async () => {
       console.log(`User ${sharer} is moving a subgoal into the shared goal...`);
-      await userAPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userAPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
 
       // create a subgoal and share it from user A to user B then collaborate and then share to user C
       await createGoalFromGoalPage(userAPage, subgoalTitle);
@@ -186,9 +189,9 @@ test.describe("Goal Sharing Feature", () => {
         .locator("div")
         .first()
         .click({ timeout: 10000 });
-      await userBPage.getByTestId("zmodal").getByText("Collaborate").click({ timeout: 10000 });
+      await userBPage.getByTestId("zmodal").getByText("Collaborate").first().click({ timeout: 10000 });
       await userBPage.getByRole("button", { name: "Collaborate on goal" }).click({ timeout: 10000 });
-      await userBPage.getByRole("button", { name: "Goals" }).click({ timeout: 10000 });
+      await userBPage.getByRole("img", { name: "ZinZen" }).first().click({ timeout: 10000 });
 
       await shareGoalFlow(userBPage, subgoalTitle, "C");
 
@@ -202,9 +205,9 @@ test.describe("Goal Sharing Feature", () => {
         .locator("div")
         .first()
         .click({ timeout: 10000 });
-      await userCPage.getByTestId("zmodal").getByText("Collaborate").click({ timeout: 10000 });
+      await userCPage.getByTestId("zmodal").getByText("Collaborate").first().click({ timeout: 10000 });
       await userCPage.getByRole("button", { name: "Collaborate on goal" }).click({ timeout: 10000 });
-      await userCPage.getByRole("button", { name: "Goals" }).click({ timeout: 10000 });
+      await userCPage.getByRole("img", { name: "ZinZen" }).first().click({ timeout: 10000 });
 
       await userAPage.getByRole("button", { name: "Goals" }).click({ timeout: 10000 });
       await userAPage
@@ -213,7 +216,7 @@ test.describe("Goal Sharing Feature", () => {
         .locator("div")
         .first()
         .click({ timeout: 10000 });
-      await userAPage.getByTestId("zmodal").getByText("Move").click({ timeout: 10000 });
+      await userAPage.getByTestId("zmodal").getByText("Move").first().click({ timeout: 10000 });
       await userAPage.getByRole("button", { name: "Move goal" }).click({ timeout: 10000 });
 
       await userAPage.getByRole("button", { name: "Goals" }).click({ timeout: 10000 });
@@ -224,15 +227,8 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click({ timeout: 10000 });
 
-      await userAPage
-        .getByRole("button", { name: "add goal | add feeling | add group", exact: true })
-        .click({ timeout: 10000 });
-      await userAPage.getByRole("button", { name: "Move here add goal", exact: true }).click({ timeout: 10000 });
-
-      // Wait for move operation to complete
-      await userAPage.waitForTimeout(5000);
-
-      await userBPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userAPage.getByTestId("fab-button").click();
+      await userBPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
       await userBPage.waitForTimeout(2000);
       await userBPage.reload({ timeout: 30000 });
@@ -258,7 +254,7 @@ test.describe("Goal Sharing Feature", () => {
         await expect(userBPage.getByTestId(`goal-${subgoalTitle}`)).toBeVisible({ timeout: 15000 });
       });
 
-      await userCPage.goto("http://127.0.0.1:3000/goals", { timeout: 30000 });
+      await userCPage.goto("http://127.0.0.1:3000/goals/root", { timeout: 30000 });
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
       await userCPage.waitForTimeout(2000);
       await userCPage.reload({ timeout: 30000 });

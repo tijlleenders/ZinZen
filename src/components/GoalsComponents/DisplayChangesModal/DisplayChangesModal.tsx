@@ -1,11 +1,11 @@
 /* eslint-disable consistent-return */
 import { Checkbox } from "antd";
 import React, { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
-import { darkModeState, lastAction } from "@src/store";
+import { darkModeState } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
@@ -28,7 +28,6 @@ import { ChangeAcceptStrategyContext } from "@src/strategies/ChangeAcceptStrateg
 import { ChangeAcceptParams } from "@src/Interfaces/ChangeAccept";
 
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
-import { GoalActions } from "@src/constants/actions";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
@@ -37,7 +36,6 @@ import { getMovedSubgoalsList } from "./ShowChanges";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const setLastAction = useSetRecoilState(lastAction);
   const [updatesIntent, setUpdatesIntent] = useState<typeOfIntent>("shared");
   const [newGoals, setNewGoals] = useState<{ intent: typeOfIntent; goal: GoalItem }[]>([]);
   const [activePPT, setActivePPT] = useState(-1);
@@ -231,7 +229,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             removeGoalInbox(currentMainGoal.id),
             updateGoal(currentMainGoal.id, { newUpdates: false }),
           ]);
-          setLastAction(GoalActions.GOAL_CHANGES_SYNCED);
           window.history.back();
           return;
         }

@@ -1,0 +1,44 @@
+.fab-button {
+  position: absolute;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: none;
+  background: var(--selection-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  width: 56px;
+  height: 56px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  bottom: 6em;
+  transition: background-color 0.2s;
+  z-index: 1000;
+
+  // Extra small (≤320px)
+  @media (max-width: 320px) {
+    right: 1em;
+  }
+
+  // Small mobile (321px–480px)
+  @media (min-width: 321px) and (max-width: 480px) {
+    right: 2em;
+  }
+
+  // Tablet (481px–768px)
+  @media (min-width: 481px) and (max-width: 768px) {
+    right: 5em;
+  }
+
+  // Desktop (≥769px)
+  @media (min-width: 769px) {
+    right: 5em;
+  }
+
+  img {
+    padding: 2px 0 0 0 !important;
+    filter: brightness(0) invert(1);
+    width: 100%;
+  }
+}

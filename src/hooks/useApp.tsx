@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 
-import { lastAction, displayConfirmation, languageSelectionState, displayToast } from "@src/store";
+import { displayConfirmation, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
@@ -14,10 +14,10 @@ import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelpe
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
-import { TaskActions } from "@src/constants/actions";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
-import useScheduler from "./useScheduler";
+import { useProcessSharedGoalData } from "./useProcessSharedGoalData";
 
+// TODO: fix the scheduler issue
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
 
@@ -25,12 +25,11 @@ function useApp() {
   const language = useRecoilValue(languageSelectionState);
   const isLanguageChosen = language !== "No language chosen.";
 
-  const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
-  const { generateInitialSchedule } = useScheduler();
 
   const confirmationState = useRecoilValue(displayConfirmation);
   const queryClient = useQueryClient();
+  useProcessSharedGoalData();
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts().then(async (contacts) => {
@@ -129,15 +128,10 @@ function useApp() {
 
       await checkUpdates();
       await createDefaultGoals();
-      try {
-        await generateInitialSchedule();
-      } catch (error) {
-        console.error("Failed to generate initial schedule:", error);
-      }
     };
 
     initializeApp();
-  }, [generateInitialSchedule]);
+  }, []);
 
   useEffect(() => {
     const lastRefresh = localStorage.getItem(LocalStorageKeys.LAST_REFRESH);
@@ -145,7 +139,6 @@ function useApp() {
     if (lastRefresh !== today) {
       refreshTaskCollection().then(() => {
         localStorage.setItem(LocalStorageKeys.LAST_REFRESH, today);
-        setLastAction(TaskActions.TASK_COLLECTION_REFRESHED);
       });
     }
   }, []);
